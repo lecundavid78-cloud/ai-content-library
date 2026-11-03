@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "topic": "li-jiaqi-token",
   "createdOn": "2026-11-03",
-  "stage": "grok-research-returned",
+  "stage": "codex-draft-ready-for-user-gemini",
   "audience": "AI beginners in China",
   "workingQuestion": "李佳琦直播间卖的到底是什么，Token 是什么？",
   "request": "grok-research-request-v001.md",
@@ -20,8 +20,8 @@
   "sources": "research/sources.md",
   "manifest": "research/manifest.json",
   "fileProvenance": "research/file-provenance.md",
-  "verifiedFactPack": null,
-  "codexScript": null,
+  "verifiedFactPack": "facts/codex-reviewed-facts-v001.md",
+  "codexScript": "copy/codex-script-v001.md",
   "geminiOptimizedReturn": null,
   "productionThread": null,
   "productionSkill": "Lemo-Opuscar",
@@ -36,6 +36,16 @@
     "voice": null,
     "style": null
   },
-  "nextAction": "Codex independently reviews the fact pack, then writes a beginner-oriented script for user-operated Gemini optimization.",
-  "published": false
+  "nextAction": "User operates Gemini using the complete request TXT. Codex preserves and fact-reviews the full return, then creates the already conditionally authorized Lemo-Opuscar production chat when the script is ready.",
+  "published": false,
+  "geminiRequest": "copy/gemini-request-v001.txt",
+  "researchSnapshotCommit": "9baf980e23a44c8444f5c1c547b2922127c26115",
+  "researchReceipt": "research/codex-review-v001.md",
+  "actualVoiceTimingDone": false,
+  "durationEstimateOnlySeconds": [
+    109,
+    129
+  ],
+  "excludedAsset": "research/screenshots/bjnews-cover-20261103.jpg",
+  "videoContentReviewed": false
 }
