@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "topic": "li-jiaqi-token",
   "createdOn": "2026-11-03",
-  "stage": "codex-draft-ready-for-user-gemini",
+  "stage": "desktop-flythrough-selected-return-to-copy",
   "audience": "AI beginners in China",
   "workingQuestion": "李佳琦直播间卖的到底是什么，Token 是什么？",
   "request": "grok-research-request-v001.md",
@@ -21,8 +21,8 @@
   "manifest": "research/manifest.json",
   "fileProvenance": "research/file-provenance.md",
   "verifiedFactPack": "facts/codex-reviewed-facts-v001.md",
-  "codexScript": "copy/codex-script-v001.md",
-  "geminiOptimizedReturn": null,
+  "codexScript": "copy/codex-script-v002.md",
+  "geminiOptimizedReturn": "copy/gemini-response-v001.raw.md",
   "productionThread": null,
   "productionSkill": "Lemo-Opuscar",
   "productionThreadCreation": {
@@ -34,18 +34,32 @@
     "duration": null,
     "aspectRatio": null,
     "voice": null,
-    "style": null
+    "style": "desktop-flythrough"
   },
-  "nextAction": "User operates Gemini using the complete request TXT. Codex preserves and fact-reviews the full return, then creates the already conditionally authorized Lemo-Opuscar production chat when the script is ready.",
+  "nextAction": "Adapt the script to the selected Desktop Flythrough direction. Keep factual limits and concise hook. No production chat or render until the script is production-ready.",
   "published": false,
   "geminiRequest": "copy/gemini-request-v001.txt",
   "researchSnapshotCommit": "9baf980e23a44c8444f5c1c547b2922127c26115",
   "researchReceipt": "research/codex-review-v001.md",
   "actualVoiceTimingDone": false,
-  "durationEstimateOnlySeconds": [
-    109,
-    129
-  ],
+  "durationEstimateOnlySeconds": null,
   "excludedAsset": "research/screenshots/bjnews-cover-20261103.jpg",
-  "videoContentReviewed": false
+  "videoContentReviewed": false,
+  "copyFeedback": "reviews/opening-feedback-v001.md",
+  "remoteSyncPending": false,
+  "styleShortlist": "reviews/style-shortlist-v001.md",
+  "styleSelection": {
+    "status": "user-selected-direction",
+    "codexRecommended": "caption-news",
+    "alternatives": [
+      "whiteboard",
+      "swiss-motion"
+    ],
+    "userConfirmed": "desktop-flythrough",
+    "userQuote": "Desktop Flythrough 我觉得不错",
+    "scope": "this-topic-only",
+    "upstreamCommit": "bebbbe1aa92a3cb4bb6f83500e61b23a17d1aa00",
+    "localStyleAvailable": false
+  },
+  "visualDirection": "reviews/desktop-flythrough-direction-v001.md"
 }
