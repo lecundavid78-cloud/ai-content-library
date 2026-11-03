@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "topic": "li-jiaqi-token",
   "createdOn": "2026-11-03",
-  "stage": "grok-research-request-ready",
+  "stage": "grok-research-returned",
   "audience": "AI beginners in China",
   "workingQuestion": "李佳琦直播间卖的到底是什么，Token 是什么？",
   "request": "grok-research-request-v001.md",
@@ -15,7 +15,11 @@
     "gemini": "user-operated",
     "codexCallsModels": false
   },
-  "grokResearchReturn": null,
+  "grokResearchReturn": "grok-research-return-v001.md",
+  "factPack": "facts/fact-pack-v001.md",
+  "sources": "research/sources.md",
+  "manifest": "research/manifest.json",
+  "fileProvenance": "research/file-provenance.md",
   "verifiedFactPack": null,
   "codexScript": null,
   "geminiOptimizedReturn": null,
@@ -32,6 +36,6 @@
     "voice": null,
     "style": null
   },
-  "nextAction": "User forwards this topic research request to Grok. Grok writes source-backed facts and real media to the shared topic folder. Codex independently reviews, then writes a beginner-oriented script for user-operated Gemini optimization.",
+  "nextAction": "Codex independently reviews the fact pack, then writes a beginner-oriented script for user-operated Gemini optimization.",
   "published": false
 }
