@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "topic": "li-jiaqi-token",
   "createdOn": "2026-11-03",
-  "stage": "desktop-flythrough-selected-return-to-copy",
+  "stage": "audience-benefit-angle-revision",
   "audience": "AI beginners in China",
   "workingQuestion": "李佳琦直播间卖的到底是什么，Token 是什么？",
   "request": "grok-research-request-v001.md",
@@ -36,7 +36,7 @@
     "voice": null,
     "style": "desktop-flythrough"
   },
-  "nextAction": "Adapt the script to the selected Desktop Flythrough direction. Keep factual limits and concise hook. No production chat or render until the script is production-ready.",
+  "nextAction": "Establish the public-facing contrast and concrete audience benefit before rewriting the Token explanation. The user may forward the complete writing-bot request; Codex does not invoke Grok. Desktop Flythrough is retained; no production chat yet.",
   "published": false,
   "geminiRequest": "copy/gemini-request-v001.txt",
   "researchSnapshotCommit": "9baf980e23a44c8444f5c1c547b2922127c26115",
@@ -61,5 +61,7 @@
     "upstreamCommit": "bebbbe1aa92a3cb4bb6f83500e61b23a17d1aa00",
     "localStyleAvailable": false
   },
-  "visualDirection": "reviews/desktop-flythrough-direction-v001.md"
+  "visualDirection": "reviews/desktop-flythrough-direction-v001.md",
+  "audienceBenefitReview": "reviews/audience-benefit-feedback-v001.md",
+  "writingBotRequest": "copy/grok-writing-bot-request-v001.txt"
 }

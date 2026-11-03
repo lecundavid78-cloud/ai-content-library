@@ -1,6 +1,8 @@
 # 李佳琦卖 Token：热点解释视频
 
-负责人：本原会话 Codex。用户已选Desktop Flythrough（桌面穿梭）作为此片视觉方向，下一步按此风格回到文案。
+负责人：本原会话 Codex。Desktop Flythrough（桌面穿梭）保留为此片视觉方向；当前优先重定文案利益，先讲事件反差和观众的生活愿望，再自然解释Token。
+
+最新见[观众利益反馈](reviews/audience-benefit-feedback-v001.md)与[可转交Grok写作bot的完整问题](copy/grok-writing-bot-request-v001.txt)。v002未批准，不因已选风格就机械进入制片。
 
 当前以[桌面穿梭视觉方向](reviews/desktop-flythrough-direction-v001.md)为准；此前[三个候选](reviews/style-shortlist-v001.md)保留历史。风格尚未渲染验证、终稿未定，当前不启动新制作会话。
 
