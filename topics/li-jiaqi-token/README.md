@@ -1,6 +1,8 @@
 # 李佳琦卖 Token：热点解释视频
 
-负责人：本原会话 Codex。Desktop Flythrough（桌面穿梭）保留为此片视觉方向；当前优先重定文案利益，先讲事件反差和观众的生活愿望，再自然解释Token。
+负责人：本原会话 Codex。Desktop Flythrough（桌面穿梭）保留；当前按用户最新三问顺序直接重写，现行[口播v003](copy/codex-script-v003.md)，尚未批准制作。
+
+2026-11-04最新反馈见[直接解释与口语要求](reviews/plain-language-feedback-v001.md)。[用户带回的写作bot原稿](copy/writing-bot-response-v001.user-supplied.md)保留；不再强行把营销判断、早点下班和情绪分析写进开头，不重复要求用户再调用模型。
 
 最新见[观众利益反馈](reviews/audience-benefit-feedback-v001.md)与[可转交Grok写作bot的完整问题](copy/grok-writing-bot-request-v001.txt)。v002未批准，不因已选风格就机械进入制片。
 
