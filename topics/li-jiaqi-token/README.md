@@ -1,22 +1,16 @@
 # 李佳琦卖 Token：热点解释视频
 
-负责人：本原会话 Codex。Desktop Flythrough（桌面穿梭）保留；当前按用户最新三问顺序直接重写，现行[口播v003](copy/codex-script-v003.md)，尚未批准制作。
+2026-11-04，用户认可完整润色稿。当前唯一制作口播为 [确认稿](copy/approved-voiceover-v001.txt)，原样保留；[认可与复核记录](reviews/copy-approval-v001.md) 和 [收据](reviews/copy-approval-v001.json) 记录本次来源及 SHA256。
 
-2026-11-04最新反馈见[直接解释与口语要求](reviews/plain-language-feedback-v001.md)。[用户带回的写作bot原稿](copy/writing-bot-response-v001.user-supplied.md)保留；不再强行把营销判断、早点下班和情绪分析写进开头，不重复要求用户再调用模型。
+本片视觉方向是已选的 Desktop Flythrough（桌面穿梭）。既有条件授权已满足，进入独立制作会话；[制作交接](production-handoff-v001.md) 是本阶段操作入口，[state.json](state.json) 记录实际创建状态。成片、配音及视觉尚未验收，不把文案认可当成成片完成。
 
-最新见[观众利益反馈](reviews/audience-benefit-feedback-v001.md)与[可转交Grok写作bot的完整问题](copy/grok-writing-bot-request-v001.txt)。v002未批准，不因已选风格就机械进入制片。
+- [确认口播](copy/approved-voiceover-v001.txt)
+- [独立核查事实包](facts/codex-reviewed-facts-v001.md)
+- [真实研究与素材接收](research/codex-review-v001.md)
+- [桌面穿梭方向](reviews/desktop-flythrough-direction-v001.md)
+- [上游真实 STYLE 快照](references/desktop-flythrough/STYLE.upstream.md)
+- [原始用户意图与创建会话授权](brief-v001.md)
 
-当前以[桌面穿梭视觉方向](reviews/desktop-flythrough-direction-v001.md)为准；此前[三个候选](reviews/style-shortlist-v001.md)保留历史。风格尚未渲染验证、终稿未定，当前不启动新制作会话。
+旧 copy/codex-script-v001.md 至 v003.md、gemini-response-v001.raw.md 和历次反馈保留为历史，不再用于制作。当前新稿由用户直接贴回；Codex 未代调用 Gemini。完整文本保存在确认稿，不覆盖较早回稿。
 
-- [给 Grok 的完整请求](grok-research-request-v001.md)
-- [用户意图与制作顺序](brief-v001.md)
-- [实际状态](state.json)
-- [Codex 初步报道核对](research/codex-precheck-v001.json)
-
-Grok PR #2 已合并，Codex已读取9baf980e23a44c8444f5c1c547b2922127c26115的事实包与来源，逐张查看八图并独立核查关键公开说明。现有[口播初稿](copy/codex-script-v001.md)、[完整Gemini优化请求](copy/gemini-request-v001.txt)、[复核事实](facts/codex-reviewed-facts-v001.md)与[接收记录](research/codex-review-v001.md)。
-
-Gemini完整回稿已保存为[原回稿](copy/gemini-response-v001.raw.md)。用户要求开头前三秒抓住注意力，不念来源或研究过程；现行[修订稿v002](copy/codex-script-v002.md)及[反馈记录](reviews/opening-feedback-v001.md)保留该要求。初稿与旧请求是历史，不重复索取回稿。
-
-当前继续沟通文案，不因回稿到达就机械启动制作。文案形成可制作版本后，沿用已授权顺序创建Lemo-Opuscar新会话；本轮未创建、配音或做视频。风格方向已选；时长、画幅、声线尚未确认。
-
-素材排除项：bjnews-cover-20261103.jpg为无关政务海报，不能使用。凤凰短片尚未播放审看，保持待检。Grok原始文字快照在research/intake-v001/，远端原件保留。
+Grok PR #2 研究快照为 9baf980e23a44c8444f5c1c547b2922127c26115；原件仍在共享私库 lecundavid78-cloud/ai-content-library 的 topics/li-jiaqi-token/。素材排除项 bjnews-cover-20261103.jpg 为无关政务海报；凤凰短片尚未实际播放审看，使用前须另验。更多限制已写入事实包与交接，不重复灌入口播。

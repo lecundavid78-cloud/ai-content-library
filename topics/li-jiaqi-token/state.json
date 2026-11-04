@@ -2,7 +2,7 @@
   "schemaVersion": "1.0.0",
   "topic": "li-jiaqi-token",
   "createdOn": "2026-11-03",
-  "stage": "plain-language-three-question-rewrite",
+  "stage": "production-chat-started",
   "audience": "AI beginners in China",
   "workingQuestion": "李佳琦直播间卖的到底是什么，Token 是什么？",
   "request": "grok-research-request-v001.md",
@@ -23,12 +23,19 @@
   "verifiedFactPack": "facts/codex-reviewed-facts-v001.md",
   "codexScript": "copy/codex-script-v003.md",
   "geminiOptimizedReturn": "copy/gemini-response-v001.raw.md",
-  "productionThread": null,
+  "productionThread": {
+    "threadId": "01a1a4b1-74ab-7960-8461-4aee94607358",
+    "hostId": "local",
+    "title": "李佳琦 Token 视频｜Desktop Flythrough 制作"
+  },
   "productionSkill": "Lemo-Opuscar",
   "productionThreadCreation": {
     "userAuthorizedConditionally": true,
     "condition": "Gemini-optimized return received and Codex fact review yields a production-ready script.",
-    "createNow": false
+    "createNow": false,
+    "conditionSatisfiedOn": "2026-11-04",
+    "conditionEvidence": "reviews/copy-approval-v001.md",
+    "created": true
   },
   "videoParameters": {
     "duration": null,
@@ -36,7 +43,7 @@
     "voice": null,
     "style": "desktop-flythrough"
   },
-  "nextAction": "Review v003 following the user-specified order: event, what Token is, what it is used for, and the actual membership product. No additional model call required and no production yet.",
+  "nextAction": "Production chat owns native film and production/ outputs; original chat retains copy and coordination. Await actual renders and QC, not more copy approval.",
   "published": false,
   "geminiRequest": "copy/gemini-request-v001.txt",
   "researchSnapshotCommit": "9baf980e23a44c8444f5c1c547b2922127c26115",
@@ -66,5 +73,9 @@
   "writingBotRequest": "copy/grok-writing-bot-request-v001.txt",
   "updatedOn": "2026-11-04",
   "writingBotResponse": "copy/writing-bot-response-v001.user-supplied.md",
-  "latestCopyFeedback": "reviews/plain-language-feedback-v001.md"
+  "latestCopyFeedback": "reviews/plain-language-feedback-v001.md",
+  "approvedScript": "copy/approved-voiceover-v001.txt",
+  "latestUserSuppliedRevision": "copy/approved-voiceover-v001.txt",
+  "scriptApproval": "reviews/copy-approval-v001.json",
+  "productionHandoff": "production-handoff-v001.md"
 }
