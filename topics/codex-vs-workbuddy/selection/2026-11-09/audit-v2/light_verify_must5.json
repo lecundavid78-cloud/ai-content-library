@@ -1,0 +1,340 @@
+{
+  "task": "light_verify_must5",
+  "collected_batch_at": "2026-11-09T17:49:38+08:00",
+  "timezone": "Asia/Shanghai",
+  "rules": [
+    "no video download",
+    "no full watch/transcribe",
+    "no comment pagination",
+    "no invented numbers",
+    "chapters are page-visible AI章节要点 only"
+  ],
+  "attempted": 5,
+  "ok_count": 5,
+  "blockers": [],
+  "videos": [
+    {
+      "id": "7700926672538730361",
+      "requested_url": "https://www.douyin.com/video/7700926672538730361",
+      "final_url": "https://www.douyin.com/video/7700926672538730361",
+      "old_index_note": "旧索引：《你一定要用上Codex》约8.2万赞",
+      "title": "你一定要用上codex",
+      "author_name": "话多多（AI版）",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAA-JLKjOjSZTNDcEauQtjaIHFn_LpbWF_96PErNrTavL3v9RuaMmbzVR5kSB4vAHcM",
+      "follower_count": "4982",
+      "author_likes_total_visible": "13.7万",
+      "publish_datetime": "2026-10-26 18:48",
+      "publish_datetime_type": "absolute",
+      "duration": "00:43",
+      "likes": "8.2万",
+      "comments": "1118",
+      "favorites_collects": "3.0万",
+      "shares_reposts": "1.8万",
+      "caption_description": "你一定要用上codex #ai #codex #深圳 #普通人的ai发布会 #我在抖音学ai",
+      "page_visible_chapters": [],
+      "chapter_summary_ai_visible": null,
+      "cover_text_readable": "我在深圳感觉每天都被这些 AI洗脑",
+      "practical_task_or_case_clues": {
+        "yes_no": "no",
+        "evidence": "页面可见文案与封面为观点/种草口播（“你一定要用上codex”“我在深圳感觉每天都被这些 AI洗脑”），未见明确可交付任务、成品或分步实操线索；无AI章节要点。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "本视频标题/简介未见“领取资料/付费课/Skill包”等CTA；侧栏推荐视频有引流文案，但不属于本视频内容。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "页面可见内容仅提 Codex；未见 CodeBuddy/WorkBuddy 混淆表述。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7700926672538730361.png",
+      "collected_at": "2026-11-09T17:48:00+08:00",
+      "notes": "互动量与旧索引基本一致（赞8.2万）。时长从播放器读到 00:43。"
+    },
+    {
+      "id": "7700093372661204367",
+      "requested_url": "https://www.douyin.com/video/7700093372661204367",
+      "final_url": "https://www.douyin.com/video/7700093372661204367",
+      "old_index_note": "旧索引：《如何让GrokBot用上Codex》约3.7万赞",
+      "title": "如何让 GrokBot 用上 codex 有闲置的额度，也不要浪费！让 GrokBot 用起来，二十四小时为你打工！",
+      "author_name": "Keith今日休息吗",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAOFtO5rM0oTm3zSevPfdDFIBWhC4bNVD3bwbNrzMgqeVALpfDua9WF9-Msj98SQh8",
+      "follower_count": "4332",
+      "author_likes_total_visible": "5.5万",
+      "publish_datetime": "2026-10-24 12:54",
+      "publish_datetime_type": "absolute",
+      "duration": "04:09",
+      "likes": "3.7万",
+      "comments": "957",
+      "favorites_collects": "2.8万",
+      "shares_reposts": "8753",
+      "caption_description": "如何让 GrokBot 用上 codex 有闲置的额度，也不要浪费！让 GrokBot 用起来，二十四小时为你打工！#我在抖音学ai #ai工具必吃榜 #grok",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:22",
+          "title": "云电脑",
+          "detail": "云电脑上装好codex，建一个新bot专门负责用codex，打开设备码登录开关，登录chad gpt账号。"
+        },
+        {
+          "time": "01:38",
+          "title": "自己电脑",
+          "detail": "自己电脑上装好codex，建一个bot专门用来调用，授权访问电脑。"
+        },
+        {
+          "time": "02:07",
+          "title": "选择方式",
+          "detail": "云电脑不依赖电脑，随时可用；自己电脑更方便，账号更安全。"
+        },
+        {
+          "time": "02:30",
+          "title": "使用方法",
+          "detail": "跟codex工具人说需求，codex可写代码和画图。"
+        },
+        {
+          "time": "03:08",
+          "title": "彩蛋",
+          "detail": "open code有免费模型可用，可尝试使用。"
+        },
+        {
+          "time": "03:36",
+          "title": "结语",
+          "detail": "建bot，装好codex，即可使用。"
+        }
+      ],
+      "chapter_summary_ai_visible": "如何让GrokBot使用codex，包括在云电脑上安装codex或使用自己电脑上的codex。通过建立专门的bot，用户可以让GrokBot用codex写代码和画图。云电脑方式不依赖用户电脑，随时可用；自己电脑方式更方便且账号更安全。此外，还提到了open code中的免费模型。",
+      "cover_text_readable": "你花钱订阅的 Codex, Claude, Gemini",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "页面可见章节明确分步：云电脑装Codex建bot、本机装Codex授权、两种方式对比、使用方法（写代码/画图）。封面文案指向把付费订阅额度接到 GrokBot。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "本视频标题/简介/可见章节未见领取资料、售课或Skill包CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "页面可见为 GrokBot + Codex；未见 CodeBuddy/WorkBuddy 混淆。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7700093372661204367.png",
+      "collected_at": "2026-11-09T17:48:20+08:00",
+      "notes": "有完整页面可见AI章节要点。赞数与旧索引一致（3.7万）。"
+    },
+    {
+      "id": "7689005697501179897",
+      "requested_url": "https://www.douyin.com/video/7689005697501179897",
+      "final_url": "https://www.douyin.com/video/7689005697501179897",
+      "old_index_note": "旧索引：《16分钟Codex速通教程》约48.7万赞",
+      "title": "人人都能看懂的16分钟Codex速通教程",
+      "author_name": "谢慢慢97",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAnOP32NpsIAoK4j10mhYW6jNOMYw3joc70XKxtfMUOfDMBUkcmKonK8N-1fH2rSaZ",
+      "follower_count": "4.6万",
+      "author_likes_total_visible": "56.1万",
+      "publish_datetime": "2026-09-24 15:49",
+      "publish_datetime_type": "absolute",
+      "duration": "16:15",
+      "likes": "48.8万",
+      "comments": "4081",
+      "favorites_collects": "50.1万",
+      "shares_reposts": "7.8万",
+      "caption_description": "人人都能看懂的16分钟Codex速通教程 #ai #codex #gpt #ai教程",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:16",
+          "title": "安装",
+          "detail": "通过浏览器进入openai官网下载codex，再下载cc switch并安装，使用cc switch切换到国内模型，最后打开codex即可使用。"
+        },
+        {
+          "time": "03:26",
+          "title": "入门",
+          "detail": "介绍了Codex的界面和功能，包括侧边栏、搜索、新对话、任务列表、模型选择、快捷键等。"
+        },
+        {
+          "time": "10:52",
+          "title": "实操",
+          "detail": "以办公家具销售为例，演示了如何使用Codex处理工作中的任务，包括创建项目、添加资料、提出要求、查看结果、修改方案等。"
+        }
+      ],
+      "chapter_summary_ai_visible": "如何安装和使用Codex，包括下载、配置和使用方法。通过一个实际工作中的例子，展示了如何利用Codex提高工作效率，如制作报价表和PPT。同时，还介绍了Codex的一些常用功能，如搜索、任务管理、模型选择等。",
+      "cover_text_readable": "以及在什么情况下使用（截图时播放器字幕可见；封面静态文案未单独拆出）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "页面可见章节含安装→入门→实操；实操明确“办公家具销售”案例，并提到报价表/PPT等产出（来自页面可见AI章节摘要）。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "本视频标题/简介未见领取资料/售课/Skill包CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "页面可见为 Codex 教程；未见 CodeBuddy/WorkBuddy 混淆。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7689005697501179897.png",
+      "collected_at": "2026-11-09T17:48:50+08:00",
+      "notes": "点赞约48.8万（旧索引约48.7万）；收藏50.1万高于点赞。页面标注“章节要点：共4个”。"
+    },
+    {
+      "id": "7699819443685794426",
+      "requested_url": "https://www.douyin.com/video/7699819443685794426",
+      "final_url": "https://www.douyin.com/video/7699819443685794426",
+      "old_index_note": "旧索引：《真正无痛开启自媒体副业》约3万赞，需判断是否真与 WorkBuddy/自媒体相关",
+      "title": "真正无痛开启自媒体副业的纯干货！",
+      "author_name": "安妮说AI",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAu3vLWwmOz7lgOae1glz-UfqKY4Hjtaa8JTe5IBr-cEo",
+      "follower_count": "144.4万",
+      "author_likes_total_visible": "2685.2万",
+      "publish_datetime": "2026-10-23 19:11",
+      "publish_datetime_type": "absolute",
+      "duration": "03:16",
+      "likes": "3.0万",
+      "comments": "334",
+      "favorites_collects": "1014",
+      "shares_reposts": "1102",
+      "caption_description": "真正无痛开启自媒体副业的纯干货！#StepFun #阶跃 #Step5Preview #WorkBuddy",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:07",
+          "title": "自媒体起号工作台",
+          "detail": "展示了用WorkBuddy搭建的自媒体起号工作台，包括赛道对比、定位方案、选题库、排期表、发布文案等。"
+        },
+        {
+          "time": "00:44",
+          "title": "需求拆解与分析",
+          "detail": "WorkBuddy通过卡片交互拆解需求，分析平台偏好、可投入时间等，提供赛道细分梳理。"
+        },
+        {
+          "time": "01:37",
+          "title": "专属工作台的搭建",
+          "detail": "完成需求拆解后，WorkBuddy搭建专属工作台，包括总览仪表盘、定位画布等。"
+        },
+        {
+          "time": "02:17",
+          "title": "使用方法与优势",
+          "detail": "按照\"起号SOP\"分阶段完成任务，WorkBuddy可根据进程更新工作台，相当于有了专属运营。"
+        },
+        {
+          "time": "03:01",
+          "title": "免费体验机会",
+          "detail": "Step5Preview已上线，10月12日至25日限免，可体验WorkBuddy。"
+        }
+      ],
+      "chapter_summary_ai_visible": "如何无痛开启自媒体副业，通过WorkBuddy和Step5Preview模型，用户可以轻松搭建自媒体起号工作台，包括赛道对比、定位方案、选题库等。WorkBuddy还能根据用户需求提供具体的操作步骤和建议，帮助用户分阶段完成任务。现在，Step5Preview已上线，提供两周限免体验。",
+      "cover_text_readable": "焦虑；说普通人一定要做自媒体",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "页面可见章节围绕用 WorkBuddy 搭建“自媒体起号工作台”（赛道对比、定位方案、选题库、排期表、发布文案、起号SOP）。与 WorkBuddy+自媒体高度相关；上一轮仅凭标题排除不成立。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "yes",
+        "evidence": "章节“免费体验机会”：Step5Preview已上线，10月12日至25日限免，可体验WorkBuddy。标签含 #StepFun #阶跃 #Step5Preview #WorkBuddy。属产品限免/体验引流，非独立付费课文案。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "页面明确写 WorkBuddy；未见 CodeBuddy。"
+      },
+      "workbuddy_selfmedia_relevance": {
+        "relevant": true,
+        "judgment": "高度相关：标题、标签、章节均指向 WorkBuddy 做自媒体起号/副业工作流。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7699819443685794426.png",
+      "collected_at": "2026-11-09T17:49:10+08:00",
+      "notes": "大号作者（粉丝144.4万）。赞3.0万与旧索引一致。页面标注“内容由AI生成”。"
+    },
+    {
+      "id": "7662035533354257683",
+      "requested_url": "https://www.douyin.com/video/7662035533354257683",
+      "final_url": "https://www.douyin.com/video/7662035533354257683",
+      "old_index_note": "旧索引：《6款Agent工具实测：国内小白第一款到底选谁？》约14.9万赞",
+      "title": "6款Agent工具实测：国内小白第一款到底选谁？ Codex、WorkBuddy、Claude Code、ZCode、Traework、OpenClaw……第一款 Agent 工具到底该选谁？先收藏，再根据自己的条件选第一款。你现在正在用哪一款 Agent？",
+      "author_name": "珍妮丁丁说",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAOzTvIhQXaHWi6jT_P5rG5xEWpWPjufiKQHL4_uaFRZzOMFYOxxQPu3AtUmTd_P09",
+      "follower_count": "16.8万",
+      "author_likes_total_visible": "93.6万",
+      "publish_datetime": "2026-07-14 20:30",
+      "publish_datetime_type": "absolute",
+      "duration": "10:21",
+      "likes": "14.9万",
+      "comments": "3386",
+      "favorites_collects": "9.3万",
+      "shares_reposts": "2.3万",
+      "caption_description": "6款Agent工具实测：国内小白第一款到底选谁？ Codex、WorkBuddy、Claude Code、ZCode、Traework、OpenClaw……第一款 Agent 工具到底该选谁？先收藏，再根据自己的条件选第一款。你现在正在用哪一款 Agent？#ai新星计划 #codex #workbuddy #Claudecode #Agent #抖音前沿科技首发计划",
+      "page_visible_chapters": [
+        {
+          "time": "00:06",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:19",
+          "title": "JPEG Code",
+          "detail": null
+        },
+        {
+          "time": "02:23",
+          "title": "Codex",
+          "detail": null
+        },
+        {
+          "time": "03:23",
+          "title": "WorkBuddy",
+          "detail": null
+        },
+        {
+          "time": "07:09",
+          "title": "TRAE",
+          "detail": null
+        },
+        {
+          "time": "07:39",
+          "title": "ZCode",
+          "detail": null
+        },
+        {
+          "time": "08:28",
+          "title": "OpenClaw",
+          "detail": null
+        },
+        {
+          "time": "09:28",
+          "title": "总结",
+          "detail": null
+        }
+      ],
+      "chapter_summary_ai_visible": "6款Agent工具测评，包括Codex、WorkBuddy、Claude Code、ZCode、Traework和OpenClaw。Codex和WorkBuddy最推荐，Codex适合有一定技术基础的用户，WorkBuddy适合国内新手。其他软件各有优缺点，可根据需求选择。",
+      "cover_text_readable": "个人观点，仅供参考（播放器左下角声明可见；主封面口号未单独拆出）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "标题与章节结构为多工具分段实测/选型（Codex、WorkBuddy、Claude Code/JPEG Code、TRAE、ZCode、OpenClaw+总结）。属选型方法论线索；页面摘要称Codex与WorkBuddy最推荐。未看到同一任务对照产出的细节证据（仅章节标题级）。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "本视频标题/简介未见领取资料/售课/Skill包CTA；有“先收藏”互动引导。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "页面写 WorkBuddy；未见 CodeBuddy。章节标题出现“JPEG Code”（疑似页面AI章节对 Claude Code 的误写），已按页面原文照录。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7662035533354257683.png",
+      "collected_at": "2026-11-09T17:49:30+08:00",
+      "notes": "较早内容（2026-07-14）。赞14.9万与旧索引一致。页面标注“内容由AI生成”“章节要点：共8个”。"
+    }
+  ]
+}
