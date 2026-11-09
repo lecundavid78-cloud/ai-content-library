@@ -1,0 +1,29 @@
+{
+  "import_batch": "import-2026-11-09-codex-workbuddy",
+  "imported_at": "2026-11-09T15:45:00+08:00",
+  "source_rows": 429,
+  "unique_platform_video_id": 429,
+  "duplicates_dropped": 0,
+  "evidence_level_counts": {
+    "L1_search_card": 363,
+    "L0_web_seed": 36,
+    "L3b_transcript_full": 1,
+    "L3a_transcript_partial": 9,
+    "L2_detail_verified": 20
+  },
+  "missing_field_counts": {
+    "author": 37,
+    "author_url": 429,
+    "published_at_raw": 27,
+    "published_at_abs": 389,
+    "duration": 38,
+    "likes": 37,
+    "comments": 399,
+    "favorites": 399,
+    "plays": 429,
+    "shares": 400
+  },
+  "transcript_files_linked": 30,
+  "comments_files_linked": 30,
+  "topic_links": 429
+}

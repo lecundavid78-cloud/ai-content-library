@@ -14,8 +14,14 @@
 - reviews/：Codex 的核查和选题判断。
 - productions/：后续文案与制作文件。
 - handoff/：读写测试和交接回执。
+- video-pool/：长期可检索的抖音等平台视频素材总池。与 `library/` 用户亲选样本、`topics/` 专题研究包分开。
+- topics/：专题研究包，单独保留原文、截图和索引原件。
 
 未收到材料时不造空帖子凑数。用户没有解释选帖理由时可以先收录，用户评价留空，不由模型编写为用户意见。
+
+## 视频素材总池
+
+[video-pool/](video-pool/README.md) 是长期可检索的视频素材池，按 `platform + video_id` 去重，主题经 `topic-links/` 引用。它与 `library/` 的用户亲选样本、以及 `topics/` 下的专题研究包分开存放：研究原件仍留在 `topics/`，本池只收可增量检索的索引、历史事件和导入记录。字段、证据等级与维护方式见该目录的 README、SCHEMA 与 MAINTENANCE。首批导入记录见 [2026-11-09 Codex vs WorkBuddy 导入报告](video-pool/import/2026-11-09-codex-workbuddy/Import_Report.md)。
 
 ## 交接测试
 
