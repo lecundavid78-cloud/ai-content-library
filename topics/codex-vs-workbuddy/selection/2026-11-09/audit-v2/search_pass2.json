@@ -1,0 +1,2865 @@
+{
+  "meta": {
+    "date": "2026-11-09",
+    "pass": "search_pass2",
+    "scope": "Supplementary Douyin SEARCH pass 2 (no downloads/watch/transcripts/comment pagination)",
+    "known_set_size": 25,
+    "known_set": [
+      "7662035533354257683",
+      "7666544308782255403",
+      "7668834052987784467",
+      "7672375866457935155",
+      "7685646949881580841",
+      "7688176625988455720",
+      "7689005697501179897",
+      "7693111158979003834",
+      "7695731896411573558",
+      "7698943253144273509",
+      "7699819443685794426",
+      "7699913121674104090",
+      "7700093372661204367",
+      "7700926672538730361",
+      "7702299256983506210",
+      "7702481499660986085",
+      "7703439581777883121",
+      "7704045181674278170",
+      "7704147659980477561",
+      "7704514173656501542",
+      "7704557313692011818",
+      "7704658287299480868",
+      "7704944575751687478",
+      "7704954966380743951",
+      "7705086303091576073"
+    ],
+    "note_on_sort": "Pass1 already proved 筛选 UI has no 最新/最热. This pass used default 综合/视频 only; limitation noted once."
+  },
+  "sort_switch": {
+    "zuixin_zuire_attempted_this_pass": false,
+    "reason": "Pass1 already proved FAIL — no 最新/最热 in 筛选 UI. Do not pretend they worked.",
+    "used": "default_综合视频",
+    "limitation_note": "All keyword tables are default 综合/视频 ranking only (engagement-weighted mix; some 1天前~1周前 cards still appear)."
+  },
+  "coverage": {
+    "keywords_searched": [
+      "Codex普通人",
+      "Codex自动化",
+      "Codex Skills",
+      "Codex真实案例",
+      "腾讯WorkBuddy",
+      "WorkBuddy实战",
+      "WorkBuddy Skills",
+      "WorkBuddy自动化",
+      "AI Agent怎么选",
+      "普通人如何使用AI Agent",
+      "WorkBuddy"
+    ],
+    "keyword_count": 11,
+    "workbuddy_bare_vs_tencent": {
+      "searched": true,
+      "identical_to_tencent_workbuddy": false,
+      "overlap_count": 4,
+      "overlap_ids": [
+        "7698361604575890728",
+        "7704017247395859748",
+        "7705055858165681443",
+        "7705396480865242408"
+      ],
+      "note": "Bare WorkBuddy vs 腾讯WorkBuddy NOT identical (4/12 overlap). Kept full table for both."
+    },
+    "creator_pages_opened": [
+      "一只野生龙",
+      "诗诗的Ai视界",
+      "Keith今日休息吗",
+      "徐老师AI观察",
+      "谢慢慢97",
+      "非哥黑科技",
+      "生姜｜AI实战",
+      "FredTalk"
+    ],
+    "creator_count": 8,
+    "captcha_login": "none observed blocking search/profile this pass",
+    "unique_video_ids_from_keywords": 115,
+    "unique_video_ids_all_including_creators": 145,
+    "in_known_set_count": 14,
+    "not_in_known_set_count": 131,
+    "unique_video_ids": [
+      "7636915997076770089",
+      "7637062054444141876",
+      "7645613014372710026",
+      "7645675251677809963",
+      "7646720550047560531",
+      "7648606793362410790",
+      "7649570409125383475",
+      "7649814497578251953",
+      "7651616119739964529",
+      "7652267273159314740",
+      "7652865876358334065",
+      "7654121980278363318",
+      "7656339177814069942",
+      "7657409144718183732",
+      "7657851624437665070",
+      "7657889510706128826",
+      "7658255622625922354",
+      "7658650591220075826",
+      "7661184598222687494",
+      "7662251858534157620",
+      "7662377320161873198",
+      "7666544308782255403",
+      "7666863919185064283",
+      "7668834052987784467",
+      "7668861287459212570",
+      "7671253467838696745",
+      "7671275418908999419",
+      "7671376941887025073",
+      "7672799303076777262",
+      "7673376389903762895",
+      "7675936675729591592",
+      "7675949950630448411",
+      "7676335888275623218",
+      "7677061772084649807",
+      "7677552585498168582",
+      "7681512629029915945",
+      "7682954995771719167",
+      "7683801910972878106",
+      "7684972153212587298",
+      "7685646949881580841",
+      "7685745818355629736",
+      "7685774259625007333",
+      "7686488564665912626",
+      "7686488764142685503",
+      "7686530260694732066",
+      "7687652722987781422",
+      "7688281824423329265",
+      "7688630803688918318",
+      "7689005697501179897",
+      "7689433470925376787",
+      "7689697766028879507",
+      "7690125617073586865",
+      "7690516349092711715",
+      "7690803974392314771",
+      "7691691121110515130",
+      "7691951826261789988",
+      "7692387289321770286",
+      "7693111158979003834",
+      "7693450781017591074",
+      "7693902023082825664",
+      "7693955340518106993",
+      "7694140963454782760",
+      "7694545868711611688",
+      "7695073906759420261",
+      "7695610699955462065",
+      "7696472548132850986",
+      "7696585286075125011",
+      "7696809745184771337",
+      "7697910925974981861",
+      "7697945898508155493",
+      "7697966368901123343",
+      "7698217352655146275",
+      "7698243061739242923",
+      "7698350008029990159",
+      "7698361604575890728",
+      "7698691868683342514",
+      "7698727528483147018",
+      "7698728335144160555",
+      "7698997017502043419",
+      "7699039130031068593",
+      "7699104562971479331",
+      "7699351226118311202",
+      "7699496342556609818",
+      "7699521912301380325",
+      "7699668901872930111",
+      "7699721561927288443",
+      "7699778070655290678",
+      "7700093372661204367",
+      "7700101898958900495",
+      "7700248247378791801",
+      "7700926672538730361",
+      "7701192045713107306",
+      "7701251581378956559",
+      "7701332201257960827",
+      "7701469783502697451",
+      "7701521873313631538",
+      "7701549991797525795",
+      "7701680099120139558",
+      "7702102872812473609",
+      "7702255186093443835",
+      "7702341323375293050",
+      "7702354150780556352",
+      "7702509745684401446",
+      "7703170716522313920",
+      "7703394811079920911",
+      "7703439581777883121",
+      "7703443718036049167",
+      "7703480779464117544",
+      "7703516028403338537",
+      "7703572738748796210",
+      "7703881167900444666",
+      "7704017247395859748",
+      "7704147659980477561",
+      "7704497268879084850",
+      "7704514173656501542",
+      "7704516873261518080",
+      "7704533634652397194",
+      "7704557313692011818",
+      "7704655895666121371",
+      "7704658287299480868",
+      "7704944575751687478",
+      "7704951802794785226",
+      "7704954966380743951",
+      "7704968045617270035",
+      "7704996854601125162",
+      "7705020329210465587",
+      "7705055858165681443",
+      "7705096187812056362",
+      "7705126378853341809",
+      "7705314967737699624",
+      "7705329659445005603",
+      "7705355681482954569",
+      "7705396480865242408",
+      "7705396611400142099",
+      "7705520898169720091",
+      "7705537813173712787",
+      "7705552640922488064",
+      "7705592858590850666",
+      "7705673659838369060",
+      "7705676959561097570",
+      "7705702037137152369",
+      "7705714039204138282",
+      "7705732554493660451",
+      "7705784815261355298",
+      "7706096634066153402"
+    ],
+    "not_in_known_set": [
+      "7636915997076770089",
+      "7637062054444141876",
+      "7645613014372710026",
+      "7645675251677809963",
+      "7646720550047560531",
+      "7648606793362410790",
+      "7649570409125383475",
+      "7649814497578251953",
+      "7651616119739964529",
+      "7652267273159314740",
+      "7652865876358334065",
+      "7654121980278363318",
+      "7656339177814069942",
+      "7657409144718183732",
+      "7657851624437665070",
+      "7657889510706128826",
+      "7658255622625922354",
+      "7658650591220075826",
+      "7661184598222687494",
+      "7662251858534157620",
+      "7662377320161873198",
+      "7666863919185064283",
+      "7668861287459212570",
+      "7671253467838696745",
+      "7671275418908999419",
+      "7671376941887025073",
+      "7672799303076777262",
+      "7673376389903762895",
+      "7675936675729591592",
+      "7675949950630448411",
+      "7676335888275623218",
+      "7677061772084649807",
+      "7677552585498168582",
+      "7681512629029915945",
+      "7682954995771719167",
+      "7683801910972878106",
+      "7684972153212587298",
+      "7685745818355629736",
+      "7685774259625007333",
+      "7686488564665912626",
+      "7686488764142685503",
+      "7686530260694732066",
+      "7687652722987781422",
+      "7688281824423329265",
+      "7688630803688918318",
+      "7689433470925376787",
+      "7689697766028879507",
+      "7690125617073586865",
+      "7690516349092711715",
+      "7690803974392314771",
+      "7691691121110515130",
+      "7691951826261789988",
+      "7692387289321770286",
+      "7693450781017591074",
+      "7693902023082825664",
+      "7693955340518106993",
+      "7694140963454782760",
+      "7694545868711611688",
+      "7695073906759420261",
+      "7695610699955462065",
+      "7696472548132850986",
+      "7696585286075125011",
+      "7696809745184771337",
+      "7697910925974981861",
+      "7697945898508155493",
+      "7697966368901123343",
+      "7698217352655146275",
+      "7698243061739242923",
+      "7698350008029990159",
+      "7698361604575890728",
+      "7698691868683342514",
+      "7698727528483147018",
+      "7698728335144160555",
+      "7698997017502043419",
+      "7699039130031068593",
+      "7699104562971479331",
+      "7699351226118311202",
+      "7699496342556609818",
+      "7699521912301380325",
+      "7699668901872930111",
+      "7699721561927288443",
+      "7699778070655290678",
+      "7700101898958900495",
+      "7700248247378791801",
+      "7701192045713107306",
+      "7701251581378956559",
+      "7701332201257960827",
+      "7701469783502697451",
+      "7701521873313631538",
+      "7701549991797525795",
+      "7701680099120139558",
+      "7702102872812473609",
+      "7702255186093443835",
+      "7702341323375293050",
+      "7702354150780556352",
+      "7702509745684401446",
+      "7703170716522313920",
+      "7703394811079920911",
+      "7703443718036049167",
+      "7703480779464117544",
+      "7703516028403338537",
+      "7703572738748796210",
+      "7703881167900444666",
+      "7704017247395859748",
+      "7704497268879084850",
+      "7704516873261518080",
+      "7704533634652397194",
+      "7704655895666121371",
+      "7704951802794785226",
+      "7704968045617270035",
+      "7704996854601125162",
+      "7705020329210465587",
+      "7705055858165681443",
+      "7705096187812056362",
+      "7705126378853341809",
+      "7705314967737699624",
+      "7705329659445005603",
+      "7705355681482954569",
+      "7705396480865242408",
+      "7705396611400142099",
+      "7705520898169720091",
+      "7705537813173712787",
+      "7705552640922488064",
+      "7705592858590850666",
+      "7705673659838369060",
+      "7705676959561097570",
+      "7705702037137152369",
+      "7705714039204138282",
+      "7705732554493660451",
+      "7705784815261355298",
+      "7706096634066153402"
+    ],
+    "in_known_set_found": [
+      "7666544308782255403",
+      "7668834052987784467",
+      "7685646949881580841",
+      "7689005697501179897",
+      "7693111158979003834",
+      "7700093372661204367",
+      "7700926672538730361",
+      "7703439581777883121",
+      "7704147659980477561",
+      "7704514173656501542",
+      "7704557313692011818",
+      "7704658287299480868",
+      "7704944575751687478",
+      "7704954966380743951"
+    ]
+  },
+  "high_signal_possibly_new": [
+    {
+      "title": "新手小白如何选择Agent？国内外10多款Agent实测！",
+      "author": "@知雪",
+      "video_id": "7699104562971479331",
+      "likes": "1187",
+      "time": "2周前",
+      "url": "https://www.douyin.com/video/7699104562971479331",
+      "why": "compare Agent incl Codex/WorkBuddy/GrokBot"
+    },
+    {
+      "title": "深度锐评 AI Agent 从夯到拉，到底用哪个？",
+      "author": "@大陆最强模匠",
+      "video_id": "7704017247395859748",
+      "likes": "1649",
+      "time": "5天前",
+      "url": "https://www.douyin.com/video/7704017247395859748",
+      "why": "compare Agent/WorkBuddy"
+    },
+    {
+      "title": "用Codex上架一个品烧了60%额度…",
+      "author": "@秋一（AI自动化）",
+      "video_id": "7701192045713107306",
+      "likes": "176",
+      "time": "1周前",
+      "url": "https://www.douyin.com/video/7701192045713107306",
+      "why": "Codex real case + cost_fail"
+    },
+    {
+      "title": "我让电脑上的 agent 们直接对话了",
+      "author": "@Jazzen Chen",
+      "video_id": "7705520898169720091",
+      "likes": "2199",
+      "time": "1天前",
+      "url": "https://www.douyin.com/video/7705520898169720091",
+      "why": "Codex/Claude multi-agent case"
+    },
+    {
+      "title": "WorkBuddy必装的8个Skill✨",
+      "author": "@时光漫记",
+      "video_id": "7704655895666121371",
+      "likes": "1.5万",
+      "time": "3天前",
+      "url": "https://www.douyin.com/video/7704655895666121371",
+      "why": "WorkBuddy Skills"
+    },
+    {
+      "title": "workbuddy 必装的8个skill",
+      "author": "@方老师AI skill",
+      "video_id": "7696809745184771337",
+      "likes": "4.1万",
+      "time": "3周前",
+      "url": "https://www.douyin.com/video/7696809745184771337",
+      "why": "WorkBuddy Skills viral"
+    },
+    {
+      "title": "WorkBuddy Skill 怎么上架赚钱？",
+      "author": "@夺冠AI落地",
+      "video_id": "7703881167900444666",
+      "likes": "220",
+      "time": "6天前",
+      "url": "https://www.douyin.com/video/7703881167900444666",
+      "why": "WorkBuddy Skills monetize"
+    },
+    {
+      "title": "如何用WorkBuddy操作你的浏览器！",
+      "author": "@刘橙绿（AI 版）",
+      "video_id": "7704968045617270035",
+      "likes": "1906",
+      "time": "3天前",
+      "url": "https://www.douyin.com/video/7704968045617270035",
+      "why": "WorkBuddy automation"
+    },
+    {
+      "title": "装完这5个skill，你的codex就能帮你自动剪视频",
+      "author": "@阿王加二",
+      "video_id": "7697945898508155493",
+      "likes": "6750",
+      "time": "3周前",
+      "url": "https://www.douyin.com/video/7697945898508155493",
+      "why": "Codex Skills automation"
+    },
+    {
+      "title": "Codex+Skills王炸！保姆级教程！",
+      "author": "@不吃辣的Chris",
+      "video_id": "7652865876358334065",
+      "likes": "10.8万",
+      "time": "4月前",
+      "url": "https://www.douyin.com/video/7652865876358334065",
+      "why": "Codex Skills tutorial (older but high signal)"
+    },
+    {
+      "title": "Grok Bot 实战：把小说漫剧渠道玩法交给 AI",
+      "author": "@非哥黑科技",
+      "video_id": "7698728335144160555",
+      "likes": "2378",
+      "time": "~2周前",
+      "url": "https://www.douyin.com/video/7698728335144160555",
+      "why": "creator homepage newer GrokBot case"
+    },
+    {
+      "title": "新手用 workbuddy的15个坑",
+      "author": "@生姜｜AI实战",
+      "video_id": "7699721561927288443",
+      "likes": "327",
+      "time": "~2周前",
+      "url": "https://www.douyin.com/video/7699721561927288443",
+      "why": "creator homepage WB pitfalls"
+    },
+    {
+      "title": "让WorkBuddy自动签到领积分",
+      "author": "@诗诗的Ai视界",
+      "video_id": "7702102872812473609",
+      "likes": "1296",
+      "time": "recent",
+      "url": "https://www.douyin.com/video/7702102872812473609",
+      "why": "creator homepage WB tip"
+    },
+    {
+      "title": "一集看懂Agent…Codex…Grok Bot",
+      "author": "@FredTalk",
+      "video_id": "7705329659445005603",
+      "likes": "121",
+      "time": "~2天前",
+      "url": "https://www.douyin.com/video/7705329659445005603",
+      "why": "creator homepage Agent overview"
+    },
+    {
+      "title": "不是吧？！Codex怎么又又又又更新了！",
+      "author": "@徐老师AI观察",
+      "video_id": "7699351226118311202",
+      "likes": "479",
+      "time": "~2周前",
+      "url": "https://www.douyin.com/video/7699351226118311202",
+      "why": "creator homepage Codex update"
+    },
+    {
+      "title": "省积分，反而更烧积分？WorkBuddy",
+      "author": "@徐老师AI观察",
+      "video_id": "7700101898958900495",
+      "likes": "400",
+      "time": "~2周前",
+      "url": "https://www.douyin.com/video/7700101898958900495",
+      "why": "creator homepage WB cost"
+    },
+    {
+      "title": "用Codex负责规划，WorkBuddy负责执行",
+      "author": "@小樱学姐聊AI",
+      "video_id": "7702255186093443835",
+      "likes": "129",
+      "time": "1周前",
+      "url": "https://www.douyin.com/video/7702255186093443835",
+      "why": "Codex+WorkBuddy dual agent"
+    },
+    {
+      "title": "AI入门第33课Codex、WorkBuddy等四个工具区别",
+      "author": "@匪叔AI笔记",
+      "video_id": "7701251581378956559",
+      "likes": "42",
+      "time": "1周前",
+      "url": "https://www.douyin.com/video/7701251581378956559",
+      "why": "compare Codex/WorkBuddy"
+    },
+    {
+      "title": "codex自动上架保姆教程",
+      "author": "@富富AI跨境",
+      "video_id": "7701549991797525795",
+      "likes": "1806",
+      "time": "1周前",
+      "url": "https://www.douyin.com/video/7701549991797525795",
+      "why": "Codex automation case"
+    },
+    {
+      "title": "超全Ai视频工作流…claude+codex+seedance",
+      "author": "@情报马（ai资讯版）",
+      "video_id": "7705537813173712787",
+      "likes": "875",
+      "time": "1天前",
+      "url": "https://www.douyin.com/video/7705537813173712787",
+      "why": "Codex workflow case"
+    }
+  ],
+  "keywords": [
+    {
+      "keyword": "Codex普通人",
+      "search_url": "https://www.douyin.com/search/Codex%E6%99%AE%E9%80%9A%E4%BA%BA?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "6分钟：普通人也能用上codex（安装教程）…",
+          "author": "@Ai林爻",
+          "video_id": "7652267273159314740",
+          "likes": "16.6万",
+          "time": "4月前",
+          "duration": "06:00",
+          "url": "https://www.douyin.com/video/7652267273159314740",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "#大模型 #研究生 #论文 #科研 #codex",
+          "author": "@野老板",
+          "video_id": "7698691868683342514",
+          "likes": "4003",
+          "time": "2周前",
+          "duration": "05:37",
+          "url": "https://www.douyin.com/video/7698691868683342514",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "当你用上Codex，你会打开新世界的大门…",
+          "author": "@杜恩泽·AI分享与思考",
+          "video_id": "7662377320161873198",
+          "likes": "7.1万",
+          "time": "3月前",
+          "duration": "01:33",
+          "url": "https://www.douyin.com/video/7662377320161873198",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "人人都能看懂的codex更新版 喂饭级教程",
+          "author": "@一只野生龙",
+          "video_id": "7704557313692011818",
+          "likes": "3.3万",
+          "time": "4天前",
+          "duration": "05:24",
+          "url": "https://www.douyin.com/video/7704557313692011818",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 5,
+          "title": "你一定要用上codex #普通人的ai发布会",
+          "author": "@话多多（AI版）",
+          "video_id": "7700926672538730361",
+          "likes": "8.2万",
+          "time": "1周前",
+          "duration": "00:43",
+          "url": "https://www.douyin.com/video/7700926672538730361",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 6,
+          "title": "Codex喂饭安装教程 不注册免费装！",
+          "author": "@浩兰德",
+          "video_id": "7695073906759420261",
+          "likes": "4.4万",
+          "time": "3周前",
+          "duration": "03:33",
+          "url": "https://www.douyin.com/video/7695073906759420261",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "我和codex真厉害 #博士生日常",
+          "author": "@脸脸不加冰丶",
+          "video_id": "7685646949881580841",
+          "likes": "23.5万",
+          "time": "1月前",
+          "duration": "00:10",
+          "url": "https://www.douyin.com/video/7685646949881580841",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 8,
+          "title": "人人都能看懂的16分钟Codex速通教程",
+          "author": "@谢慢慢97",
+          "video_id": "7689005697501179897",
+          "likes": "48.8万",
+          "time": "1月前",
+          "duration": "16:15",
+          "url": "https://www.douyin.com/video/7689005697501179897",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 9,
+          "title": "Codex 自动剪辑保姆级教程，它来了！",
+          "author": "@Dragon的Al视界",
+          "video_id": "7690516349092711715",
+          "likes": "7478",
+          "time": "1月前",
+          "duration": "19:39",
+          "url": "https://www.douyin.com/video/7690516349092711715",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "用 Codex 写代码的真实写照…每一步都不对",
+          "author": "@小Y在coding",
+          "video_id": "7698727528483147018",
+          "likes": "3.4万",
+          "time": "2周前",
+          "duration": "00:55",
+          "url": "https://www.douyin.com/video/7698727528483147018",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "如何用codex赚钱落地版 #普通人学ai",
+          "author": "@林昭芮",
+          "video_id": "7671376941887025073",
+          "likes": "779",
+          "time": "3月前",
+          "duration": "01:52",
+          "url": "https://www.douyin.com/video/7671376941887025073",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "codex 保姆级安装教程！…CC Switch接入DeepSeek",
+          "author": "@迪达拉AI",
+          "video_id": "7704147659980477561",
+          "likes": "6664",
+          "time": "5天前",
+          "duration": "06:51",
+          "url": "https://www.douyin.com/video/7704147659980477561",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": true
+        }
+      ]
+    },
+    {
+      "keyword": "Codex自动化",
+      "search_url": "https://www.douyin.com/search/Codex%E8%87%AA%E5%8A%A8%E5%8C%96?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "Codex 自动剪辑保姆级教程，它来了！",
+          "author": "@Dragon的Al视界",
+          "video_id": "7690516349092711715",
+          "likes": "7478",
+          "time": "1月前",
+          "duration": "19:39",
+          "url": "https://www.douyin.com/video/7690516349092711715",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "Codex 自动化跑千川实测+全套 API 授权搭建教程！！",
+          "author": "@Dennn.",
+          "video_id": "7658255622625922354",
+          "likes": "2721",
+          "time": "4月前",
+          "duration": "06:11",
+          "url": "https://www.douyin.com/video/7658255622625922354",
+          "tags": [
+            "Codex",
+            "tutorial",
+            "case"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "Tk的达人板块已经用Codex完全自动化",
+          "author": "@体验官花花",
+          "video_id": "7695610699955462065",
+          "likes": "2302",
+          "time": "4周前",
+          "duration": "02:17",
+          "url": "https://www.douyin.com/video/7695610699955462065",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "用codex自动化效果全案，ai方案设计",
+          "author": "@懂老师",
+          "video_id": "7651616119739964529",
+          "likes": "7032",
+          "time": "4月前",
+          "duration": "01:23",
+          "url": "https://www.douyin.com/video/7651616119739964529",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "codex自动抓取爆款🈶，解放双手",
+          "author": "@阿汪🍡✨",
+          "video_id": "7681512629029915945",
+          "likes": "239",
+          "time": "2月前",
+          "duration": "03:01",
+          "url": "https://www.douyin.com/video/7681512629029915945",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 6,
+          "title": "装完这5个skill，你的codex就能帮你自动剪视频",
+          "author": "@阿王加二",
+          "video_id": "7697945898508155493",
+          "likes": "6750",
+          "time": "3周前",
+          "duration": "01:47",
+          "url": "https://www.douyin.com/video/7697945898508155493",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "让 Codex 自动帮你干活！三步搞定电脑自动化",
+          "author": "@会偷懒的程序员阿语",
+          "video_id": "7646720550047560531",
+          "likes": "8360",
+          "time": "5月前",
+          "duration": "00:44",
+          "url": "https://www.douyin.com/video/7646720550047560531",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "用codex完善全链路自动聊天工具！",
+          "author": "@chenww9",
+          "video_id": "7657409144718183732",
+          "likes": "208",
+          "time": "4月前",
+          "duration": "06:28",
+          "url": "https://www.douyin.com/video/7657409144718183732",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "codex自动上架保姆教程",
+          "author": "@富富AI跨境",
+          "video_id": "7701549991797525795",
+          "likes": "1806",
+          "time": "1周前",
+          "duration": "01:23",
+          "url": "https://www.douyin.com/video/7701549991797525795",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "封神Codex x Photoshop打通设计全自动",
+          "author": "@Flat招财猫",
+          "video_id": "7648606793362410790",
+          "likes": "730",
+          "time": "5月前",
+          "duration": "01:22",
+          "url": "https://www.douyin.com/video/7648606793362410790",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "codex-剪映自动剪辑 跑通！",
+          "author": "@阿汪🍡✨",
+          "video_id": "7677552585498168582",
+          "likes": "1341",
+          "time": "2月前",
+          "duration": "01:49",
+          "url": "https://www.douyin.com/video/7677552585498168582",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "超全Ai视频工作流…claude+codex+seedance",
+          "author": "@情报马（ai资讯版）",
+          "video_id": "7705537813173712787",
+          "likes": "875",
+          "time": "1天前",
+          "duration": "04:49",
+          "url": "https://www.douyin.com/video/7705537813173712787",
+          "tags": [
+            "Codex",
+            "case"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "Codex Skills",
+      "search_url": "https://www.douyin.com/search/Codex%20Skills?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "Codex+Skills王炸！保姆级教程！纯实战干货",
+          "author": "@不吃辣的Chris",
+          "video_id": "7652865876358334065",
+          "likes": "10.8万",
+          "time": "4月前",
+          "duration": "09:10",
+          "url": "https://www.douyin.com/video/7652865876358334065",
+          "tags": [
+            "Codex",
+            "tutorial",
+            "case"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "Codex必装的神级Skills",
+          "author": "@周泽晨丨AI 员工上岗",
+          "video_id": "7686488564665912626",
+          "likes": "6.3万",
+          "time": "1月前",
+          "duration": "02:37",
+          "url": "https://www.douyin.com/video/7686488564665912626",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "Codex爽用！必备这6个实用skill",
+          "author": "@Lulu的AI野路子",
+          "video_id": "7677061772084649807",
+          "likes": "3.8万",
+          "time": "2月前",
+          "duration": "03:10",
+          "url": "https://www.douyin.com/video/7677061772084649807",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "Codex做电商图，必装的2个Skills",
+          "author": "@芒果林奇",
+          "video_id": "7675949950630448411",
+          "likes": "5255",
+          "time": "2月前",
+          "duration": "01:29",
+          "url": "https://www.douyin.com/video/7675949950630448411",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "codex超实用论文skill分享",
+          "author": "@小咕是咸鱼🐟",
+          "video_id": "7654121980278363318",
+          "likes": "1.5万",
+          "time": "4月前",
+          "duration": "02:45",
+          "url": "https://www.douyin.com/video/7654121980278363318",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 6,
+          "title": "三个Codex神级Skill，用上直接拉开一个段位",
+          "author": "@老麦不废话",
+          "video_id": "7649570409125383475",
+          "likes": "3.6万",
+          "time": "4月前",
+          "duration": "01:17",
+          "url": "https://www.douyin.com/video/7649570409125383475",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "Codex Skill 技能…怎么自己创建skill",
+          "author": "@郑一环",
+          "video_id": "7645675251677809963",
+          "likes": "1698",
+          "time": "5月前",
+          "duration": "04:11",
+          "url": "https://www.douyin.com/video/7645675251677809963",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "codex必装skills 能解决问题的skill",
+          "author": "@浩哥咚咚咚",
+          "video_id": "7661184598222687494",
+          "likes": "1.7万",
+          "time": "3月前",
+          "duration": "05:51",
+          "url": "https://www.douyin.com/video/7661184598222687494",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "新手小白安装这六个 SKills 就行够了！",
+          "author": "@FredTalk",
+          "video_id": "7636915997076770089",
+          "likes": "7.6万",
+          "time": "6月前",
+          "duration": "06:20",
+          "url": "https://www.douyin.com/video/7636915997076770089",
+          "tags": [
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "Codex skill 给codex装上这10个skill",
+          "author": "@Danny",
+          "video_id": "7705126378853341809",
+          "likes": "66",
+          "time": "2天前",
+          "duration": "03:39",
+          "url": "https://www.douyin.com/video/7705126378853341809",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "我把设计经验做成UI Skill…Codex UI Skill",
+          "author": "@西瓜同学🍉",
+          "video_id": "7662251858534157620",
+          "likes": "1.2万",
+          "time": "3月前",
+          "duration": "03:05",
+          "url": "https://www.douyin.com/video/7662251858534157620",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "Codex必装的神级Skills（另一条）",
+          "author": "@周泽晨丨AI 员工上岗",
+          "video_id": "7686488764142685503",
+          "likes": "3.7万",
+          "time": "1月前",
+          "duration": "02:35",
+          "url": "https://www.douyin.com/video/7686488764142685503",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "Codex真实案例",
+      "search_url": "https://www.douyin.com/search/Codex%E7%9C%9F%E5%AE%9E%E6%A1%88%E4%BE%8B?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "#大模型 #研究生 #论文 #科研 #codex",
+          "author": "@野老板",
+          "video_id": "7698691868683342514",
+          "likes": "4003",
+          "time": "2周前",
+          "duration": "05:37",
+          "url": "https://www.douyin.com/video/7698691868683342514",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "用Codex上架一个品烧了60%额度…",
+          "author": "@秋一（AI自动化）",
+          "video_id": "7701192045713107306",
+          "likes": "176",
+          "time": "1周前",
+          "duration": "05:18",
+          "url": "https://www.douyin.com/video/7701192045713107306",
+          "tags": [
+            "Codex",
+            "cost_fail"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "用 Codex 写代码的真实写照…",
+          "author": "@小Y在coding",
+          "video_id": "7698727528483147018",
+          "likes": "3.4万",
+          "time": "2周前",
+          "duration": "00:55",
+          "url": "https://www.douyin.com/video/7698727528483147018",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "我让电脑上的 agent 们直接对话了…Claude/Codex",
+          "author": "@Jazzen Chen",
+          "video_id": "7705520898169720091",
+          "likes": "2199",
+          "time": "1天前",
+          "duration": "02:31",
+          "url": "https://www.douyin.com/video/7705520898169720091",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "人人都能看懂的codex更新版 喂饭级教程",
+          "author": "@一只野生龙",
+          "video_id": "7704557313692011818",
+          "likes": "3.3万",
+          "time": "4天前",
+          "duration": "05:24",
+          "url": "https://www.douyin.com/video/7704557313692011818",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 6,
+          "title": "Codex 的缺点有哪些？真的很影响使用。",
+          "author": "@小Y在coding",
+          "video_id": "7673376389903762895",
+          "likes": "614",
+          "time": "2月前",
+          "duration": "05:22",
+          "url": "https://www.douyin.com/video/7673376389903762895",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "突发紧急状况，codex大规模封号！",
+          "author": "@山海有灵AI",
+          "video_id": "7705355681482954569",
+          "likes": "496",
+          "time": "2天前",
+          "duration": "00:32",
+          "url": "https://www.douyin.com/video/7705355681482954569",
+          "tags": [
+            "Codex",
+            "cost_fail"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "突发 ! Codex大规模封号",
+          "author": "@肥羊Marks",
+          "video_id": "7705676959561097570",
+          "likes": "79",
+          "time": "1天前",
+          "duration": "00:45",
+          "url": "https://www.douyin.com/video/7705676959561097570",
+          "tags": [
+            "Codex",
+            "cost_fail"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "Open AI终于对大陆用户动手了？ #codex #封号",
+          "author": "@小刘AiGC",
+          "video_id": "7705396611400142099",
+          "likes": "507",
+          "time": "1天前",
+          "duration": "00:34",
+          "url": "https://www.douyin.com/video/7705396611400142099",
+          "tags": [
+            "Codex",
+            "cost_fail"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "codex破甲，挖掘codex的潜力",
+          "author": "@王同学的AI 笔记",
+          "video_id": "7656339177814069942",
+          "likes": "6874",
+          "time": "4月前",
+          "duration": "00:47",
+          "url": "https://www.douyin.com/video/7656339177814069942",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "Codex 今天重置了吗？…封号问题…",
+          "author": "@懒洋洋",
+          "video_id": "7705702037137152369",
+          "likes": "4",
+          "time": "1天前",
+          "duration": "00:54",
+          "url": "https://www.douyin.com/video/7705702037137152369",
+          "tags": [
+            "Codex",
+            "cost_fail"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "Codex零基础使用教程他来了！",
+          "author": "@知雪",
+          "video_id": "7649814497578251953",
+          "likes": "35.9万",
+          "time": "4月前",
+          "duration": "21:28",
+          "url": "https://www.douyin.com/video/7649814497578251953",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "腾讯WorkBuddy",
+      "search_url": "https://www.douyin.com/search/%E8%85%BE%E8%AE%AFWorkBuddy?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "深度锐评 AI Agent 从夯到拉，到底用哪个？",
+          "author": "@大陆最强模匠",
+          "video_id": "7704017247395859748",
+          "likes": "1649",
+          "time": "5天前",
+          "duration": "03:11",
+          "url": "https://www.douyin.com/video/7704017247395859748",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "腾讯发布 Buddy One…WorkBuddy…",
+          "author": "@晚点LatePost",
+          "video_id": "7704516873261518080",
+          "likes": "1453",
+          "time": "4天前",
+          "duration": "02:58",
+          "url": "https://www.douyin.com/video/7704516873261518080",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "一个视频讲清楚WorkBuddy 豆包工作",
+          "author": "@涛的ai实验室",
+          "video_id": "7698361604575890728",
+          "likes": "329",
+          "time": "2周前",
+          "duration": "07:04",
+          "url": "https://www.douyin.com/video/7698361604575890728",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "双11…我开发了一个 Skill…#腾讯WorkBuddy",
+          "author": "@FUN科技",
+          "video_id": "7705396480865242408",
+          "likes": "8465",
+          "time": "1天前",
+          "duration": "02:31",
+          "url": "https://www.douyin.com/video/7705396480865242408",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "腾讯偷偷开放17门AI课…#workbuddy从业者",
+          "author": "@老幺（全域电商操盘）",
+          "video_id": "7704533634652397194",
+          "likes": "5688",
+          "time": "4天前",
+          "duration": "01:51",
+          "url": "https://www.douyin.com/video/7704533634652397194",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 6,
+          "title": "腾讯全家桶来了！ #workbuddy #buddyone",
+          "author": "@龙飞商业笔记",
+          "video_id": "7702354150780556352",
+          "likes": "111",
+          "time": "1周前",
+          "duration": "01:20",
+          "url": "https://www.douyin.com/video/7702354150780556352",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "腾讯workBuddy好用吗是不是不行？",
+          "author": "@后生电商",
+          "video_id": "7702341323375293050",
+          "likes": "464",
+          "time": "1周前",
+          "duration": "02:05",
+          "url": "https://www.douyin.com/video/7702341323375293050",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "不要再纠结codex和claude了…腾讯的WorkBuddy",
+          "author": "@小左玩Ai",
+          "video_id": "7645613014372710026",
+          "likes": "8096",
+          "time": "5月前",
+          "duration": "01:49",
+          "url": "https://www.douyin.com/video/7645613014372710026",
+          "tags": [
+            "Codex",
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "WorkBuddy教育公益版正式上线！",
+          "author": "@腾讯WorkBuddy",
+          "video_id": "7698217352655146275",
+          "likes": "2173",
+          "time": "3周前",
+          "duration": "01:35",
+          "url": "https://www.douyin.com/video/7698217352655146275",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "混元Hy4正式版上线WorkBuddy，对战DeepSeek",
+          "author": "@碳基生物退役指南",
+          "video_id": "7705055858165681443",
+          "likes": "465",
+          "time": "2天前",
+          "duration": "04:31",
+          "url": "https://www.douyin.com/video/7705055858165681443",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "WorkBuddy 多个 Agent 协同出考试题",
+          "author": "@王老师的记录课",
+          "video_id": "7637062054444141876",
+          "likes": "44",
+          "time": "6月前",
+          "duration": "08:03",
+          "url": "https://www.douyin.com/video/7637062054444141876",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "DeepSeekHarness和WorkBuddy谁更强",
+          "author": "@硅基比特",
+          "video_id": "7699668901872930111",
+          "likes": "173",
+          "time": "2周前",
+          "duration": "10:20",
+          "url": "https://www.douyin.com/video/7699668901872930111",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "WorkBuddy实战",
+      "search_url": "https://www.douyin.com/search/WorkBuddy%E5%AE%9E%E6%88%98?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "100个WorkBuddy实战技能分享…",
+          "author": "@辰哥",
+          "video_id": "7704944575751687478",
+          "likes": "4832",
+          "time": "3天前",
+          "duration": "16:13",
+          "url": "https://www.douyin.com/video/7704944575751687478",
+          "tags": [
+            "WorkBuddy",
+            "case"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 2,
+          "title": "WorkBuddy+电商Skill 0基础教程来了！",
+          "author": "@棒棒闲不住",
+          "video_id": "7686530260694732066",
+          "likes": "116",
+          "time": "1月前",
+          "duration": "04:57",
+          "url": "https://www.douyin.com/video/7686530260694732066",
+          "tags": [
+            "WorkBuddy",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "「保姆级」WorkBuddy零基础从入门到精通10集全攻略",
+          "author": "@查老师并不渣",
+          "video_id": "7666544308782255403",
+          "likes": "4.5万",
+          "time": "3月前",
+          "duration": "06:34",
+          "url": "https://www.douyin.com/video/7666544308782255403",
+          "tags": [
+            "WorkBuddy",
+            "tutorial"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 4,
+          "title": "一个视频搞懂WorkBuddy完整工作流+实战技巧！",
+          "author": "@AIGC妮妮",
+          "video_id": "7693450781017591074",
+          "likes": "563",
+          "time": "1月前",
+          "duration": "01:59:44",
+          "url": "https://www.douyin.com/video/7693450781017591074",
+          "tags": [
+            "WorkBuddy",
+            "case"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "WorkBuddy丨新手入门教学",
+          "author": "@非哥黑科技",
+          "video_id": "7668834052987784467",
+          "likes": "10.2万",
+          "time": "3月前",
+          "duration": "12:33",
+          "url": "https://www.douyin.com/video/7668834052987784467",
+          "tags": [
+            "WorkBuddy",
+            "tutorial"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 6,
+          "title": "Workbuddy的36个skills跑通亚马逊运营全链路",
+          "author": "@跨境小K",
+          "video_id": "7698350008029990159",
+          "likes": "2390",
+          "time": "2周前",
+          "duration": "01:32",
+          "url": "https://www.douyin.com/video/7698350008029990159",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "AI 剪辑 Motion模板，喂饭级教程来了！ #Workbuddy",
+          "author": "@阿杜Next",
+          "video_id": "7705673659838369060",
+          "likes": "1852",
+          "time": "1天前",
+          "duration": "07:14",
+          "url": "https://www.douyin.com/video/7705673659838369060",
+          "tags": [
+            "WorkBuddy",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "混元Hy4正式版上线WorkBuddy，对战DeepSeek",
+          "author": "@碳基生物退役指南",
+          "video_id": "7705055858165681443",
+          "likes": "465",
+          "time": "2天前",
+          "duration": "04:31",
+          "url": "https://www.douyin.com/video/7705055858165681443",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "不要再纠结codex和claude了…WorkBuddy",
+          "author": "@小左玩Ai",
+          "video_id": "7645613014372710026",
+          "likes": "8096",
+          "time": "5月前",
+          "duration": "01:49",
+          "url": "https://www.douyin.com/video/7645613014372710026",
+          "tags": [
+            "Codex",
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "装好WorkBuddy，第一件事就做这个",
+          "author": "@生姜｜AI实战",
+          "video_id": "7693111158979003834",
+          "likes": "3.3万",
+          "time": "1月前",
+          "duration": "02:54",
+          "url": "https://www.douyin.com/video/7693111158979003834",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 11,
+          "title": "如何用WorkBuddy操作你的浏览器！解锁六种用法",
+          "author": "@刘橙绿（AI 版）",
+          "video_id": "7704968045617270035",
+          "likes": "1906",
+          "time": "3天前",
+          "duration": "04:02",
+          "url": "https://www.douyin.com/video/7704968045617270035",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "workbuddy新手最常见的五大天坑",
+          "author": "@牧天（为实战点赞）",
+          "video_id": "7697910925974981861",
+          "likes": "235",
+          "time": "3周前",
+          "duration": "12:03",
+          "url": "https://www.douyin.com/video/7697910925974981861",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "WorkBuddy Skills",
+      "search_url": "https://www.douyin.com/search/WorkBuddy%20Skills?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "WorkBuddy 必装的 8 个 Skill",
+          "author": "@旗哥聊AI",
+          "video_id": "7699496342556609818",
+          "likes": "1808",
+          "time": "2周前",
+          "duration": "01:50",
+          "url": "https://www.douyin.com/video/7699496342556609818",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "WorkBuddy Skill 怎么上架赚钱？",
+          "author": "@夺冠AI落地",
+          "video_id": "7703881167900444666",
+          "likes": "220",
+          "time": "6天前",
+          "duration": "04:15",
+          "url": "https://www.douyin.com/video/7703881167900444666",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "100个WorkBuddy实战技能分享…",
+          "author": "@辰哥",
+          "video_id": "7704944575751687478",
+          "likes": "4832",
+          "time": "3天前",
+          "duration": "16:13",
+          "url": "https://www.douyin.com/video/7704944575751687478",
+          "tags": [
+            "WorkBuddy",
+            "case"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 4,
+          "title": "workbuddy必装技能，6大神器",
+          "author": "@指北Agent",
+          "video_id": "7703516028403338537",
+          "likes": "1489",
+          "time": "6天前",
+          "duration": "02:16",
+          "url": "https://www.douyin.com/video/7703516028403338537",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "GitHub上的skill，怎么在workbuddy里下载",
+          "author": "@龙long学长",
+          "video_id": "7696472548132850986",
+          "likes": "1000",
+          "time": "3周前",
+          "duration": "01:10",
+          "url": "https://www.douyin.com/video/7696472548132850986",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 6,
+          "title": "workbuddy 必装的8个skill",
+          "author": "@方老师AI skill",
+          "video_id": "7696809745184771337",
+          "likes": "4.1万",
+          "time": "3周前",
+          "duration": "01:46",
+          "url": "https://www.douyin.com/video/7696809745184771337",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "【第二十二期】如何让AI自动安装Skill…Workbuddy",
+          "author": "@智体Log",
+          "video_id": "7701521873313631538",
+          "likes": "276",
+          "time": "1周前",
+          "duration": "00:47",
+          "url": "https://www.douyin.com/video/7701521873313631538",
+          "tags": [
+            "WorkBuddy",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "aWorkBuddy 搭建个人专用skill",
+          "author": "@众创AI",
+          "video_id": "7658650591220075826",
+          "likes": "249",
+          "time": "4月前",
+          "duration": "05:55",
+          "url": "https://www.douyin.com/video/7658650591220075826",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "盘点WorkBuddy好用的的8个Skill",
+          "author": "@大铁锤（AI版）",
+          "video_id": "7703480779464117544",
+          "likes": "326",
+          "time": "1周前",
+          "duration": "01:38",
+          "url": "https://www.douyin.com/video/7703480779464117544",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "skill也能申请变现？我把WorkBuddy上传流程走一遍",
+          "author": "@向阳AI",
+          "video_id": "7703443718036049167",
+          "likes": "215",
+          "time": "1周前",
+          "duration": "01:07",
+          "url": "https://www.douyin.com/video/7703443718036049167",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "WorkBuddy必装的8个Skill✨",
+          "author": "@时光漫记",
+          "video_id": "7704655895666121371",
+          "likes": "1.5万",
+          "time": "3天前",
+          "duration": "01:32",
+          "url": "https://www.douyin.com/video/7704655895666121371",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "用Workbuddy加载skill做各类型打斗",
+          "author": "@飞驰影漫社",
+          "video_id": "7666863919185064283",
+          "likes": "143",
+          "time": "3月前",
+          "duration": "03:26",
+          "url": "https://www.douyin.com/video/7666863919185064283",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "WorkBuddy自动化",
+      "search_url": "https://www.douyin.com/search/WorkBuddy%E8%87%AA%E5%8A%A8%E5%8C%96?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "100个WorkBuddy实战技能分享…电商自动化",
+          "author": "@辰哥",
+          "video_id": "7704944575751687478",
+          "likes": "4832",
+          "time": "3天前",
+          "duration": "16:13",
+          "url": "https://www.douyin.com/video/7704944575751687478",
+          "tags": [
+            "WorkBuddy",
+            "case"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 2,
+          "title": "aWorkbuddy 全自动操作浏览器",
+          "author": "@众创AI",
+          "video_id": "7671253467838696745",
+          "likes": "88",
+          "time": "3月前",
+          "duration": "02:55",
+          "url": "https://www.douyin.com/video/7671253467838696745",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "大家想要的WorkBuddy网页自动化功能它来了",
+          "author": "@独立工作者",
+          "video_id": "7702509745684401446",
+          "likes": "34",
+          "time": "1周前",
+          "duration": "02:10",
+          "url": "https://www.douyin.com/video/7702509745684401446",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "用Codex负责规划…WorkBuddy负责执行…双Agent",
+          "author": "@小樱学姐聊AI",
+          "video_id": "7702255186093443835",
+          "likes": "129",
+          "time": "1周前",
+          "duration": "01:23",
+          "url": "https://www.douyin.com/video/7702255186093443835",
+          "tags": [
+            "Codex",
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "两个 Skill 把电脑变成自媒体流水线…WorkBuddy",
+          "author": "@旗哥聊AI",
+          "video_id": "7697966368901123343",
+          "likes": "1271",
+          "time": "3周前",
+          "duration": "01:36",
+          "url": "https://www.douyin.com/video/7697966368901123343",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 6,
+          "title": "如何用WorkBuddy操作你的浏览器！解锁六种用法",
+          "author": "@刘橙绿（AI 版）",
+          "video_id": "7704968045617270035",
+          "likes": "1906",
+          "time": "3天前",
+          "duration": "04:02",
+          "url": "https://www.douyin.com/video/7704968045617270035",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "自动开具发票 #WorkBuddy财税超能力",
+          "author": "@AI财税笔记",
+          "video_id": "7682954995771719167",
+          "likes": "165",
+          "time": "2月前",
+          "duration": "00:54",
+          "url": "https://www.douyin.com/video/7682954995771719167",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "腾讯 WorkBuddy…课程 8 自动化",
+          "author": "@米筐鱼🛫",
+          "video_id": "7672799303076777262",
+          "likes": "4",
+          "time": "2月前",
+          "duration": "26:57",
+          "url": "https://www.douyin.com/video/7672799303076777262",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "workbuddy 第4集｜…封装技能和使用自动化",
+          "author": "@阿川.AI",
+          "video_id": "7657889510706128826",
+          "likes": "262",
+          "time": "4月前",
+          "duration": "04:50",
+          "url": "https://www.douyin.com/video/7657889510706128826",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "workbuddy 如何实现自动化视频剪辑？",
+          "author": "@夏天（AI工作流）",
+          "video_id": "7692387289321770286",
+          "likes": "136",
+          "time": "1月前",
+          "duration": "01:08",
+          "url": "https://www.douyin.com/video/7692387289321770286",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "WorkBuddy 外贸批量邮件实操教程",
+          "author": "@大飞哥软件自习室",
+          "video_id": "7698997017502043419",
+          "likes": "10",
+          "time": "2周前",
+          "duration": "08:24",
+          "url": "https://www.douyin.com/video/7698997017502043419",
+          "tags": [
+            "WorkBuddy",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "WorkBuddy 自动化工作流 5 步走",
+          "author": "@何公子",
+          "video_id": "7693955340518106993",
+          "likes": "39",
+          "time": "1月前",
+          "duration": "01:48",
+          "url": "https://www.douyin.com/video/7693955340518106993",
+          "tags": [
+            "WorkBuddy",
+            "case"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "AI Agent怎么选",
+      "search_url": "https://www.douyin.com/search/AI%20Agent%E6%80%8E%E4%B9%88%E9%80%89?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "新手小白如何选择Agent？国内外10多款Agent实测！",
+          "author": "@知雪",
+          "video_id": "7699104562971479331",
+          "likes": "1187",
+          "time": "2周前",
+          "duration": "15:44",
+          "url": "https://www.douyin.com/video/7699104562971479331",
+          "tags": [
+            "case"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "5min带你搞懂 Agent 评测体系",
+          "author": "@Harbor404",
+          "video_id": "7696585286075125011",
+          "likes": "2034",
+          "time": "3周前",
+          "duration": "05:42",
+          "url": "https://www.douyin.com/video/7696585286075125011",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "选Agent?生产型看模型/生活型看生态",
+          "author": "@菲戈传输",
+          "video_id": "7690803974392314771",
+          "likes": "1.7万",
+          "time": "1月前",
+          "duration": "05:20",
+          "url": "https://www.douyin.com/video/7690803974392314771",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "Vibe知识大赏 | Agent到底是啥？",
+          "author": "@咔哒阿柠",
+          "video_id": "7703394811079920911",
+          "likes": "2.0万",
+          "time": "1周前",
+          "duration": "04:41",
+          "url": "https://www.douyin.com/video/7703394811079920911",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "火爆全网的三款Personal Agent的深度盘点",
+          "author": "@松松同学",
+          "video_id": "7699778070655290678",
+          "likes": "1723",
+          "time": "2周前",
+          "duration": "06:28",
+          "url": "https://www.douyin.com/video/7699778070655290678",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 6,
+          "title": "6款Agent，到底选谁？",
+          "author": "@徐老师AI观察",
+          "video_id": "7704514173656501542",
+          "likes": "4669",
+          "time": "4天前",
+          "duration": "07:39",
+          "url": "https://www.douyin.com/video/7704514173656501542",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": true
+        },
+        {
+          "rank": 7,
+          "title": "AI入门第33课Codex、WorkBuddy等四个工具区别",
+          "author": "@匪叔AI笔记",
+          "video_id": "7701251581378956559",
+          "likes": "42",
+          "time": "1周前",
+          "duration": "09:22",
+          "url": "https://www.douyin.com/video/7701251581378956559",
+          "tags": [
+            "Codex",
+            "WorkBuddy",
+            "compare",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "写代码的 AI 工具，我从夯到拉排了一遍",
+          "author": "@A学长",
+          "video_id": "7701680099120139558",
+          "likes": "54",
+          "time": "1周前",
+          "duration": "02:22",
+          "url": "https://www.douyin.com/video/7701680099120139558",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "新手怎么选Agent？",
+          "author": "@40有点惑",
+          "video_id": "7694545868711611688",
+          "likes": "3115",
+          "time": "1月前",
+          "duration": "01:34",
+          "url": "https://www.douyin.com/video/7694545868711611688",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "10款热门AI Agent，从夯到拉排列",
+          "author": "@方木聊ai",
+          "video_id": "7699039130031068593",
+          "likes": "327",
+          "time": "2周前",
+          "duration": "05:00",
+          "url": "https://www.douyin.com/video/7699039130031068593",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "deepseek最适配那一套harnes…claude/codex",
+          "author": "@情报马（ai资讯版）",
+          "video_id": "7701469783502697451",
+          "likes": "1685",
+          "time": "1周前",
+          "duration": "14:51",
+          "url": "https://www.douyin.com/video/7701469783502697451",
+          "tags": [
+            "Codex"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "五花八门的Agent到底该用哪个？",
+          "author": "@周泽晨丨AI 员工上岗",
+          "video_id": "7689433470925376787",
+          "likes": "190",
+          "time": "1月前",
+          "duration": "05:12",
+          "url": "https://www.douyin.com/video/7689433470925376787",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "普通人如何使用AI Agent",
+      "search_url": "https://www.douyin.com/search/%E6%99%AE%E9%80%9A%E4%BA%BA%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8AI%20Agent?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "通俗易懂地讲解什么是Agent？从0到1搭建",
+          "author": "@洪涛同学LovTech",
+          "video_id": "7675936675729591592",
+          "likes": "4.9万",
+          "time": "2月前",
+          "duration": "15:06",
+          "url": "https://www.douyin.com/video/7675936675729591592",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "一条视频讲清楚，agent是什么？",
+          "author": "@宅不住的AI",
+          "video_id": "7657851624437665070",
+          "likes": "1.5万",
+          "time": "4月前",
+          "duration": "02:55",
+          "url": "https://www.douyin.com/video/7657851624437665070",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "Vibe知识大赏 | Agent到底是啥？",
+          "author": "@咔哒阿柠",
+          "video_id": "7703394811079920911",
+          "likes": "2.0万",
+          "time": "1周前",
+          "duration": "04:41",
+          "url": "https://www.douyin.com/video/7703394811079920911",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "入门 AI Agent 教程",
+          "author": "@在希Zaixi",
+          "video_id": "7693902023082825664",
+          "likes": "1.2万",
+          "time": "1月前",
+          "duration": "01:14",
+          "url": "https://www.douyin.com/video/7693902023082825664",
+          "tags": [
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "2026年，真正厉害的是Agent…普通人想用AI",
+          "author": "@老胡学AI-进阶版",
+          "video_id": "7668861287459212570",
+          "likes": "4.2万",
+          "time": "3月前",
+          "duration": "02:19",
+          "url": "https://www.douyin.com/video/7668861287459212570",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 6,
+          "title": "一条视频教你搭建属于自己的智能体",
+          "author": "@小智聊AI",
+          "video_id": "7704996854601125162",
+          "likes": "90",
+          "time": "2天前",
+          "duration": "10:40",
+          "url": "https://www.douyin.com/video/7704996854601125162",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "让AI指挥AI干活，你负责当老板。双Agent闭环",
+          "author": "@孟德君AI",
+          "video_id": "7689697766028879507",
+          "likes": "4.1万",
+          "time": "1月前",
+          "duration": "01:58",
+          "url": "https://www.douyin.com/video/7689697766028879507",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "从0手推AI干货！…大模型、skill、agent",
+          "author": "@陈孝军",
+          "video_id": "7687652722987781422",
+          "likes": "2.2万",
+          "time": "1月前",
+          "duration": "05:27",
+          "url": "https://www.douyin.com/video/7687652722987781422",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "全网最适合AI新手入门级指南",
+          "author": "@酪蛋白",
+          "video_id": "7700248247378791801",
+          "likes": "929",
+          "time": "2周前",
+          "duration": "04:31",
+          "url": "https://www.douyin.com/video/7700248247378791801",
+          "tags": [
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "Codex零基础使用教程他来了！",
+          "author": "@知雪",
+          "video_id": "7649814497578251953",
+          "likes": "35.9万",
+          "time": "4月前",
+          "duration": "21:28",
+          "url": "https://www.douyin.com/video/7649814497578251953",
+          "tags": [
+            "Codex",
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "Claude(Code)桌面端，保姆级全攻略",
+          "author": "@技术爬爬虾",
+          "video_id": "7705732554493660451",
+          "likes": "3763",
+          "time": "1天前",
+          "duration": "47:14",
+          "url": "https://www.douyin.com/video/7705732554493660451",
+          "tags": [
+            "tutorial"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "AI时代的Agent使用指南（邪修版）",
+          "author": "@花茶屠夫（AI版）",
+          "video_id": "7685745818355629736",
+          "likes": "2.1万",
+          "time": "1月前",
+          "duration": "02:29",
+          "url": "https://www.douyin.com/video/7685745818355629736",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        }
+      ]
+    },
+    {
+      "keyword": "WorkBuddy",
+      "search_url": "https://www.douyin.com/search/WorkBuddy?type=video",
+      "sort": "default_综合视频",
+      "cards_captured": 12,
+      "cards": [
+        {
+          "rank": 1,
+          "title": "深度锐评 AI Agent 从夯到拉，到底用哪个？",
+          "author": "@大陆最强模匠",
+          "video_id": "7704017247395859748",
+          "likes": "1649",
+          "time": "5天前",
+          "duration": "03:11",
+          "url": "https://www.douyin.com/video/7704017247395859748",
+          "tags": [
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 2,
+          "title": "WorkBuddy模型怎么选 倍率怎么算",
+          "author": "@庚子说",
+          "video_id": "7705314967737699624",
+          "likes": "57",
+          "time": "2天前",
+          "duration": "01:47",
+          "url": "https://www.douyin.com/video/7705314967737699624",
+          "tags": [
+            "WorkBuddy",
+            "compare"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 3,
+          "title": "WorkBuddy必装的8个Skill✨",
+          "author": "@时光漫记",
+          "video_id": "7704655895666121371",
+          "likes": "1.5万",
+          "time": "3天前",
+          "duration": "01:32",
+          "url": "https://www.douyin.com/video/7704655895666121371",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 4,
+          "title": "一个视频讲清楚WorkBuddy 豆包工作",
+          "author": "@涛的ai实验室",
+          "video_id": "7698361604575890728",
+          "likes": "329",
+          "time": "2周前",
+          "duration": "07:04",
+          "url": "https://www.douyin.com/video/7698361604575890728",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 5,
+          "title": "装完 WorkBuddy 嫌它笨？你八成漏了这步！",
+          "author": "@超人学AI",
+          "video_id": "7705714039204138282",
+          "likes": "342",
+          "time": "1天前",
+          "duration": "01:07",
+          "url": "https://www.douyin.com/video/7705714039204138282",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 6,
+          "title": "如何用WorkBuddy操作你的浏览器！解锁六种用法",
+          "author": "@刘橙绿（AI 版）",
+          "video_id": "7704968045617270035",
+          "likes": "1906",
+          "time": "3天前",
+          "duration": "04:02",
+          "url": "https://www.douyin.com/video/7704968045617270035",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 7,
+          "title": "双11…Skill…#腾讯WorkBuddy",
+          "author": "@FUN科技",
+          "video_id": "7705396480865242408",
+          "likes": "8473",
+          "time": "1天前",
+          "duration": "02:31",
+          "url": "https://www.douyin.com/video/7705396480865242408",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 8,
+          "title": "deepseek v4.1 flash+ workbuddy…做出来的",
+          "author": "@萧安",
+          "video_id": "7698243061739242923",
+          "likes": "5.0万",
+          "time": "3周前",
+          "duration": "00:49",
+          "url": "https://www.douyin.com/video/7698243061739242923",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 9,
+          "title": "Agent、skill、mcp用workbuddy+opus",
+          "author": "@楠哥短视频",
+          "video_id": "7705552640922488064",
+          "likes": "88",
+          "time": "1天前",
+          "duration": "01:21",
+          "url": "https://www.douyin.com/video/7705552640922488064",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 10,
+          "title": "混元Hy4正式版上线WorkBuddy，对战DeepSeek",
+          "author": "@碳基生物退役指南",
+          "video_id": "7705055858165681443",
+          "likes": "465",
+          "time": "2天前",
+          "duration": "04:31",
+          "url": "https://www.douyin.com/video/7705055858165681443",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 11,
+          "title": "workbuddy里下载量最高的8个skill",
+          "author": "@七贝勒",
+          "video_id": "7705592858590850666",
+          "likes": "302",
+          "time": "1天前",
+          "duration": "02:13",
+          "url": "https://www.douyin.com/video/7705592858590850666",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        },
+        {
+          "rank": 12,
+          "title": "WorkBuddy 8个热门Skil",
+          "author": "@Marco笔录宇宙",
+          "video_id": "7704951802794785226",
+          "likes": "232",
+          "time": "20小时前",
+          "duration": "02:11",
+          "url": "https://www.douyin.com/video/7704951802794785226",
+          "tags": [
+            "WorkBuddy"
+          ],
+          "in_known_set": false
+        }
+      ]
+    }
+  ],
+  "creators": [
+    {
+      "name": "一只野生龙",
+      "profile_url": "https://www.douyin.com/user/MS4wLjABAAAAfQsQFmg7qi3kRPYC68D2Y5M7TNptj19ueIQVkjflDQs",
+      "opened_via": "direct_profile_after_video_author_href",
+      "seed_video": "7704557313692011818",
+      "visible_videos_scanned": 14,
+      "related_last_approx_30d": [
+        {
+          "title": "人人都能看懂的codex更新版 喂饭级教程",
+          "video_id": "7704557313692011818",
+          "likes": "3.3万",
+          "time_visible": "not shown on profile cards; seed was 4天前",
+          "in_known_set": true,
+          "note": "known seed; appears as top/recent Codex piece"
+        }
+      ],
+      "other_related_older_or_untimed": [
+        {
+          "title": "别再用普通工具啦！…#agent",
+          "video_id": "7684972153212587298",
+          "likes": "326",
+          "in_known_set": false
+        }
+      ],
+      "better_or_more_recent_than_seed": "No clearer newer Codex/WorkBuddy/GrokBot video than seed 7704557313692011818 among visible cards. Recent visible mix is Flova/照片skill/DeepSeek/Muse."
+    },
+    {
+      "name": "诗诗的Ai视界",
+      "profile_url": "https://www.douyin.com/user/MS4wLjABAAAArEQWJ7rz6IZ0gE1JkBRxqxIQq73RGTFSZdmZAisWWGk",
+      "opened_via": "video_then_author",
+      "seed_video": "7704658287299480868",
+      "visible_videos_scanned": 13,
+      "related_last_approx_30d": [
+        {
+          "title": "给你的workbuddy装上学霸大脑",
+          "video_id": "7704658287299480868",
+          "likes": "1.7万",
+          "in_known_set": true,
+          "note": "pinned known seed"
+        },
+        {
+          "title": "腾讯云的认证公开课…#WorkBuddy #FDE #OPC",
+          "video_id": "7705784815261355298",
+          "likes": "149",
+          "in_known_set": false,
+          "note": "newer than seed; WorkBuddy-adjacent"
+        },
+        {
+          "title": "…GitHub…#WorkBuddy",
+          "video_id": "7705020329210465587",
+          "likes": "471",
+          "in_known_set": false,
+          "note": "newer/recent WorkBuddy-tagged"
+        },
+        {
+          "title": "让WorkBuddy自动签到领积分",
+          "video_id": "7702102872812473609",
+          "likes": "1296",
+          "in_known_set": false,
+          "note": "WorkBuddy cost/automation tip"
+        }
+      ],
+      "better_or_more_recent_than_seed": "Yes candidates: 7705784815261355298 and 7705020329210465587 appear newer than pinned seed; 7702102872812473609 is a strong WorkBuddy practical tip (auto check-in)."
+    },
+    {
+      "name": "Keith今日休息吗",
+      "profile_url": "https://www.douyin.com/user/MS4wLjABAAAAOFtO5rM0oTm3zSevPfdDFIBWhC4bNVD3bwbNrzMgqeVALpfDua9WF9-Msj98SQh8",
+      "opened_via": "video_then_author",
+      "seed_video": "7700093372661204367",
+      "visible_videos_scanned": 16,
+      "related_last_approx_30d": [
+        {
+          "title": "如何让 GrokBot 用上 codex",
+          "video_id": "7700093372661204367",
+          "likes": "3.7万",
+          "in_known_set": true,
+          "note": "pinned known seed"
+        },
+        {
+          "title": "GrokBot视频工作流大公开",
+          "video_id": "7703439581777883121",
+          "likes": "1383",
+          "in_known_set": true,
+          "note": "known; strong GrokBot workflow"
+        },
+        {
+          "title": "GrokBot 稳稳地接住你",
+          "video_id": "7699521912301380325",
+          "likes": "85",
+          "in_known_set": false
+        },
+        {
+          "title": "普通人 Github 入门指南 #codex",
+          "video_id": "7685774259625007333",
+          "likes": "4810",
+          "in_known_set": false,
+          "note": "pinned; older than ~30d likely"
+        },
+        {
+          "title": "零基础普通人玩转 Git 指南 #codex",
+          "video_id": "7690125617073586865",
+          "likes": "61",
+          "in_known_set": false
+        }
+      ],
+      "better_or_more_recent_than_seed": "7703439581777883121 (already known) is another strong recent GrokBot piece. No clearly better newer GrokBot+Codex combo than the seed among visible cards."
+    },
+    {
+      "name": "徐老师AI观察",
+      "profile_url": "https://www.douyin.com/user/MS4wLjABAAAAjurDFC_1yVndBc4djekdxlifQy_2fUaXmec6zRjd6tdS2JF8KBDzvz9a_iVOrnfh",
+      "opened_via": "direct_profile",
+      "seed_video": "7704514173656501542",
+      "visible_videos_scanned": 20,
+      "related_last_approx_30d": [
+        {
+          "title": "6款Agent，到底选谁？",
+          "video_id": "7704514173656501542",
+          "likes": "4669",
+          "in_known_set": true,
+          "note": "pinned known seed"
+        },
+        {
+          "title": "省积分，反而更烧积分？…WorkBuddy做动画",
+          "video_id": "7700101898958900495",
+          "likes": "400",
+          "in_known_set": false,
+          "note": "WorkBuddy cost_fail case"
+        },
+        {
+          "title": "不是吧？！Codex怎么又又又又更新了！",
+          "video_id": "7699351226118311202",
+          "likes": "479",
+          "in_known_set": false,
+          "note": "Codex update tutorial"
+        },
+        {
+          "title": "以后老板不需要员工了？…Grok Bot组了一个AI团队",
+          "video_id": "7694140963454782760",
+          "likes": "443",
+          "in_known_set": false,
+          "note": "GrokBot case"
+        },
+        {
+          "title": "WorkBuddy每月送的500积分，到底够不够用？",
+          "video_id": "7691951826261789988",
+          "likes": "1470",
+          "in_known_set": false
+        },
+        {
+          "title": "Codex地位不保…Harness vs Codex",
+          "video_id": "7688630803688918318",
+          "likes": "2287",
+          "in_known_set": false
+        }
+      ],
+      "better_or_more_recent_than_seed": "Seed remains the best Agent-selection overview. Stronger adjacent recent pieces: 7700101898958900495 (WorkBuddy cost), 7699351226118311202 (Codex update)."
+    },
+    {
+      "name": "谢慢慢97",
+      "profile_url": "https://www.douyin.com/user/MS4wLjABAAAAnOP32NpsIAoK4j10mhYW6jNOMYw3joc70XKxtfMUOfDMBUkcmKonK8N-1fH2rSaZ",
+      "opened_via": "video_then_author",
+      "seed_video": "7689005697501179897",
+      "visible_videos_scanned": 26,
+      "related_last_approx_30d": [
+        {
+          "title": "人人都能看懂的16分钟Codex速通教程",
+          "video_id": "7689005697501179897",
+          "likes": "48.8万",
+          "in_known_set": true,
+          "note": "pinned known seed (~1月前)"
+        },
+        {
+          "title": "4分钟讲清什么是Harness！…deepseek harness和其他agent",
+          "video_id": "7706096634066153402",
+          "likes": "98",
+          "in_known_set": false,
+          "note": "very recent Agent/Harness explain"
+        },
+        {
+          "title": "AI小白agent入门教程",
+          "video_id": "7703170716522313920",
+          "likes": "689",
+          "in_known_set": false
+        },
+        {
+          "title": "5分钟讲透：小白如何找到满意的skill",
+          "video_id": "7701332201257960827",
+          "likes": "1.2万",
+          "in_known_set": false
+        }
+      ],
+      "better_or_more_recent_than_seed": "No newer Codex-titled video beats the seed. Newer related: 7706096634066153402 (Harness/agent), 7703170716522313920 (agent入门), skill explainers."
+    },
+    {
+      "name": "非哥黑科技",
+      "profile_url": "https://www.douyin.com/user/MS4wLjABAAAAK9MpBWTPOfLlQLEtZ6O6tRtdFtoyGxAMNT6nuizwhhA",
+      "opened_via": "video_then_author",
+      "seed_video": "7668834052987784467",
+      "visible_videos_scanned": 24,
+      "related_last_approx_30d": [
+        {
+          "title": "WorkBuddy丨新手入门教学",
+          "video_id": "7668834052987784467",
+          "likes": "10.2万",
+          "in_known_set": true,
+          "note": "pinned known seed (~3月前)"
+        },
+        {
+          "title": "Grok Bot 实战：把小说漫剧渠道玩法交给 AI",
+          "video_id": "7698728335144160555",
+          "likes": "2378",
+          "in_known_set": false,
+          "note": "~2周前 GrokBot case — more recent than seed"
+        },
+        {
+          "title": "用豆包agent，批量做封面和视频素材",
+          "video_id": "7683801910972878106",
+          "likes": "649",
+          "in_known_set": false
+        },
+        {
+          "title": "workbuddy丨7个神仙技能",
+          "video_id": "7676335888275623218",
+          "likes": "1432",
+          "in_known_set": false
+        }
+      ],
+      "better_or_more_recent_than_seed": "Yes: 7698728335144160555 is a more recent high-signal GrokBot实战 than the older WorkBuddy入门 seed. WorkBuddy seed still strongest WB tutorial on profile."
+    },
+    {
+      "name": "生姜｜AI实战",
+      "profile_url": "https://www.douyin.com/user/MS4wLjABAAAAD5d5KkgwKJrrCUfgVA_3IFEQ0eN1V5-fZUCkZsggnw1zy5cY-w_G5bEb6HEWCXIv",
+      "opened_via": "direct_profile",
+      "seed_video": "7693111158979003834",
+      "visible_videos_scanned": 23,
+      "related_last_approx_30d": [
+        {
+          "title": "装好WorkBuddy，第一件事就做这个",
+          "video_id": "7693111158979003834",
+          "likes": "3.3万",
+          "in_known_set": true,
+          "note": "pinned known seed"
+        },
+        {
+          "title": "新手用 workbuddy的15个坑",
+          "video_id": "7699721561927288443",
+          "likes": "327",
+          "in_known_set": false,
+          "note": "more recent WB pitfalls case"
+        },
+        {
+          "title": "workbuddy做自媒体的神2.0",
+          "video_id": "7691691121110515130",
+          "likes": "348",
+          "in_known_set": false
+        }
+      ],
+      "other_related_series": [
+        {
+          "title": "workbuddy做自媒体的神 第1集",
+          "video_id": "7671275418908999419",
+          "likes": "2.1万",
+          "in_known_set": false
+        },
+        {
+          "title": "【秋招篇】…WorkBuddy",
+          "video_id": "7688281824423329265",
+          "likes": "528",
+          "in_known_set": false
+        },
+        {
+          "title": "【HR/教师/销售/实体老板篇】WorkBuddy职业系列",
+          "video_id": "multiple",
+          "likes": "varies",
+          "in_known_set": false,
+          "note": "large WorkBuddy case series on profile"
+        }
+      ],
+      "better_or_more_recent_than_seed": "Yes: 7699721561927288443 (15个坑) is newer than seed; seed still best pinned knowledge-base intro. Large occupational WorkBuddy series worth mining."
+    },
+    {
+      "name": "FredTalk",
+      "profile_url": "https://www.douyin.com/user/MS4wLjABAAAAbsEkiVbKt7yhYoBK8_PkNTQoPAgRiLzOyrBc-sYHSdo",
+      "opened_via": "video_then_author",
+      "seed_video": "7704954966380743951",
+      "visible_videos_scanned": 27,
+      "related_last_approx_30d": [
+        {
+          "title": "Codex超全教程！新手看这一期就够了",
+          "video_id": "7704954966380743951",
+          "likes": "5757",
+          "in_known_set": true,
+          "note": "known seed; still top Codex tutorial"
+        },
+        {
+          "title": "一集看懂Agent…Codex…Grok Bot…",
+          "video_id": "7705329659445005603",
+          "likes": "121",
+          "in_known_set": false,
+          "note": "newer Agent overview incl Codex/GrokBot"
+        },
+        {
+          "title": "别让AI猜！教你做出自己的第一个Skill",
+          "video_id": "7705096187812056362",
+          "likes": "330",
+          "in_known_set": false
+        },
+        {
+          "title": "Tibo的Codex 28天，到底更新了啥？",
+          "video_id": "7703572738748796210",
+          "likes": "428",
+          "in_known_set": false
+        },
+        {
+          "title": "本周GitHub…遥控 Claude Code、Codex",
+          "video_id": "7704497268879084850",
+          "likes": "2665",
+          "in_known_set": false
+        }
+      ],
+      "better_or_more_recent_than_seed": "Seed remains best Codex tutorial. Newer related: 7705329659445005603 (Agent evolution incl GrokBot/Codex), 7703572738748796210 (Codex 28天)."
+    }
+  ]
+}

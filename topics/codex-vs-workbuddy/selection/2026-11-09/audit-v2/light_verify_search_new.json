@@ -1,0 +1,855 @@
+{
+  "task": "light_verify_search_new",
+  "collected_batch_at": "2026-11-09T18:17:22+08:00",
+  "timezone": "Asia/Shanghai",
+  "rules": [
+    "no video download",
+    "no full watch/transcribe",
+    "no comment pagination",
+    "no invented numbers",
+    "chapters are page-visible AI章节要点 only",
+    "do not overwrite light_verify_must5.*, light_verify_batch2.*, light_verify_batch3.*, or search_pass1.*"
+  ],
+  "attempted": 12,
+  "ok_count": 12,
+  "blockers": [],
+  "notes_batch": "12/12 直链打开成功；未遇登录墙/验证码/404。未下载视频、未完整观看、未翻评论。engagement 取自详情页可见数字（喜欢/评论/收藏/分享旁数值）。",
+  "videos": [
+    {
+      "id": "7704514173656501542",
+      "requested_url": "https://www.douyin.com/video/7704514173656501542",
+      "final_url": "https://www.douyin.com/video/7704514173656501542",
+      "title": "第8集 | 6款Agent，到底选谁？ 这次我把6款热门AI工具放在一起，从能干什么、怎么上手，到使用门槛，一次给你讲明白！一条视频帮你理清6款Agent的使用场景和上手门槛！你现在最常用哪个？评论区聊聊！ #Codex #WorkBuddy #豆包 #徐老师AI观察 #抖音精选app征稿中",
+      "author_name": "徐老师AI观察",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAjurDFC_1yVndBc4djekdxlifQy_2fUaXmec6zRjd6tdS2JF8KBDzvz9a_iVOrnfh",
+      "follower_count": "1.0万",
+      "author_likes_total_visible": "5.5万",
+      "publish_datetime": "2026-11-05 10:49",
+      "publish_datetime_type": "absolute",
+      "duration": "07:39",
+      "likes": "4668",
+      "comments": "85",
+      "favorites_collects": "3999",
+      "shares_reposts": "790",
+      "caption_description": "第8集 | 6款Agent，到底选谁？ 这次我把6款热门AI工具放在一起，从能干什么、怎么上手，到使用门槛，一次给你讲明白！一条视频帮你理清6款Agent的使用场景和上手门槛！你现在最常用哪个？评论区聊聊！ #Codex #WorkBuddy #豆包 #徐老师AI观察 #抖音精选app征稿中",
+      "page_visible_chapters": [
+        {
+          "time": "00:01",
+          "title": "引言",
+          "detail": "介绍豆包、WorkBuddy、Codex、Claude、Code、OpenClaw、DeepSeek和Harness等热门AI工具的选择问题。"
+        },
+        {
+          "time": "00:14",
+          "title": "豆包",
+          "detail": "适合日常问答、写作和讨论，上手门槛低，需明确问题需求。"
+        },
+        {
+          "time": "00:59",
+          "title": "Workbuddy",
+          "detail": "适合整理文档、处理表格、做PPT、查资料，需学习任务说明、文件权限和验收。"
+        },
+        {
+          "time": "01:57",
+          "title": "Codex和Claude...",
+          "detail": "适合网站程序和小工具开发，需学习项目运行和错误检查。"
+        },
+        {
+          "time": "04:01",
+          "title": "OpenClaw",
+          "detail": "适合连接消息渠道和工具，需学习连接部署和维护。"
+        },
+        {
+          "time": "05:02",
+          "title": "DeepSeek Har...",
+          "detail": "适合调整Agent工作环境，需学习插件配置和运行环境。"
+        },
+        {
+          "time": "06:01",
+          "title": "选择建议",
+          "detail": "根据用途、上手门槛和维护成本选择合适的工具，先完成真实工作，再补充能力。"
+        }
+      ],
+      "chapter_summary_ai_visible": "6款热门AI工具的使用场景、上手门槛和维护成本。豆包适合日常问答和写作，Workbuddy适合办公文件处理，Codex和Claude Code适合项目开发，OpenClaw适合连接消息渠道和工具，DeepSeek Harness适合调整工作环境。选择时需考虑用途、上手难度和维护成本，先完成真实工作，再逐步补充能力。",
+      "cover_text_readable": "为什么没有灵犀；豆包对话界面可见「今天有什么工作要处理？」/「比较熟悉的对话界面」等叠字（截图可读）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "标题/章节按场景对比6款Agent（豆包/WorkBuddy/Codex/Claude Code/OpenClaw/DeepSeek Harness）的用途、上手门槛与维护成本，并给选择建议。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "标题/简介/章节要点未见领取资料、付费课、Skill包、代充等CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "页面可见明确写 WorkBuddy / Codex；未见 CodeBuddy 混称。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": true,
+        "grokbot_collaboration": false,
+        "comparison": true,
+        "cost": true,
+        "offtopic": false,
+        "note": "直接对比 Codex 与 WorkBuddy 等6款Agent场景/门槛/维护成本；含选择建议。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7704514173656501542.png",
+      "collected_at": "2026-11-09T18:14:00+08:00",
+      "notes": "作者声明：内容由 AI 生成。合集「AI工具」第8集。章节要点已展开。"
+    },
+    {
+      "id": "7704944575751687478",
+      "requested_url": "https://www.douyin.com/video/7704944575751687478",
+      "final_url": "https://www.douyin.com/video/7704944575751687478",
+      "title": "100个WorkBuddy实战技能分享 自动批量复刻并二创电商爆款带货视频，SKILL技能搭建，WorkBuddy电商自动化，保姆级实战教程，零基础学会。#WorkBuddy #AI提效 #WorkBuddy教程 #自动剪辑 #AI带货",
+      "author_name": "辰哥",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAElMVeHEZChA9cX9wMz91hUIDT1q6aOu7ji7HG8L3BKXMn5aXcFFRVGem_6bJrkgf",
+      "follower_count": "5.4万",
+      "author_likes_total_visible": "14.8万",
+      "publish_datetime": "2026-11-06 14:40",
+      "publish_datetime_type": "absolute",
+      "duration": "16:13",
+      "likes": "4828",
+      "comments": "471",
+      "favorites_collects": "5106",
+      "shares_reposts": "1528",
+      "caption_description": "100个WorkBuddy实战技能分享 自动批量复刻并二创电商爆款带货视频，SKILL技能搭建，WorkBuddy电商自动化，保姆级实战教程，零基础学会。#WorkBuddy #AI提效 #WorkBuddy教程 #自动剪辑 #AI带货",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:20",
+          "title": "案例展示",
+          "detail": "展示了用WorkBuddy自动化批量复刻二创爆款带货视频的案例。"
+        },
+        {
+          "time": "01:24",
+          "title": "素材准备",
+          "detail": "准备模特、场景、产品、音色、参考视频等素材。"
+        },
+        {
+          "time": "03:21",
+          "title": "与WorkBuddy沟通",
+          "detail": "与WorkBuddy沟通，明确需求，选择模型，安装工具，发送提示词。"
+        },
+        {
+          "time": "08:58",
+          "title": "提示词逻辑框架",
+          "detail": "提供提示词逻辑框架，包括格式、身份锁定、字数限制和字幕处理。"
+        },
+        {
+          "time": "10:06",
+          "title": "素材补充",
+          "detail": "补充素材提示词，确保视频衔接顺畅。"
+        },
+        {
+          "time": "11:00",
+          "title": "执行任务出片",
+          "detail": "执行任务出片，半自动生成，逐段确认，避免浪费。"
+        },
+        {
+          "time": "13:00",
+          "title": "验收与存档",
+          "detail": "验收与存档，对比原片和复刻片，封装skill。"
+        },
+        {
+          "time": "14:25",
+          "title": "封装skill",
+          "detail": null
+        }
+      ],
+      "chapter_summary_ai_visible": "如何使用WorkBuddy自动化批量复刻并二创电商爆款带货视频，包括素材准备、与WorkBuddy沟通、提示词逻辑框架、素材补充、执行任务出片、验收与存档以及封装skill。通过这些步骤，可以轻松实现带货视频的快速制作和优化。",
+      "cover_text_readable": "复刻二创爆款视频SKILL实战带学；Workbuddy 自动化批量二创爆款带货视频（截图叠字）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "章节完整给出素材准备→沟通→提示词→出片→验收→封装skill的实战流程；标题称「100个WorkBuddy实战技能」。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "yes",
+        "evidence": "首屏评论区作者回复可见「群聊 · Skill技能包L / Skill技能包2 / Skill学习包A」等；用户问「skill怎么获取」作者导群。标题亦强调 SKILL技能搭建。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "页面主体写 WorkBuddy；未见 CodeBuddy。"
+      },
+      "topic_relevance": {
+        "codex": false,
+        "tencent_workbuddy": true,
+        "grokbot_collaboration": false,
+        "comparison": false,
+        "cost": false,
+        "offtopic": false,
+        "note": "WorkBuddy 电商带货视频自动化/Skill封装实战；Codex仅出现在推荐区，非本片主题。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7704944575751687478.png",
+      "collected_at": "2026-11-09T18:15:00+08:00",
+      "notes": "章节要点已展开。作者在评论用群聊分发Skill包。"
+    },
+    {
+      "id": "7702299256983506210",
+      "requested_url": "https://www.douyin.com/video/7702299256983506210",
+      "final_url": "https://www.douyin.com/video/7702299256983506210",
+      "title": "告别PPT感！Grok Bot审美杀疯了 以前让 Codex 用 Remotion 做视频，动效有、卡点也有，但那股“PPT 感”怎么调教都甩不掉。直到我把整条长任务交给 Grok Bot，成片出来的那一刻真被惊艳到了——不用堆复杂的 Skill，底座 Opus 5.5 的审美和大逻辑直接拉满！ 继上期“睡一觉 Grok Bot 自己把视频做完”再次火出圈后，这期彻底拆解我的一条龙视频工作流： 1",
+      "author_name": "相旭有想",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAH-wlerZVC9VgsYfl7S2kj0gSL2Hp0xxx5ZF1vdURiLkuC14z3CB9GHfyHGBig9nt",
+      "follower_count": "1768",
+      "author_likes_total_visible": "1.2万",
+      "publish_datetime": "2026-10-30 11:34",
+      "publish_datetime_type": "absolute",
+      "duration": "03:12",
+      "likes": "5596",
+      "comments": "211",
+      "favorites_collects": "5777",
+      "shares_reposts": "1926",
+      "caption_description": "告别PPT感！Grok Bot审美杀疯了 以前让 Codex 用 Remotion 做视频，动效有、卡点也有，但那股“PPT 感”怎么调教都甩不掉。直到我把整条长任务交给 Grok Bot，成片出来的那一刻真被惊艳到了——不用堆复杂的 Skill，底座 Opus 5.5 的审美和大逻辑直接拉满！继上期“睡一觉 Grok Bot 自己把视频做完”再次火出圈后，这期彻底拆解我的一条龙视频工作流：1. 单点工具 vs 总包工头：Grok Bot 如何跨云端与本地调度 Codex、Gemini 与 Google Flow；2. 五大 Bot 军团分工：我定内容与审美，总导演 Bot + 选题文案 Bot + 素材 Bot + AI 生成 Bot + 视频上传 Bot 各司其职；3. 四步制作铁律：声音先定死，画面跟着声音走。Gemini Studio 整篇配音对齐，Remotion 自动卡点、横竖两版一起渲染，最后自动抽帧检查裁切。4. 零门槛抄作业：Grok Bot 免费模板库刚扩充到 146 个（覆盖九大行业），不用从零折腾，直接拉起你的专属 Agent 团队。#GrokBot #AI视频制作 #Remotion #AIAgent #相旭有想",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:13",
+          "title": "Grok Bot与其他工...",
+          "detail": "Grok Bot像总包工头，能调度多个工具，而Claude Code更像单点工具。"
+        },
+        {
+          "time": "00:37",
+          "title": "分工",
+          "detail": "总导演Bot负责核心工作，选题文案Bot打磨文案，素材Bot准备素材，AI生成Bot生成氛围镜头和音乐，视频上传Bot分发视频。"
+        },
+        {
+          "time": "01:12",
+          "title": "制作流程",
+          "detail": "声音先定死，画面跟着声音走，包括配音、分镜、渲染、审核等步骤。"
+        },
+        {
+          "time": "01:46",
+          "title": "使用体验",
+          "detail": "Grok Bot审美和大逻辑强，无需过多插手，效果令人惊艳。"
+        },
+        {
+          "time": "02:45",
+          "title": "免费模板库",
+          "detail": "免费模板库扩充至146个，覆盖九大行业，可方便组建Agent团队。"
+        }
+      ],
+      "chapter_summary_ai_visible": "如何使用Grok Bot制作视频，包括其与其他工具的区别、团队分工、制作流程和使用体验。Grok Bot能跨云端与本地调度多个工具，实现高效的视频制作。其免费模板库已扩充至146个，覆盖九大行业，方便用户组建专属Agent团队。",
+      "cover_text_readable": "Grok Bot. 让它帮我做点事；可见历史视频播放/点赞浮层（截图）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "展开简介给出Grok调度Codex/Gemini的一条龙视频工作流与五大Bot分工；章节含制作流程与模板库。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "简介提到免费模板库146个，但未见付费课/领取资料/代充/Skill包导流按钮；非典型领资料CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "未见 CodeBuddy/WorkBuddy；主题为 Grok Bot vs Codex/Claude Code。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": false,
+        "grokbot_collaboration": true,
+        "comparison": true,
+        "cost": false,
+        "offtopic": false,
+        "note": "Grok Bot 调度 Codex 等做视频工作流；与 Codex Remotion「PPT感」对比。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7702299256983506210.png",
+      "collected_at": "2026-11-09T18:15:20+08:00",
+      "notes": "作者声明：内容由 AI 生成。章节要点已展开。"
+    },
+    {
+      "id": "7698943253144273509",
+      "requested_url": "https://www.douyin.com/video/7698943253144273509",
+      "final_url": "https://www.douyin.com/video/7698943253144273509",
+      "title": "把 Grokbot接入到各家 agent #codex#Claude#agent#AI 单独用Grok bot来干活总是觉得额度不够用？不如把它接入到各家agent。最近我发现我订阅的一些会员有时候会出现额度用不完的情况。Grok Bot本身就有持久化任务、分工调度和后台运行能力，我让它负责统筹，Codex、Gemini，Claude负责具体执行，这样Grok只负责统筹和管理，不真正参与具体任务，",
+      "author_name": "悲伤的菠萝",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAnwwFFaLU29ppmkCoQsktE7naa796CZmQ3Ro4SZAz0eDoPoR9x7COFfls1rmHVW65",
+      "follower_count": "174",
+      "author_likes_total_visible": "3483",
+      "publish_datetime": "2026-10-21 10:31",
+      "publish_datetime_type": "absolute",
+      "duration": "00:28",
+      "likes": "2985",
+      "comments": "140",
+      "favorites_collects": "1564",
+      "shares_reposts": "503",
+      "caption_description": "把 Grokbot接入到各家 agent #codex#Claude#agent#AI 单独用Grok bot来干活总是觉得额度不够用？不如把它接入到各家agent。最近我发现我订阅的一些会员有时候会出现额度用不完的情况。Grok Bot本身就有持久化任务、分工调度和后台运行能力，我让它负责统筹，Codex、Gemini，Claude负责具体执行，这样Grok只负责统筹和管理，不真正参与具体任务，这样额度是完全够用的而且也能合理分配各家额度的使用。",
+      "page_visible_chapters": [],
+      "chapter_summary_ai_visible": null,
+      "cover_text_readable": "让你的智能体，与 Claude Code 和 Codex 自由协作。（截图叠字）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "简介描述 Grok 统筹 + Codex/Gemini/Claude 执行以节省/分配额度的协作方案。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "标题/简介未见领取资料、付费课、Skill包、代充CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "未见 CodeBuddy/WorkBuddy。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": false,
+        "grokbot_collaboration": true,
+        "comparison": false,
+        "cost": true,
+        "offtopic": false,
+        "note": "GrokBot 与 Codex 等协作、额度/成本分配；短片无章节要点。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7698943253144273509.png",
+      "collected_at": "2026-11-09T18:15:40+08:00",
+      "notes": "页面可见「个人观点，仅供参考」。无AI章节要点。"
+    },
+    {
+      "id": "7688176625988455720",
+      "requested_url": "https://www.douyin.com/video/7688176625988455720",
+      "final_url": "https://www.douyin.com/video/7688176625988455720",
+      "title": "马斯克的 GrokBot，开始接管我的工作和生活 这期我用了一段时间的 Grok Bot，发现它不太像「写代码的 Codex」，更像能跟着我到处办公的助理。 云电脑 24 小时在线，电脑关机了，手机照样能派活：出大纲、写脚本、整理选题灵感。 每个 Bot 还能当成 AI 员工——生活、周末亲子、刷 X 日报各管一摊；再配个总裁助理分活、HR 招新人。Notion、Gmail、飞书也能接上。 这期主",
+      "author_name": "杜耶Pro",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAl2bu24GLjCU9hlxAK77kUO4Q3p6s2qc74lB7cK3t0fo",
+      "follower_count": "1.3万",
+      "author_likes_total_visible": "11.6万",
+      "publish_datetime": "2026-09-22 10:11",
+      "publish_datetime_type": "absolute",
+      "duration": "07:04",
+      "likes": "3221",
+      "comments": "261",
+      "favorites_collects": "2034",
+      "shares_reposts": "998",
+      "caption_description": "马斯克的 GrokBot，开始接管我的工作和生活 这期我用了一段时间的 Grok Bot，发现它不太像「写代码的 Codex」，更像能跟着我到处办公的助理。云电脑 24 小时在线，电脑关机了，手机照样能派活：出大纲、写脚本、整理选题灵感。每个 Bot 还能当成 AI 员工——生活、周末亲子、刷 X 日报各管一摊；再配个总裁助理分活、HR 招新人。Notion、Gmail、飞书也能接上。这期主要演示：PC / 手机怎么用、为什么适合移动办公、一人成军怎么组队。#GrokBot #AI助手 #Agent #智能助手 #杜耶",
+      "page_visible_chapters": [],
+      "chapter_summary_ai_visible": null,
+      "cover_text_readable": "我最近用起来超爽的agent的工具（截图口播叠字）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "简介演示 PC/手机用法、移动办公、一人成军组队；对比「写代码的 Codex」与办公助理定位。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "标题/简介未见领取资料、付费课、Skill包、代充CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "未见 CodeBuddy；WorkBuddy 仅推荐区出现，非本片文案。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": false,
+        "grokbot_collaboration": true,
+        "comparison": true,
+        "cost": false,
+        "offtopic": false,
+        "note": "GrokBot 使用体验，并与 Codex（写代码）定位对比；非腾讯 WorkBuddy。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7688176625988455720.png",
+      "collected_at": "2026-11-09T18:16:00+08:00",
+      "notes": "作者声明：个人观点，仅供参考。无章节要点面板。"
+    },
+    {
+      "id": "7703439581777883121",
+      "requested_url": "https://www.douyin.com/video/7703439581777883121",
+      "final_url": "https://www.douyin.com/video/7703439581777883121",
+      "title": "GrokBot视频工作流大公开 给大家介绍一下我的 Grok Bot 视频团队！(๑˃̵ᴗ˂̵) #ai工作流 #grok #ai教程 #干货分享 #grokbot",
+      "author_name": "Keith今日休息吗",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAOFtO5rM0oTm3zSevPfdDFIBWhC4bNVD3bwbNrzMgqeVALpfDua9WF9-Msj98SQh8",
+      "follower_count": "4333",
+      "author_likes_total_visible": "5.5万",
+      "publish_datetime": "2026-11-02 13:19",
+      "publish_datetime_type": "absolute",
+      "duration": "07:46",
+      "likes": "1383",
+      "comments": "61",
+      "favorites_collects": "1230",
+      "shares_reposts": "543",
+      "caption_description": "GrokBot视频工作流大公开 给大家介绍一下我的 Grok Bot 视频团队！(๑˃̵ᴗ˂̵) #ai工作流 #grok #ai教程 #干货分享 #grokbot",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:21",
+          "title": "团队搭建",
+          "detail": "老板创建四个Bot，分别是监制、编导、配音师、动效师，各管各的，减少出错。"
+        },
+        {
+          "time": "01:27",
+          "title": "视频制作流程",
+          "detail": "从口播稿开始，编导设计画面方案，动效师制作动画字幕和动效音效，最后合成视频。"
+        },
+        {
+          "time": "05:54",
+          "title": "动画效果的提升",
+          "detail": "推荐Lemomo大佬的开源项目Lemo-Opuscar，或在Vibe知识大赏找样片，让动效师学习。"
+        },
+        {
+          "time": "07:04",
+          "title": "总结",
+          "detail": "搭建团队，走流水线，各管各的，按需求搭建团队。"
+        }
+      ],
+      "chapter_summary_ai_visible": "Grok Bot视频团队的搭建和视频制作流程，包括团队成员的职责、视频制作的步骤、动画效果的提升方法等。通过这种方法，可以提高视频制作的效率和质量。",
+      "cover_text_readable": "上一期三十几万人看过的视频是使用我制作而成的；叠字可见「Codex 别闭着! 交给 Grok Bot 替你用」（截图）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "章节公开 Grok Bot 视频团队搭建与流水线制作步骤；封面提及上期成片数据。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "标题/简介/章节未见领取资料、付费课、Skill包、代充CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "未见 CodeBuddy/WorkBuddy 混称；主题 Grok Bot 视频工作流，封面提及 Codex。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": false,
+        "grokbot_collaboration": true,
+        "comparison": false,
+        "cost": false,
+        "offtopic": false,
+        "note": "GrokBot 视频制作团队/工作流；封面叠字提及 Codex。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7703439581777883121.png",
+      "collected_at": "2026-11-09T18:16:20+08:00",
+      "notes": "作者声明：内容由 AI 生成。章节要点已展开。"
+    },
+    {
+      "id": "7695731896411573558",
+      "requested_url": "https://www.douyin.com/video/7695731896411573558",
+      "final_url": "https://www.douyin.com/video/7695731896411573558",
+      "title": "workbuddy也能和codex合作了？",
+      "author_name": "卡皮码",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAA7lVyCpsAalXTC0KfSrH_OjG8dccNfrbPIxadW8OnGbAN5qeXtZwpJBZA_L_0aTxZ",
+      "follower_count": "3277",
+      "author_likes_total_visible": "1.7万",
+      "publish_datetime": "2026-10-12 18:50",
+      "publish_datetime_type": "absolute",
+      "duration": "01:10",
+      "likes": "1657",
+      "comments": "211",
+      "favorites_collects": "1735",
+      "shares_reposts": "459",
+      "caption_description": "workbuddy也能和codex合作了？",
+      "page_visible_chapters": [
+        {
+          "time": "00:03",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:19",
+          "title": "搭配的原因",
+          "detail": "Codex额度宝贵，workbody可免费领取积分，搭配使用可让不同AI各司其职。"
+        },
+        {
+          "time": "00:29",
+          "title": "具体流程",
+          "detail": "Codex负责任务拆解，workbody执行任务，Codex检查结果，如有问题则返工。"
+        },
+        {
+          "time": "00:45",
+          "title": "关键组件",
+          "detail": "Gateway负责传递指令和执行结果，处理通信会话编号和消息格式。"
+        },
+        {
+          "time": "01:03",
+          "title": "开源项目",
+          "detail": "项目已开源至GitHub，可复制提示词让Codex安装配置。"
+        }
+      ],
+      "chapter_summary_ai_visible": "如何将workbody和Codex搭配使用，实现高效的任务执行和检查。Codex负责任务规划和验收，workbody负责执行，Gateway负责传递指令和结果。通过这种方式，可以充分利用两个工具的优势，提高工作效率。",
+      "cover_text_readable": "纯干货分享，不存在站外引流；Codex x WorkBuddy；教你一个WorkBuddy和Codex搭配使用的高效玩法；让Codex负责规划和验收（截图）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "章节给出 Codex规划验收 + WorkBuddy执行 + Gateway 通信的协作流程，并称已开源到 GitHub。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "封面写「不存在站外引流」；标题/简介无领资料/付费课CTA。评论有人「求资料」但作者侧未见领资料按钮。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "页面明确 Codex x WorkBuddy；章节 AI 摘要偶发拼写 workbody，但未见 CodeBuddy。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": true,
+        "grokbot_collaboration": false,
+        "comparison": true,
+        "cost": true,
+        "offtopic": false,
+        "note": "核心就是 Codex 与 WorkBuddy 协作及额度/积分成本分工。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7695731896411573558.png",
+      "collected_at": "2026-11-09T18:16:40+08:00",
+      "notes": "作者声明：内容由 AI 生成。章节要点已展开。AI章节摘要拼写为 workbody。"
+    },
+    {
+      "id": "7704045181674278170",
+      "requested_url": "https://www.douyin.com/video/7704045181674278170",
+      "final_url": "https://www.douyin.com/video/7704045181674278170",
+      "title": "零成本用上 Opus 5.5！WorkBuddy积分几乎不花 #AI工具 #AI编程 #Opus #WorkBuddy #效率工具",
+      "author_name": "秋实KL",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAl2485N9_zOwqax1bu4Kj2ENdoHFOdn6HpnJjrmt2rWY",
+      "follower_count": "7904",
+      "author_likes_total_visible": "22.7万",
+      "publish_datetime": "2026-11-04 11:30",
+      "publish_datetime_type": "absolute",
+      "duration": "02:11",
+      "likes": "1482",
+      "comments": "55",
+      "favorites_collects": "1314",
+      "shares_reposts": "329",
+      "caption_description": "零成本用上 Opus 5.5！WorkBuddy积分几乎不花 #AI工具 #AI编程 #Opus #WorkBuddy #效率工具",
+      "page_visible_chapters": [
+        {
+          "time": "00:18",
+          "title": "Magpie配置工具",
+          "detail": null
+        },
+        {
+          "time": "00:43",
+          "title": "opencode",
+          "detail": null
+        },
+        {
+          "time": "01:01",
+          "title": "Zcode",
+          "detail": null
+        },
+        {
+          "time": "01:11",
+          "title": "Kiro opus5.5",
+          "detail": null
+        },
+        {
+          "time": "01:42",
+          "title": "workbuddy接入",
+          "detail": null
+        }
+      ],
+      "chapter_summary_ai_visible": "页面显示「章节要点：共5个」；展开后可见时间戳章节 Magpie配置工具 / opencode / Zcode / Kiro opus5.5 / workbuddy接入（未抓到独立摘要长段落）。",
+      "cover_text_readable": "网上一大堆 免费 Token；DeepSeek V4.1 免费用 / 5亿 Token 活动白送 / Opus 5.5 免费用；字幕「现在网上有一大堆的免费 token 等着你来用」",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "章节列出 Magpie/opencode/Zcode/Kiro 等接入路径，并以 workbuddy接入 收尾；主题为零成本用 Opus。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "标题强调零成本/积分几乎不花，属省成本攻略；未见领取资料包/付费课/代充导流。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "明确 WorkBuddy；未见 CodeBuddy。"
+      },
+      "topic_relevance": {
+        "codex": false,
+        "tencent_workbuddy": true,
+        "grokbot_collaboration": false,
+        "comparison": false,
+        "cost": true,
+        "offtopic": false,
+        "note": "WorkBuddy 积分/零成本接入 Opus 5.5；Codex 未在标题简介出现。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7704045181674278170.png",
+      "collected_at": "2026-11-09T18:16:55+08:00",
+      "notes": "章节要点共5个；摘要长段落未稳定展开，仅记录时间戳标题。"
+    },
+    {
+      "id": "7702481499660986085",
+      "requested_url": "https://www.douyin.com/video/7702481499660986085",
+      "final_url": "https://www.douyin.com/video/7702481499660986085",
+      "title": "Grokbot可以接入你的Codex、Claudecode、Gemini #普通人搞ai的100种方式 #普通人的ai发布会 #我在抖音学ai #Grokbot #gina",
+      "author_name": "Gina跨境AI提效",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAA2PuofcZeX1Ls9vfgZJVjHB41h-9Dy6oowkYCNuJjLvoo1-a8Ird3MZgS8riOFfvS",
+      "follower_count": "1.2万",
+      "author_likes_total_visible": "4.3万",
+      "publish_datetime": "2026-10-30 23:22",
+      "publish_datetime_type": "absolute",
+      "duration": "04:41",
+      "likes": "493",
+      "comments": "21",
+      "favorites_collects": "369",
+      "shares_reposts": "117",
+      "caption_description": "第3集 | Grokbot可以接入你的Codex、Claudecode、Gemini #普通人搞ai的100种方式 #普通人的ai发布会 #我在抖音学ai #Grokbot #gina",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:23",
+          "title": "Grokbot云电脑",
+          "detail": "Grokbot云电脑一直在云端运行，可安装codex，其他bot也可使用。"
+        },
+        {
+          "time": "00:49",
+          "title": "安装与登录",
+          "detail": "新建bot调用codex，让codex操作安装，打开qgb设备码登录功能，完成账号授权。"
+        },
+        {
+          "time": "01:30",
+          "title": "本地调用",
+          "detail": "新建bot调用本地codex，授权访问本地电脑，操作简单，账号安全易把控。"
+        },
+        {
+          "time": "02:05",
+          "title": "两种方法的区别",
+          "detail": "云电脑方式可24小时工作，本地方式操作方便，账号安全，根据需求选择。"
+        },
+        {
+          "time": "02:41",
+          "title": "使用方法",
+          "detail": "给codex下任务，记录常用操作流程，让其自动完成任务。"
+        },
+        {
+          "time": "03:19",
+          "title": "操作总结",
+          "detail": "创建bot，选择安装方式，记录操作规则，交给bot自动调用工具干活。"
+        },
+        {
+          "time": "03:41",
+          "title": "AI员工团队",
+          "detail": "展示了不同业务的ai员工团队，各自负责不同工作，提高效率。"
+        },
+        {
+          "time": "04:28",
+          "title": "结语",
+          "detail": "内容由AI生成"
+        }
+      ],
+      "chapter_summary_ai_visible": "如何使用Grokbot云电脑和本地电脑上的Codex，实现自动化任务，如写代码、做网页和调用工具生成图片。通过创建专门的bot，选择安装方式，记录操作规则，用户可以让Codex自动完成任务，提高工作效率。同时，还介绍了如何搭建AI员工团队，实现不同业务的自动化。",
+      "cover_text_readable": "工具调用关系：Grok Bot 连接 Codex / Claude / Gemini；字幕「就是你花钱订阅的Codex，Claude，Gemini」",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "章节给出云电脑/本地两种接入 Codex 的安装登录与用法，以及 AI 员工团队示例。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "标题/简介/章节未见领取资料、付费课、Skill包、代充CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "未见 CodeBuddy/WorkBuddy；主题 Grokbot↔Codex/Claude/Gemini。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": false,
+        "grokbot_collaboration": true,
+        "comparison": true,
+        "cost": true,
+        "offtopic": false,
+        "note": "GrokBot 接入已订阅的 Codex 等；评论可见费用讨论，正文讲云端/本地差异。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7702481499660986085.png",
+      "collected_at": "2026-11-09T18:17:05+08:00",
+      "notes": "合集「Grok Bot 跨境 AI 提效」第3集。章节要点已展开。"
+    },
+    {
+      "id": "7699913121674104090",
+      "requested_url": "https://www.douyin.com/video/7699913121674104090",
+      "final_url": "https://www.douyin.com/video/7699913121674104090",
+      "title": "GrokBot跟Codex的使用方法跟区别 #grok #codex #ai #电商",
+      "author_name": "张滚滚AI出海",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAbONdlqhzZaZdiO2zKU84y_b7ludDeZdecpOk4oZc1QVSgAC5dAdiN6QbrECmsMMk",
+      "follower_count": "5.1万",
+      "author_likes_total_visible": "34.3万",
+      "publish_datetime": "2026-10-24 01:15",
+      "publish_datetime_type": "absolute",
+      "duration": "02:37",
+      "likes": "181",
+      "comments": "9",
+      "favorites_collects": "109",
+      "shares_reposts": "79",
+      "caption_description": "GrokBot跟Codex的使用方法跟区别 #grok #codex #ai #电商",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:08",
+          "title": "GrokBot的使用演示",
+          "detail": "演示了如何使用GrokBot整理店铺投流数据，GrokBot会将数据整理成格式化表格并提供修改建议。"
+        },
+        {
+          "time": "00:44",
+          "title": "GrokBot与Code...",
+          "detail": "GrokBot与Codex的区别在于GrokBot可以创建多个会话，每个会话相当于一个skill，通过语音控制调动所有会话，且在云端运行，即使电脑关机也能使用。"
+        }
+      ],
+      "chapter_summary_ai_visible": "马斯克的GrokBot与之前使用的Codex有明显区别。GrokBot可以创建多个会话，每个会话相当于一个skill，通过语音控制调动所有会话，实现不同功能。GrokBot在云端运行，即使电脑关机也能使用，而Codex的会话在本地运行，关机后无法使用。",
+      "cover_text_readable": "GrokBot跟Codex 使用方法跟区别（黄色大字叠字）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "章节含店铺投流数据整理演示，以及 GrokBot vs Codex 会话/云端差异说明。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "标题/简介/章节未见领取资料、付费课、Skill包、代充CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "未见 CodeBuddy/WorkBuddy；对比对象为 GrokBot 与 Codex。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": false,
+        "grokbot_collaboration": true,
+        "comparison": true,
+        "cost": false,
+        "offtopic": false,
+        "note": "GrokBot vs Codex 使用方法与区别；电商场景演示。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7699913121674104090.png",
+      "collected_at": "2026-11-09T18:17:10+08:00",
+      "notes": "作者侧栏显示认证徽章。章节要点已展开。"
+    },
+    {
+      "id": "7704147659980477561",
+      "requested_url": "https://www.douyin.com/video/7704147659980477561",
+      "final_url": "https://www.douyin.com/video/7704147659980477561",
+      "title": "codex 保姆级安装教程！ Codex装好了，打开却还是全英文？这期从Windows下载安装开始，演示用CC Switch接入DeepSeek，再完成界面汉化。 适合第一次安装，或者已经装好、卡在接入和中文界面的朋友。跟着操作，先把工具配好，再开始学具体用法。 这条演示的是第三方模型接入路径，不需要订阅GPT会员；API使用按模型服务商计费。#codex #Codex教程 #AI学习 #Codex汉化 #deepseek",
+      "author_name": "迪达拉AI",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAMt_-ASJDm95itnuBlXRBdI0YAJo3EsQvS9cI6gx7MGkg1pNVC7IatHQ11w2IXUb4",
+      "follower_count": "7003",
+      "author_likes_total_visible": "7491",
+      "publish_datetime": "2026-11-04 11:07",
+      "publish_datetime_type": "absolute",
+      "duration": "06:51",
+      "likes": "6664",
+      "comments": "1192",
+      "favorites_collects": "7427",
+      "shares_reposts": "1186",
+      "caption_description": "codex 保姆级安装教程！ Codex装好了，打开却还是全英文？这期从Windows下载安装开始，演示用CC Switch接入DeepSeek，再完成界面汉化。 适合第一次安装，或者已经装好、卡在接入和中文界面的朋友。跟着操作，先把工具配好，再开始学具体用法。 这条演示的是第三方模型接入路径，不需要订阅GPT会员；API使用按模型服务商计费。#codex #Codex教程 #AI学习 #Codex汉化 #deepseek",
+      "page_visible_chapters": [],
+      "chapter_summary_ai_visible": null,
+      "cover_text_readable": "手把手；字幕「这是一期手把手带你」（截图）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "简介给出 Windows 下载安装→CC Switch 接 DeepSeek→界面汉化完整交付路径，并说明第三方模型计费。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "标题/简介未见领取资料、付费课、Skill包、代充CTA；说明不需GPT会员、API按服务商计费。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "未见 CodeBuddy/WorkBuddy；主题 Codex 安装汉化。"
+      },
+      "topic_relevance": {
+        "codex": true,
+        "tencent_workbuddy": false,
+        "grokbot_collaboration": false,
+        "comparison": false,
+        "cost": true,
+        "offtopic": false,
+        "note": "Codex 安装/汉化/第三方模型接入与计费说明；非 WorkBuddy/GrokBot。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7704147659980477561.png",
+      "collected_at": "2026-11-09T18:17:15+08:00",
+      "notes": "作者声明：内容由 AI 生成。无章节要点面板。"
+    },
+    {
+      "id": "7705086303091576073",
+      "requested_url": "https://www.douyin.com/video/7705086303091576073",
+      "final_url": "https://www.douyin.com/video/7705086303091576073",
+      "title": "第40集 | workbuddy如何连接企微 ai企业工作中非常实用的小技巧，workbuddy连接企微群聊#workbuddy教程 #workbuddy #企业微信 #企业微信教程",
+      "author_name": "佳伟讲AI",
+      "author_profile_url": "https://www.douyin.com/user/MS4wLjABAAAAeJeTFs4g5egKrE2FILhfBTcmcpdFYf7Kuz3D3TnizHDFQncTOw3JtnodZ6xP00SO",
+      "follower_count": "2499",
+      "author_likes_total_visible": "2.5万",
+      "publish_datetime": "2026-11-06 23:50",
+      "publish_datetime_type": "absolute",
+      "duration": "03:34",
+      "likes": "219",
+      "comments": "3",
+      "favorites_collects": "248",
+      "shares_reposts": "44",
+      "caption_description": "第40集 | workbuddy如何连接企微 ai企业工作中非常实用的小技巧，workbuddy连接企微群聊#workbuddy教程 #workbuddy #企业微信 #企业微信教程",
+      "page_visible_chapters": [
+        {
+          "time": "00:00",
+          "title": "引言",
+          "detail": null
+        },
+        {
+          "time": "00:11",
+          "title": "连接work Buddy...",
+          "detail": "进入work Buddy界面，点击助理，找到企微机器人，点击连接并获取，创建智能机器人并授权。"
+        },
+        {
+          "time": "00:54",
+          "title": "测试机器人",
+          "detail": "测试机器人是否可用，发送消息后机器人会思考并回复。"
+        },
+        {
+          "time": "01:14",
+          "title": "添加机器人到群聊",
+          "detail": "在手机工作台找到智能机器人，添加到群聊。"
+        },
+        {
+          "time": "02:08",
+          "title": "机器人的使用",
+          "detail": "在群聊中at机器人，机器人会根据指令回复消息。"
+        },
+        {
+          "time": "02:48",
+          "title": "结语",
+          "detail": "机器人消耗积分，电脑需保持开机状态。"
+        }
+      ],
+      "chapter_summary_ai_visible": "如何将work Buddy与企微相连，实现机器人在群聊中的使用。通过简单的步骤，用户可以在企微群聊中添加机器人，让机器人帮助完成一些工作任务。机器人的使用需要消耗积分，且电脑需保持开机状态。",
+      "cover_text_readable": "字幕「相当于在你的企微」；画面可见 WorkBuddy v3.9.2 与企微界面分屏（截图）",
+      "practical_task_or_case_clues": {
+        "yes_no": "yes",
+        "evidence": "章节逐步演示连接企微机器人、测试、加群、@使用；合集含领取免费积分/上架技能变现等相邻集。"
+      },
+      "ads_paid_course_lead_magnet_cta": {
+        "yes_no": "no",
+        "evidence": "本集标题/简介/章节未见领取资料或付费课CTA。同作者合集侧栏可见「Workbuddy领取免费积分」「上架技能、专家变现」相邻集，但非本页主CTA。"
+      },
+      "codebuddy_vs_workbuddy_confusion_visible": {
+        "yes_no": "no",
+        "evidence": "明确 workbuddy；未见 CodeBuddy。"
+      },
+      "topic_relevance": {
+        "codex": false,
+        "tencent_workbuddy": true,
+        "grokbot_collaboration": false,
+        "comparison": false,
+        "cost": true,
+        "offtopic": false,
+        "note": "WorkBuddy 连接腾讯企业微信；章节提到消耗积分。非 Codex/GrokBot。"
+      },
+      "page_status": "ok",
+      "screenshot": "/workspace/douyin-codex-workbuddy-research/selection/2026-11-09/audit-v2/screenshots/7705086303091576073.png",
+      "collected_at": "2026-11-09T18:17:20+08:00",
+      "notes": "作者声明：个人观点，仅供参考。合集「小白入门」第40集。章节要点已展开。"
+    }
+  ]
+}
