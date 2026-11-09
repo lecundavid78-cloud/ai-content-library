@@ -4,7 +4,8 @@
 **Scope:** 仅用户已批准的 4 条视频；未擅自增加样本；未决定最终选题；未生成口播；未制作数字人；未对博主表达方式做主观优劣裁定。  
 **Pilot root:** `/workspace/douyin-codex-workbuddy-research/pilot/2026-11-09/`  
 **GitHub 归档意图路径:** `topics/codex-vs-workbuddy/pilot/2026-11-09/`（基于 PR #6 分支 `cursor/codex-vs-workbuddy-audit-v2-2026-11-09-53da` 新建独立 review PR）  
-**PR link:** https://github.com/lecundavid78-cloud/ai-content-library/pull/7
+**PR link:** https://github.com/lecundavid78-cloud/ai-content-library/pull/7  
+**V2 download verification:** `Video_Download_Verification.md`（2026-11-09；因授权未通过，未下载完整音视频）
 
 ---
 

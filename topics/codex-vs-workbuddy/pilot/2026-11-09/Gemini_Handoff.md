@@ -4,7 +4,20 @@
 **Pilot folder (relative root for all paths below):** `topics/codex-vs-workbuddy/pilot/2026-11-09/`  
 （本地等价路径：`/workspace/douyin-codex-workbuddy-research/pilot/2026-11-09/`）  
 **Package date:** 2026-11-09 Asia/Shanghai  
-**Companion report:** `Pilot_4_Videos_Capture_Report.md`
+**Companion report:** `Pilot_4_Videos_Capture_Report.md`  
+**Companion verification:** `Video_Download_Verification.md`（2026-11-09 V2）
+
+---
+
+## 2026-11-09 V2 音视频补采结果
+
+本轮核对 HelloTik 与抖音公开条款后，**未获准**下载这四条第三方完整音视频，也未获准将完整文件用于内部转写或交给 Gemini 做完整音视频分析。因此：
+
+- 没有通过 HelloTik 解析或下载任何文件。
+- 本地仍无 mp4 或其他完整音视频文件，也就没有可提供给 Gemini 的已授权音视频副本。
+- Gemini **仍然不能**从本包获得完整画面和声音。如需完整音画，请直接打开下方原抖音链接。
+- 上一轮截图、PARTIAL 字幕、画面时间线和评论未改写。
+- 详细条款摘录、逐条 7 项验收和授权缺口见 `Video_Download_Verification.md`。
 
 ---
 
