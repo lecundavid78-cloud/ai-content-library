@@ -1,0 +1,24 @@
+{
+  "episode": "ep02-reuse-test",
+  "title": "新一期视频，只改一张工作单",
+  "output": "episodes/ep02-reuse-test/out/ep02-reuse-test_v004.mp4",
+  "generatedAt": "2026-11-10T14:31:58.499Z",
+  "duration": 14.4,
+  "frames": 432,
+  "canvas": "1080x1920@30",
+  "loudnessLUFS": -14.4,
+  "coreHashes": {
+    "src": "ab2d9b85d652d0e54d6ed3eecfd2899f583f831437bbb98ed8a9d384d19a5165",
+    "brand": "0f2ca394ffcd4bc61abf961ef660f62caf16e1fbc2262c1badb44a84b5295a1c"
+  },
+  "brandVersion": "1.0.0",
+  "inputs": {
+    "media/screen.mp4": "7de859583baf0fa09db252690d1470dec4f86da16235a06b29dfcb20c4194eba"
+  },
+  "warnings": [],
+  "qa": {
+    "longestStaticSec": 0.9,
+    "staticRuns": []
+  },
+  "draft": false
+}
