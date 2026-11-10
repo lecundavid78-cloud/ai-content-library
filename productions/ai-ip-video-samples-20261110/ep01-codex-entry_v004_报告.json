@@ -1,0 +1,26 @@
+{
+  "episode": "ep01-codex-entry",
+  "title": "装 Codex，先认准官方入口",
+  "output": "episodes/ep01-codex-entry/out/ep01-codex-entry_v004.mp4",
+  "generatedAt": "2026-11-10T14:30:27.814Z",
+  "duration": 15.1,
+  "frames": 453,
+  "canvas": "1080x1920@30",
+  "loudnessLUFS": -14.1,
+  "coreHashes": {
+    "src": "ab2d9b85d652d0e54d6ed3eecfd2899f583f831437bbb98ed8a9d384d19a5165",
+    "brand": "0f2ca394ffcd4bc61abf961ef660f62caf16e1fbc2262c1badb44a84b5295a1c"
+  },
+  "brandVersion": "1.0.0",
+  "inputs": {
+    "media/voice.mp3": "12bb8295c1d9e964dbd735e29e314eb0eee30dddce6802fbfe15bf32aabdb691",
+    "media/avatar-lipsync.mp4": "6bbf0a835c14c8df79ae5a43e5e2be81ea699da11b77561c676b6ba3126c518a",
+    "media/screen.mp4": "9a23f625b8a8d94b9af3b0ea314a133f9cdb4dd2db2ae2b11dfc85f0d3dc695e"
+  },
+  "warnings": [],
+  "qa": {
+    "longestStaticSec": 0.2,
+    "staticRuns": []
+  },
+  "draft": false
+}
