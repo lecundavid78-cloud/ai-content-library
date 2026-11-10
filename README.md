@@ -14,6 +14,7 @@
 - reviews/：Codex 的核查和选题判断。
 - productions/：后续文案与制作文件。
 - productions/ai-ip-video-samples-20261110/：2026-11-10 两期 AI 个人 IP 竖屏样片。
+- productions/ai-ip-video-review-20261111/：2026-11-11 对上述样片的独立审查。
 - handoff/：读写测试和交接回执。
 
 未收到材料时不造空帖子凑数。用户没有解释选帖理由时可以先收录，用户评价留空，不由模型编写为用户意见。
