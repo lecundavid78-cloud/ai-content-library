@@ -1,0 +1,13 @@
+{
+  "scope": "User-approved public archive of current local implementation files",
+  "source_directory": "Original_Project_Implementation_20261109",
+  "created_utc": "2026-11-11T02:12:16.002742+00:00",
+  "file_count": 1637,
+  "bytes": 120018986,
+  "server_only_weights_and_caches_included": false,
+  "archive": "Original_Project_Implementation_20261109_Local_Archive_20261111.zip",
+  "archive_bytes": 75208136,
+  "archive_sha256": "5d1c6906807a83e78c67e5e3fc385f9b6efa58ef658cb1ee3bffe973fa7ec884",
+  "credential_pattern_scan": "No matches in inspected text files and immediate ZIP text entries",
+  "verification": "ZIP CRC and per-file SHA256 passed"
+}
