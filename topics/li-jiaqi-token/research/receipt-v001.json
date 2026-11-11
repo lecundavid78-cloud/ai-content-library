@@ -1,0 +1,59 @@
+{
+  "checkedOn": "2026-11-03",
+  "repository": "lecundavid78-cloud/ai-content-library",
+  "mergeCommit": "9baf980e23a44c8444f5c1c547b2922127c26115",
+  "contentCommit": "f96a27d429cc17a2d1625931d52d0324607efda3",
+  "pr": 2,
+  "prMergedVerified": true,
+  "localTextSnapshots": [
+    {
+      "path": "facts/fact-pack-v001.md",
+      "blobMatches": true,
+      "sha256": "c53ba491bc5534d35ec3affd49ca94dce9ea2db16f8de5d609952cddbfd4b215",
+      "manifestSha256Matches": true,
+      "bytes": 12523
+    },
+    {
+      "path": "grok-research-return-v001.md",
+      "blobMatches": true,
+      "sha256": "3b69f97be247456ff33965c164e0d348113414eefb7976dda2336ce5f053789f",
+      "manifestSha256Matches": true,
+      "bytes": 2909
+    },
+    {
+      "path": "research/sources.md",
+      "blobMatches": true,
+      "sha256": "8a0ad49dd79b8fbee1372993d3f81137dea9ea73e96ff20136c0c1d8187bf78c",
+      "manifestSha256Matches": true,
+      "bytes": 5155
+    },
+    {
+      "path": "research/file-provenance.md",
+      "blobMatches": true,
+      "sha256": "be25cbc1e1142d362636393c1ef1fd2d115485b3f6355d3a1d83b65ebe3d5290",
+      "manifestSha256Matches": true,
+      "bytes": 6209
+    },
+    {
+      "path": "research/manifest.json",
+      "blobMatches": true,
+      "sha256": "de0723c0594db87a1d4bc60bc7b9f5124ce422db33fa95cbfc69c9690b7f8a0d",
+      "manifestSha256Matches": null,
+      "bytes": 17026
+    },
+    {
+      "path": "state.json",
+      "blobMatches": true,
+      "sha256": "720d52d15edcaacb3f13eafd473ea917f33be41b26a5831602d026b064998707",
+      "manifestSha256Matches": null,
+      "bytes": 1450
+    }
+  ],
+  "imagesVisuallyOpened": 8,
+  "imagesExcluded": 1,
+  "remoteVideoBlob": "6165e7c0a48ff893befd1aef264a928b2eb098aa",
+  "videoContentReviewed": false,
+  "publicVideoDownloadResult": "HTTP 567",
+  "scriptChecks": "human-writing prose check exit 0; actual spoken timing not performed",
+  "geminiInvokedByCodex": false
+}

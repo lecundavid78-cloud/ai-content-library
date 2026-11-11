@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "checkedOn": "2026-11-03",
+  "checkedBy": "Codex",
+  "repository": "lecundavid78-cloud/ai-content-library",
+  "repositoryUrl": "https://github.com/lecundavid78-cloud/ai-content-library",
+  "visibility": "private",
+  "branch": "main",
+  "initialCommit": "06bc80e906005863d0ab4bac870c4603a8a79fe9",
+  "verifiedBootstrapCommit": "0b453c3a2eb4d61c22fc8ce71a7804715d67fd3c",
+  "checks": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 855,
+      "sha256": "58c70b02ad136eb47473a7fc4ac86fb135b21c6b6b5207720beab3c9c8f7a159",
+      "gitBlobSha": "2eb5d7fdc9ef847e6b8cab1933c5f084197b443b",
+      "readBackMatch": true,
+      "kind": "text"
+    },
+    {
+      "path": "bootstrap-manifest.json",
+      "bytes": 1036,
+      "sha256": "35c1c9455e0e5e145d7680e77d7c481705dec2ebbce392407fdf6a1a1dec043d",
+      "gitBlobSha": "b5e89baed0abcb08937adca2dc9b41ec85ae4910",
+      "readBackMatch": true,
+      "kind": "text"
+    },
+    {
+      "path": "handoff/codex-check-v001.md",
+      "bytes": 360,
+      "sha256": "0c84aa2ffab8dd7206f4041c8e3885a78f0213e310f0902e9f8449acfec2aced",
+      "gitBlobSha": "ad3080f83dc15d46032c3015a2d09fc26737d87f",
+      "readBackMatch": true,
+      "kind": "text"
+    },
+    {
+      "path": "handoff/fixture-original-post.png",
+      "bytes": 134976,
+      "sha256": "d6a6bec7de24b29de71d77a200d9bbc3a351f1336865b5823af8d86b439fb2ea",
+      "gitBlobSha": "01de521228b08d9d3ec23edb493462ce4cb6dbd7",
+      "readBackMatch": true,
+      "kind": "image"
+    },
+    {
+      "path": "library/index.json",
+      "bytes": 48,
+      "sha256": "68cc21608704da4e28ff5a6a1ad76b4104868b91d711c1212be4af48aa9684f9",
+      "gitBlobSha": "93f233deb072aaf9df31aa34ee0d42124568ceab",
+      "readBackMatch": true,
+      "kind": "text"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1873,
+      "sha256": "237aa2f1280c72209d8e32e40a88d876ab983ba857594478d7dc5523aff6a2d7",
+      "gitBlobSha": "0aa5201298cbb07b9ae4b5379eb57885edfc5901",
+      "readBackMatch": true,
+      "kind": "text"
+    }
+  ],
+  "image": {
+    "path": "handoff/fixture-original-post.png",
+    "bytes": 134976,
+    "sha256": "d6a6bec7de24b29de71d77a200d9bbc3a351f1336865b5823af8d86b439fb2ea",
+    "dimensions": [
+      624,
+      1072
+    ],
+    "downloadedFromGitHub": true,
+    "visuallyOpened": true,
+    "role": "historical screenshot for transport test; not one of the two user-selected samples"
+  },
+  "result": {
+    "codexTextWriteRead": "pass",
+    "codexImageWriteRead": "pass",
+    "grokReadWrite": "pending",
+    "endToEndVerified": false,
+    "userSelectedSampleCountImported": 0
+  },
+  "nextAction": "User forwards handoff/GROK_CONNECT.md to Grok. Grok verifies access, writes text and an unchanged PNG echo, then archives the two user-selected posts and returns commit and paths. Codex independently verifies that return.",
+  "automaticWakeupConfigured": false
+}
