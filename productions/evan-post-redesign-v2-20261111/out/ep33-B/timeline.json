@@ -1,0 +1,278 @@
+{
+  "note": "show/hide 是烧录字幕与 SRT 共用的唯一展示时间轴（成片秒）；speech 是词级对齐的发声区间。",
+  "cues": [
+    {
+      "n": 1,
+      "en": "When I was a kitten,",
+      "zh": "当我还是只小奶猫时，",
+      "speech": [
+        0.0,
+        1.176
+      ],
+      "show": 0.0,
+      "hide": 1.544
+    },
+    {
+      "n": 2,
+      "en": "my owner taught me to play fetch with a toy mouse.",
+      "zh": "主人拿一只玩具老鼠教我玩扔出去再捡回来的游戏。",
+      "speech": [
+        1.624,
+        4.353
+      ],
+      "show": 1.544,
+      "hide": 4.767
+    },
+    {
+      "n": 3,
+      "en": "At first, I’d chase it, sit on it,",
+      "zh": "起初，我追上去，一屁股坐在老鼠上，",
+      "speech": [
+        4.847,
+        7.576
+      ],
+      "show": 4.767,
+      "hide": 7.732
+    },
+    {
+      "n": 4,
+      "en": "and wait for a snack.",
+      "zh": "等着吃小零食。",
+      "speech": [
+        7.812,
+        8.753
+      ],
+      "show": 7.732,
+      "hide": 9.103
+    },
+    {
+      "n": 5,
+      "en": "I thought I’d done my part.",
+      "zh": "我觉得我已经尽了自己的一份力。",
+      "speech": [
+        9.506,
+        10.847
+      ],
+      "show": 9.426,
+      "hide": 11.135
+    },
+    {
+      "n": 6,
+      "en": "She started with short throws, holding a treat.",
+      "zh": "于是她手里捏着零食，从短距离抛掷开始教我。",
+      "speech": [
+        11.435,
+        13.929
+      ],
+      "show": 11.355,
+      "hide": 14.279
+    },
+    {
+      "n": 7,
+      "en": "Whenever I brought it back, she’d roll it again.",
+      "zh": "每次我把老鼠叼回来，她就再扔出去一次。",
+      "speech": [
+        14.659,
+        16.941
+      ],
+      "show": 14.579,
+      "hide": 17.291
+    },
+    {
+      "n": 8,
+      "en": "Soon, I got the hang of it.",
+      "zh": "很快，我就摸到了窍门。",
+      "speech": [
+        17.624,
+        19.294
+      ],
+      "show": 17.544,
+      "hide": 19.644
+    },
+    {
+      "n": 9,
+      "en": "I was so proud of myself,",
+      "zh": "我为自己感到骄傲极了，",
+      "speech": [
+        19.906,
+        21.388
+      ],
+      "show": 19.826,
+      "hide": 21.738
+    },
+    {
+      "n": 10,
+      "en": "I fetched it three times in a row.",
+      "zh": "一口气连着叼回来了三次。",
+      "speech": [
+        21.953,
+        23.882
+      ],
+      "show": 21.873,
+      "hide": 24.232
+    },
+    {
+      "n": 11,
+      "en": "Then one night,",
+      "zh": "后来有一天晚上，",
+      "speech": [
+        24.682,
+        25.553
+      ],
+      "show": 24.602,
+      "hide": 25.873
+    },
+    {
+      "n": 12,
+      "en": "I knocked the mouse off the sofa by accident.",
+      "zh": "我不小心把玩具老鼠碰下了沙发。",
+      "speech": [
+        25.953,
+        28.094
+      ],
+      "show": 25.873,
+      "hide": 28.444
+    },
+    {
+      "n": 13,
+      "en": "She ran over and put it by my paws.",
+      "zh": "她立马小跑过来，把它放回我的爪子边。",
+      "speech": [
+        28.847,
+        30.776
+      ],
+      "show": 28.767,
+      "hide": 31.112
+    },
+    {
+      "n": 14,
+      "en": "Now, I push it off on purpose.",
+      "zh": "现在，我都故意地把它推下沙发。",
+      "speech": [
+        31.412,
+        33.585
+      ],
+      "show": 31.332,
+      "hide": 33.894
+    },
+    {
+      "n": 15,
+      "en": "She brings it back every single time,",
+      "zh": "她每一次，无一例外都会给我捡回来，",
+      "speech": [
+        33.974,
+        36.094
+      ],
+      "show": 33.894,
+      "hide": 36.32
+    },
+    {
+      "n": 16,
+      "en": "and I let her pet me as a reward.",
+      "zh": "而我则恩准她摸摸我作为奖励。",
+      "speech": [
+        36.4,
+        38.118
+      ],
+      "show": 36.32,
+      "hide": 38.468
+    },
+    {
+      "n": 17,
+      "en": "She’s a natural.",
+      "zh": "她还真是块天生的好料子。",
+      "speech": [
+        38.847,
+        39.671
+      ],
+      "show": 38.767,
+      "hide": 40.151
+    }
+  ],
+  "cards": [
+    {
+      "n": 1,
+      "en": "play fetch",
+      "zh": "玩扔出去再捡回来的游戏",
+      "spoken_at": 2.63,
+      "from": 2.63,
+      "to": 5.83,
+      "seconds": 3.2,
+      "min_read_seconds": 2.09,
+      "style": "compact",
+      "group_size": 1
+    },
+    {
+      "n": 2,
+      "en": "done my part",
+      "zh": "尽了自己的一份力",
+      "spoken_at": 10.04,
+      "from": 10.04,
+      "to": 13.24,
+      "seconds": 3.2,
+      "min_read_seconds": 2.07,
+      "style": "compact",
+      "group_size": 1
+    },
+    {
+      "n": 3,
+      "en": "got the hang of it",
+      "zh": "摸到了窍门",
+      "spoken_at": 18.33,
+      "from": 18.33,
+      "to": 23.57,
+      "seconds": 5.25,
+      "min_read_seconds": 2.3,
+      "style": "compact",
+      "group_size": 2
+    },
+    {
+      "n": 4,
+      "en": "proud of myself",
+      "zh": "为自己感到骄傲",
+      "spoken_at": 20.37,
+      "from": 20.37,
+      "to": 23.57,
+      "seconds": 3.2,
+      "min_read_seconds": 1.98,
+      "style": "compact",
+      "group_size": 2
+    },
+    {
+      "n": 5,
+      "en": "by accident",
+      "zh": "不小心",
+      "spoken_at": 27.27,
+      "from": 27.27,
+      "to": 30.47,
+      "seconds": 3.2,
+      "min_read_seconds": 1.37,
+      "style": "compact",
+      "group_size": 1
+    },
+    {
+      "n": 6,
+      "en": "on purpose",
+      "zh": "故意地",
+      "spoken_at": 32.59,
+      "from": 32.59,
+      "to": 34.6,
+      "seconds": 2.01,
+      "min_read_seconds": 1.37,
+      "style": "compact",
+      "group_size": 1
+    },
+    {
+      "n": 7,
+      "en": "every single time",
+      "zh": "每一次，无一例外",
+      "spoken_at": 34.75,
+      "from": 34.75,
+      "to": 37.95,
+      "seconds": 3.2,
+      "min_read_seconds": 1.98,
+      "style": "compact",
+      "group_size": 1
+    }
+  ]
+}

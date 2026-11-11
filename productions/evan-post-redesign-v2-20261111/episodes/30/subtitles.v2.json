@@ -1,0 +1,115 @@
+{
+  "schema": "evan-post-v2",
+  "episode": 30,
+  "说明": "稳健性测试用：字幕分句、文字与 episodes/30/subtitles.json 完全相同（未重新分句），只把原题手动换行改为自动排版，并加上脸部安全框。",
+  "speed": 0.9,
+  "header": {
+    "tag": "雅思口语 Part 2 · 情景练习",
+    "title_zh": "最近做出的一个改变",
+    "title_en": "Describe a change that you made recently"
+  },
+  "safe": {
+    "face": [
+      392,
+      696,
+      760,
+      1040
+    ],
+    "source": "detect-safe 自动估计"
+  },
+  "vocab": [
+    {
+      "match": "dwelling on it",
+      "en": "dwelling on it",
+      "zh": "一直纠结这件事"
+    },
+    {
+      "match": "box myself in",
+      "en": "box myself in",
+      "zh": "把自己困住／自我设限"
+    },
+    {
+      "match": "trap myself",
+      "en": "trap myself",
+      "zh": "把自己困住"
+    },
+    {
+      "match": "a second chance",
+      "en": "a second chance",
+      "zh": "第二次机会"
+    },
+    {
+      "match": "at ease",
+      "en": "at ease",
+      "zh": "自在／安心"
+    },
+    {
+      "match": "make mistakes",
+      "en": "make mistakes",
+      "zh": "犯错"
+    },
+    {
+      "match": "beat myself up",
+      "en": "beat myself up",
+      "zh": "过分责怪自己"
+    }
+  ],
+  "cues": [
+    {
+      "en": "Recently,I stopped hiding whenever I messed up.",
+      "zh": "最近，我改掉了“一闯祸就躲起来”的毛病。"
+    },
+    {
+      "en": "Last week, I knocked over a flowerpot.",
+      "zh": "上周，我打翻了一个花盆。"
+    },
+    {
+      "en": "Nothing broke, just some spilled dirt.",
+      "zh": "花盆没碎，只是撒了点土。"
+    },
+    {
+      "en": "Still, I hid under the sofa all afternoon,",
+      "zh": "可我还是在沙发底下躲了一整个下午，"
+    },
+    {
+      "en": "dwelling on it, and skipped my treat.",
+      "zh": "一直纠结这件事，连小零食都没吃。"
+    },
+    {
+      "en": "Then, a bowl of fish landed by the sofa. \"Dinner, Evan.\"",
+      "zh": "后来，一碗鱼肉放到了沙发边。“Evan，吃晚饭了。”"
+    },
+    {
+      "en": "I realized I didn't need to box myself in",
+      "zh": "我意识到，我不需要把自己困住，"
+    },
+    {
+      "en": "or trap myself in the dark to prove I was sorry.",
+      "zh": "也不用把自己困在黑暗里来证明我很愧疚。"
+    },
+    {
+      "en": "So I came out, ate first,",
+      "zh": "于是我钻出来，先吃了饭，"
+    },
+    {
+      "en": "pushed one paw of soil back, and gave myself a second chance.",
+      "zh": "再用爪子扒拉了一小撮土回去，给了自己第二次机会。"
+    },
+    {
+      "en": "Now I feel more at ease.",
+      "zh": "现在的我感觉自在多了。"
+    },
+    {
+      "en": "I still make mistakes, but I don't beat myself up.",
+      "zh": "我还是会犯错，但不再过分责怪自己了。"
+    },
+    {
+      "en": "The plant just needed more soil.",
+      "zh": "那盆植物只是需要添点土，"
+    },
+    {
+      "en": "I had already packed my toy mouse for a new home.",
+      "zh": "而我已经打包好玩具老鼠，准备找新家了。"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "evan-post-v2",
+  "episode": 31,
+  "说明": "稳健性测试用：字幕分句、文字与 episodes/31/subtitles.json 完全相同（未重新分句），只把原题手动换行改为自动排版，并加上脸部安全框。",
+  "speed": 0.85,
+  "header": {
+    "tag": "雅思口语 Part 2 · 情景练习",
+    "title_zh": "一次早起的经历",
+    "title_en": "Describe a time when you got up early"
+  },
+  "safe": {
+    "face": [
+      393,
+      680,
+      895,
+      1053
+    ],
+    "source": "detect-safe 自动估计"
+  },
+  "vocab": [
+    {
+      "match": "at the crack of dawn",
+      "en": "at the crack of dawn",
+      "zh": "天刚破晓时"
+    },
+    {
+      "match": "worth it",
+      "en": "worth it",
+      "zh": "值得"
+    },
+    {
+      "match": "make an effort",
+      "en": "make an effort",
+      "zh": "付出努力"
+    },
+    {
+      "match": "wide awake",
+      "en": "wide awake",
+      "zh": "完全清醒"
+    },
+    {
+      "match": "curled up",
+      "en": "curled up",
+      "zh": "蜷缩起来"
+    },
+    {
+      "match": "in no time",
+      "en": "in no time",
+      "zh": "很快／一下子"
+    },
+    {
+      "match": "missed the point",
+      "en": "missed the point",
+      "zh": "没抓住重点"
+    }
+  ],
+  "cues": [
+    {
+      "en": "Last Sunday, I got up at the crack of dawn",
+      "zh": "上周日，我天刚破晓就爬起来，"
+    },
+    {
+      "en": "to watch the sunrise.",
+      "zh": "去看日出。"
+    },
+    {
+      "en": "My owner said it was worth it,",
+      "zh": "主人说这绝对值得，"
+    },
+    {
+      "en": "so I decided to make an effort.",
+      "zh": "所以我决定努力一回。"
+    },
+    {
+      "en": "By five, I was wide awake,",
+      "zh": "五点时，我已经完全清醒了，"
+    },
+    {
+      "en": "waiting by the cold window while she made tea.",
+      "zh": "趁她泡茶的时候，乖乖守在冰凉的窗边。"
+    },
+    {
+      "en": "At first, the garden was completely dark.",
+      "zh": "起初，花园里一片漆黑。"
+    },
+    {
+      "en": "Suddenly, the first patch of sunlight hit the cushion.",
+      "zh": "突然，第一小块阳光落在了坐垫上。"
+    },
+    {
+      "en": "I curled up in it in no time.",
+      "zh": "我一下子就蜷缩了进去。"
+    },
+    {
+      "en": "She came over and pointed at the sky.",
+      "zh": "她走过来，指着天空让我看。"
+    },
+    {
+      "en": "I immediately turned around,",
+      "zh": "我立刻转过身，"
+    },
+    {
+      "en": "facing the room to warm my back.",
+      "zh": "面向屋里，好让太阳把我的后背也晒暖和。"
+    },
+    {
+      "en": "She said I had missed the point.",
+      "zh": "她说我完全没抓住重点。"
+    },
+    {
+      "en": "Honestly, I felt warm and satisfied.",
+      "zh": "老实讲，我觉得又暖和又满足。"
+    },
+    {
+      "en": "She woke up to see the sun.",
+      "zh": "她早起是为了看太阳。"
+    },
+    {
+      "en": "I woke up to use it.",
+      "zh": "我早起是为了用太阳。"
+    },
+    {
+      "en": "Same sun, different priorities.",
+      "zh": "同一个太阳，不同的追求罢了。"
+    }
+  ],
+  "zh_matches_delivered_subtitles": true
+}

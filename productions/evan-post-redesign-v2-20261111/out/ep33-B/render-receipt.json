@@ -1,0 +1,460 @@
+{
+  "tool": "evan_post2 2.0.0-exp",
+  "episode_dir": "episodes/33",
+  "raw_sha256": "5329251571472bb0986face2ba09186410312337974d222a79d58b4f5711dc5c",
+  "config": "subtitles.v2.json",
+  "config_sha256": "f13de9977fefd84d4008dbc6f7b94844849e9bce1205f2cfe37aa688bde7773f",
+  "preset": "B.json",
+  "preset_sha256": "70b8a939084312402489e647ce492826844390343fc276242fe3fce34002cd21",
+  "code_sha256": {
+    "__init__.py": "082c16252b4615dc7d4baeafaaab2ccf3e9fa0fcfe7cf7ab2760c4fcbb3d1cff",
+    "checks.py": "e404fa1032cf742832852e15f99d6704cf9a548ef0d7fb0295dbb296594e62d3",
+    "compose.py": "5802b1ac3aad639f0fcc9f1b95f308696a14c25bc4f7d3848bef98e1dfc13c46",
+    "draw.py": "abce503d8bcdb71fe636f123a5e26d3b0f2262ab09191d50078d0104990ddfa8",
+    "params.py": "93589ecd6234c2434ad59562a6df075d2685159aa0b94ce0705f61ca95d334b7",
+    "safezone.py": "454d583316f8cdb30781907bb6574f9dae0668ac808833b1d3b882ee3f77377a",
+    "text.py": "a0935e865d167be911aa756d8b397a20820e0259ded282c05782e9fa690e154e",
+    "timeline.py": "be07197792701d895cb3187418e08c4b5a09132194bf45b2aaf3b78113b2c6e0",
+    "render_v2.py": "de8134ff66ba4c61f6208c513e0ac88f71ef4ef84a75b47554903b1231d7914b"
+  },
+  "speed": 0.85,
+  "speed_application_count": 1,
+  "output_seconds": 40.151,
+  "cue_count": 17,
+  "card_count": 7,
+  "errors": [],
+  "warnings": [],
+  "review_flags": [],
+  "min_clearance_px": {
+    "above_face": 83,
+    "below_face": 225
+  },
+  "mean_covered_ratio": 0.1246,
+  "face_safe_box": [
+    340,
+    496,
+    764,
+    906
+  ],
+  "silence_refinements": [
+    {
+      "cue": 15,
+      "asr_start": 28.24,
+      "refined_start": 28.878
+    }
+  ],
+  "hook": {
+    "text": "谁在训练谁？",
+    "t0": 0.0,
+    "t1": 2.8
+  },
+  "question": {
+    "t0": 2.9499999999999997,
+    "t1": 7.369999999999999,
+    "wanted": 4.42,
+    "fallback": false
+  },
+  "bookend": {
+    "text": "谁在训练谁？",
+    "t0": 38.76705882352942,
+    "t1": 40.150588235294116
+  },
+  "twist": {
+    "cue": 13,
+    "t": 31.23176470588235,
+    "zoom": 0.06,
+    "ease": 1.1,
+    "center": [
+      552.0,
+      701.0
+    ]
+  },
+  "card_groups": [
+    {
+      "t0": 2.63,
+      "t1": 5.83,
+      "style": "dock",
+      "cards": [
+        "play fetch"
+      ]
+    },
+    {
+      "t0": 10.04,
+      "t1": 13.24,
+      "style": "dock",
+      "cards": [
+        "done my part"
+      ]
+    },
+    {
+      "t0": 18.33,
+      "t1": 23.57,
+      "style": "dock",
+      "cards": [
+        "got the hang of it",
+        "proud of myself"
+      ]
+    },
+    {
+      "t0": 27.27,
+      "t1": 30.47,
+      "style": "dock",
+      "cards": [
+        "by accident"
+      ]
+    },
+    {
+      "t0": 32.59,
+      "t1": 34.6,
+      "style": "dock",
+      "cards": [
+        "on purpose"
+      ]
+    },
+    {
+      "t0": 34.75,
+      "t1": 37.95,
+      "style": "dock",
+      "cards": [
+        "every single time"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "n": 1,
+      "en": "play fetch",
+      "zh": "玩扔出去再捡回来的游戏",
+      "spoken_at": 2.63,
+      "from": 2.63,
+      "to": 5.83,
+      "seconds": 3.2,
+      "min_read_seconds": 2.09,
+      "style": "compact",
+      "group_size": 1
+    },
+    {
+      "n": 2,
+      "en": "done my part",
+      "zh": "尽了自己的一份力",
+      "spoken_at": 10.04,
+      "from": 10.04,
+      "to": 13.24,
+      "seconds": 3.2,
+      "min_read_seconds": 2.07,
+      "style": "compact",
+      "group_size": 1
+    },
+    {
+      "n": 3,
+      "en": "got the hang of it",
+      "zh": "摸到了窍门",
+      "spoken_at": 18.33,
+      "from": 18.33,
+      "to": 23.57,
+      "seconds": 5.25,
+      "min_read_seconds": 2.3,
+      "style": "compact",
+      "group_size": 2
+    },
+    {
+      "n": 4,
+      "en": "proud of myself",
+      "zh": "为自己感到骄傲",
+      "spoken_at": 20.37,
+      "from": 20.37,
+      "to": 23.57,
+      "seconds": 3.2,
+      "min_read_seconds": 1.98,
+      "style": "compact",
+      "group_size": 2
+    },
+    {
+      "n": 5,
+      "en": "by accident",
+      "zh": "不小心",
+      "spoken_at": 27.27,
+      "from": 27.27,
+      "to": 30.47,
+      "seconds": 3.2,
+      "min_read_seconds": 1.37,
+      "style": "compact",
+      "group_size": 1
+    },
+    {
+      "n": 6,
+      "en": "on purpose",
+      "zh": "故意地",
+      "spoken_at": 32.59,
+      "from": 32.59,
+      "to": 34.6,
+      "seconds": 2.01,
+      "min_read_seconds": 1.37,
+      "style": "compact",
+      "group_size": 1
+    },
+    {
+      "n": 7,
+      "en": "every single time",
+      "zh": "每一次，无一例外",
+      "spoken_at": 34.75,
+      "from": 34.75,
+      "to": 37.95,
+      "seconds": 3.2,
+      "min_read_seconds": 1.98,
+      "style": "compact",
+      "group_size": 1
+    }
+  ],
+  "cues": [
+    {
+      "cue": 1,
+      "show": 0.0,
+      "hide": 1.544,
+      "seconds": 1.54,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.0,
+      "zh_cps": 5.8,
+      "zh_break_needs_eyeball": false,
+      "en": "When I was a kitten,"
+    },
+    {
+      "cue": 2,
+      "show": 1.544,
+      "hide": 4.767,
+      "seconds": 3.22,
+      "en_lines": 2,
+      "zh_lines": 2,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.5,
+      "zh_cps": 6.8,
+      "zh_break_needs_eyeball": false,
+      "en": "my owner taught me to play fetch with a toy mouse."
+    },
+    {
+      "cue": 3,
+      "show": 4.767,
+      "hide": 7.732,
+      "seconds": 2.96,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 11.5,
+      "zh_cps": 4.7,
+      "zh_break_needs_eyeball": false,
+      "en": "At first, I'd chase it, sit on it,"
+    },
+    {
+      "cue": 4,
+      "show": 7.732,
+      "hide": 9.103,
+      "seconds": 1.37,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.3,
+      "zh_cps": 4.4,
+      "zh_break_needs_eyeball": false,
+      "en": "and wait for a snack."
+    },
+    {
+      "cue": 5,
+      "show": 9.426,
+      "hide": 11.135,
+      "seconds": 1.71,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.8,
+      "zh_cps": 8.2,
+      "zh_break_needs_eyeball": false,
+      "en": "I thought I'd done my part."
+    },
+    {
+      "cue": 6,
+      "show": 11.355,
+      "hide": 14.279,
+      "seconds": 2.92,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 16.1,
+      "zh_cps": 6.5,
+      "zh_break_needs_eyeball": false,
+      "en": "She started with short throws, holding a treat."
+    },
+    {
+      "cue": 7,
+      "show": 14.579,
+      "hide": 17.291,
+      "seconds": 2.71,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 17.7,
+      "zh_cps": 6.3,
+      "zh_break_needs_eyeball": false,
+      "en": "Whenever I brought it back, she'd roll it again."
+    },
+    {
+      "cue": 8,
+      "show": 17.544,
+      "hide": 19.644,
+      "seconds": 2.1,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 12.9,
+      "zh_cps": 4.3,
+      "zh_break_needs_eyeball": false,
+      "en": "Soon, I got the hang of it."
+    },
+    {
+      "cue": 9,
+      "show": 19.826,
+      "hide": 21.738,
+      "seconds": 1.91,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.1,
+      "zh_cps": 5.2,
+      "zh_break_needs_eyeball": false,
+      "en": "I was so proud of myself,"
+    },
+    {
+      "cue": 10,
+      "show": 21.873,
+      "hide": 24.232,
+      "seconds": 2.36,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.4,
+      "zh_cps": 4.7,
+      "zh_break_needs_eyeball": false,
+      "en": "I fetched it three times in a row."
+    },
+    {
+      "cue": 11,
+      "show": 24.602,
+      "hide": 25.873,
+      "seconds": 1.27,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 11.8,
+      "zh_cps": 5.5,
+      "zh_break_needs_eyeball": false,
+      "en": "Then one night,"
+    },
+    {
+      "cue": 12,
+      "show": 25.873,
+      "hide": 28.444,
+      "seconds": 2.57,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 17.5,
+      "zh_cps": 5.4,
+      "zh_break_needs_eyeball": false,
+      "en": "I knocked the mouse off the sofa by accident."
+    },
+    {
+      "cue": 13,
+      "show": 28.767,
+      "hide": 31.112,
+      "seconds": 2.34,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.9,
+      "zh_cps": 6.8,
+      "zh_break_needs_eyeball": false,
+      "en": "She ran over and put it by my paws."
+    },
+    {
+      "cue": 14,
+      "show": 31.332,
+      "hide": 33.894,
+      "seconds": 2.56,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 11.7,
+      "zh_cps": 5.1,
+      "zh_break_needs_eyeball": false,
+      "en": "Now, I push it off on purpose."
+    },
+    {
+      "cue": 15,
+      "show": 33.894,
+      "hide": 36.32,
+      "seconds": 2.43,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.3,
+      "zh_cps": 6.2,
+      "zh_break_needs_eyeball": false,
+      "en": "She brings it back every single time,"
+    },
+    {
+      "cue": 16,
+      "show": 36.32,
+      "hide": 38.468,
+      "seconds": 2.15,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.4,
+      "zh_cps": 6.1,
+      "zh_break_needs_eyeball": false,
+      "en": "and I let her pet me as a reward."
+    },
+    {
+      "cue": 17,
+      "show": 38.767,
+      "hide": 40.151,
+      "seconds": 1.38,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 11.6,
+      "zh_cps": 8.0,
+      "zh_break_needs_eyeball": false,
+      "en": "She's a natural."
+    }
+  ],
+  "note": "结构检查不等于画面好看、口型正确或留存更高。",
+  "output": "sample.mp4",
+  "output_sha256": "a296f72154f1addd9be8caf82bf800b528ca67b0792e99bc0ae82aad918bb8bf",
+  "actual_seconds": 40.145,
+  "video_seconds": 40.12,
+  "audio_seconds": 40.145,
+  "frames_written": 1003,
+  "outro_seconds": 0.0,
+  "decode": "passed",
+  "human_review": "pending",
+  "publication": "not_published"
+}

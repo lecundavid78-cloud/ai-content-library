@@ -1,0 +1,123 @@
+{
+  "schema": "evan-post-v2",
+  "episode": 32,
+  "说明": "稳健性测试用：字幕分句、文字与 episodes/32/subtitles.json 完全相同（未重新分句），只把原题手动换行改为自动排版，并加上脸部安全框。",
+  "speed": 0.85,
+  "header": {
+    "tag": "雅思口语 Part 2 · 情景练习",
+    "title_zh": "等不到回复的消息",
+    "title_en": "Describe a time when you sent a message or an email to someone but received no reply for a long time"
+  },
+  "safe": {
+    "face": [
+      368,
+      712,
+      760,
+      1096
+    ],
+    "source": "detect-safe 自动估计"
+  },
+  "vocab": [
+    {
+      "match": "got no reply",
+      "en": "got no reply",
+      "zh": "没有收到回复"
+    },
+    {
+      "match": "lose patience",
+      "en": "lose patience",
+      "zh": "失去耐心"
+    },
+    {
+      "match": "a follow-up",
+      "en": "a follow-up",
+      "zh": "一次后续跟进／追问"
+    },
+    {
+      "match": "the whole time",
+      "en": "the whole time",
+      "zh": "一直／自始至终"
+    },
+    {
+      "match": "No wonder",
+      "en": "No wonder",
+      "zh": "难怪"
+    },
+    {
+      "match": "taken it personally",
+      "en": "taken it personally",
+      "zh": "把这事理解成针对自己"
+    },
+    {
+      "match": "jumped to conclusions",
+      "en": "jumped to conclusions",
+      "zh": "过早下结论"
+    }
+  ],
+  "cues": [
+    {
+      "en": "Last Friday, I texted my owner from her tablet:",
+      "zh": "上周五，我用主人的平板给她发了条消息："
+    },
+    {
+      "en": "\"Please open the bedroom door. It's dinner time.\"",
+      "zh": "“请把卧室门打开，到晚饭时间了。”"
+    },
+    {
+      "en": "For nearly an hour, I got no reply.",
+      "zh": "差不多快一个小时，我都没有收到回复。"
+    },
+    {
+      "en": "I stared at the screen and began to lose patience.",
+      "zh": "我死死盯着屏幕，开始失去耐心。"
+    },
+    {
+      "en": "I heard her rushing around outside, yet she ignored me!",
+      "zh": "我明明听见她在门外跑来跑去，居然完全无视我！"
+    },
+    {
+      "en": "Offended, I sent a follow-up: \"Have you forgotten me?\"",
+      "zh": "我气不过，又发了一次后续追问：“你是不是把我忘了？”"
+    },
+    {
+      "en": "Instantly, my belly buzzed.",
+      "zh": "结果下一秒，我的肚皮底下震动了起来。"
+    },
+    {
+      "en": "I looked down.",
+      "zh": "我低头一看。"
+    },
+    {
+      "en": "I'd been sitting on her warm phone the whole time.",
+      "zh": "原来我一直坐在她温乎乎的手机上。"
+    },
+    {
+      "en": "No wonder she couldn't find it!",
+      "zh": "难怪她到处都找不到！"
+    },
+    {
+      "en": "She opened the door, pulled the phone from under me,",
+      "zh": "她推开门，把手机从我身下抽出来，"
+    },
+    {
+      "en": "and finally replied: \"Move.\"",
+      "zh": "终于回了一个词：“起开。”"
+    },
+    {
+      "en": "I felt relieved, then embarrassed.",
+      "zh": "我先是松了一口气，接着一阵尴尬。"
+    },
+    {
+      "en": "I'd taken it personally and jumped to conclusions.",
+      "zh": "是我把这事理解成针对自己，还过早下结论了。"
+    },
+    {
+      "en": "Clearly, better communication starts",
+      "zh": "显然，改善沟通的第一步，"
+    },
+    {
+      "en": "with moving my butt off her phone.",
+      "zh": "是先把我的屁股从她手机上挪开。"
+    }
+  ]
+}

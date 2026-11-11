@@ -1,0 +1,536 @@
+{
+  "tool": "evan_post2 2.0.0-exp",
+  "episode_dir": "episodes/31",
+  "raw_sha256": "de9a5d5143569c7fa8a4a3d6533219b2b13f2053a4e7e09ea4c77011c3a086de",
+  "config": "subtitles.v2.json",
+  "config_sha256": "198c206f59f1895e0e3b84f0819ec9d5a13c819374d65017bd05ba360e2580b8",
+  "preset": "A.json",
+  "preset_sha256": "33672cecf6384fff3ab25a22b2986c072d9dd7f8d85fdfcdd66e52ab88e133e4",
+  "speed": 0.85,
+  "speed_application_count": 1,
+  "output_seconds": 44.104,
+  "cue_count": 17,
+  "card_count": 7,
+  "errors": [],
+  "warnings": [
+    "字幕中文与 chinese.txt 不完全一致（沿用已交付字幕的中文，未改动）"
+  ],
+  "review_flags": [
+    "原题英文在 13.4s 才展开（开头表达卡密集）；提示条里的中文题意全程可见。如需更早可设 question_at"
+  ],
+  "min_clearance_px": {
+    "above_face": 52,
+    "below_face": 298
+  },
+  "mean_covered_ratio": 0.127,
+  "face_safe_box": [
+    393,
+    680,
+    895,
+    1053
+  ],
+  "silence_refinements": [],
+  "hook": {
+    "text": "日出很美，我的后背很暖",
+    "t0": 0.0,
+    "t1": 2.0
+  },
+  "question": {
+    "t0": 13.418235294117649,
+    "t1": 17.17823529411765,
+    "wanted": 3.76,
+    "fallback": false
+  },
+  "bookend": {
+    "text": "日出很美，我的后背很暖",
+    "t0": 41.19058823529412,
+    "t1": 44.103529411764704
+  },
+  "twist": null,
+  "card_groups": [
+    {
+      "t0": 2.1,
+      "t1": 5.3,
+      "style": "standard",
+      "cards": [
+        "at the crack of dawn"
+      ]
+    },
+    {
+      "t0": 5.67,
+      "t1": 7.31,
+      "style": "standard",
+      "cards": [
+        "worth it"
+      ]
+    },
+    {
+      "t0": 7.46,
+      "t1": 9.92,
+      "style": "standard",
+      "cards": [
+        "make an effort"
+      ]
+    },
+    {
+      "t0": 10.07,
+      "t1": 13.27,
+      "style": "standard",
+      "cards": [
+        "wide awake"
+      ]
+    },
+    {
+      "t0": 21.64,
+      "t1": 25.67,
+      "style": "standard",
+      "cards": [
+        "curled up",
+        "in no time"
+      ]
+    },
+    {
+      "t0": 31.53,
+      "t1": 34.73,
+      "style": "standard",
+      "cards": [
+        "missed the point"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "n": 1,
+      "en": "at the crack of dawn",
+      "zh": "天刚破晓时",
+      "spoken_at": 1.86,
+      "from": 2.1,
+      "to": 5.3,
+      "seconds": 3.2,
+      "min_read_seconds": 2.3,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 2,
+      "en": "worth it",
+      "zh": "值得",
+      "spoken_at": 5.67,
+      "from": 5.67,
+      "to": 7.31,
+      "seconds": 1.64,
+      "min_read_seconds": 1.28,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 3,
+      "en": "make an effort",
+      "zh": "付出努力",
+      "spoken_at": 7.46,
+      "from": 7.46,
+      "to": 9.92,
+      "seconds": 2.46,
+      "min_read_seconds": 1.71,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 4,
+      "en": "wide awake",
+      "zh": "完全清醒",
+      "spoken_at": 10.07,
+      "from": 10.07,
+      "to": 13.27,
+      "seconds": 3.2,
+      "min_read_seconds": 1.46,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 5,
+      "en": "curled up",
+      "zh": "蜷缩起来",
+      "spoken_at": 21.64,
+      "from": 21.64,
+      "to": 25.67,
+      "seconds": 4.02,
+      "min_read_seconds": 1.46,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 6,
+      "en": "in no time",
+      "zh": "很快／一下子",
+      "spoken_at": 22.47,
+      "from": 22.47,
+      "to": 25.67,
+      "seconds": 3.2,
+      "min_read_seconds": 1.8,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 7,
+      "en": "missed the point",
+      "zh": "没抓住重点",
+      "spoken_at": 31.53,
+      "from": 31.53,
+      "to": 34.73,
+      "seconds": 3.2,
+      "min_read_seconds": 1.8,
+      "style": "standard",
+      "group_size": 1
+    }
+  ],
+  "cues": [
+    {
+      "cue": 1,
+      "show": 0.0,
+      "hide": 2.885,
+      "seconds": 2.88,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.6,
+      "zh_cps": 4.2,
+      "zh_break_needs_eyeball": false,
+      "en": "Last Sunday, I got up at the crack of dawn"
+    },
+    {
+      "cue": 2,
+      "show": 2.885,
+      "hide": 4.35,
+      "seconds": 1.47,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.3,
+      "zh_cps": 2.7,
+      "zh_break_needs_eyeball": false,
+      "en": "to watch the sunrise."
+    },
+    {
+      "cue": 3,
+      "show": 4.72,
+      "hide": 6.414,
+      "seconds": 1.69,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 17.7,
+      "zh_cps": 4.7,
+      "zh_break_needs_eyeball": false,
+      "en": "My owner said it was worth it,"
+    },
+    {
+      "cue": 4,
+      "show": 6.414,
+      "hide": 8.491,
+      "seconds": 2.08,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.9,
+      "zh_cps": 4.3,
+      "zh_break_needs_eyeball": false,
+      "en": "so I decided to make an effort."
+    },
+    {
+      "cue": 5,
+      "show": 8.72,
+      "hide": 11.214,
+      "seconds": 2.49,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 10.4,
+      "zh_cps": 4.4,
+      "zh_break_needs_eyeball": false,
+      "en": "By five, I was wide awake,"
+    },
+    {
+      "cue": 6,
+      "show": 11.214,
+      "hide": 14.029,
+      "seconds": 2.82,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 16.3,
+      "zh_cps": 5.7,
+      "zh_break_needs_eyeball": false,
+      "en": "waiting by the cold window while she made tea."
+    },
+    {
+      "cue": 7,
+      "show": 14.249,
+      "hide": 17.385,
+      "seconds": 3.14,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.1,
+      "zh_cps": 2.9,
+      "zh_break_needs_eyeball": false,
+      "en": "At first, the garden was completely dark."
+    },
+    {
+      "cue": 8,
+      "show": 17.638,
+      "hide": 21.244,
+      "seconds": 3.61,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.0,
+      "zh_cps": 3.9,
+      "zh_break_needs_eyeball": false,
+      "en": "Suddenly, the first patch of sunlight hit the cushion."
+    },
+    {
+      "cue": 9,
+      "show": 21.473,
+      "hide": 23.606,
+      "seconds": 2.13,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.6,
+      "zh_cps": 4.7,
+      "zh_break_needs_eyeball": false,
+      "en": "I curled up in it in no time."
+    },
+    {
+      "cue": 10,
+      "show": 23.826,
+      "hide": 26.249,
+      "seconds": 2.42,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.3,
+      "zh_cps": 4.5,
+      "zh_break_needs_eyeball": false,
+      "en": "She came over and pointed at the sky."
+    },
+    {
+      "cue": 11,
+      "show": 26.249,
+      "hide": 28.115,
+      "seconds": 1.87,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.0,
+      "zh_cps": 3.2,
+      "zh_break_needs_eyeball": false,
+      "en": "I immediately turned around,"
+    },
+    {
+      "cue": 12,
+      "show": 28.226,
+      "hide": 30.468,
+      "seconds": 2.24,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.3,
+      "zh_cps": 7.6,
+      "zh_break_needs_eyeball": false,
+      "en": "facing the room to warm my back."
+    },
+    {
+      "cue": 13,
+      "show": 30.72,
+      "hide": 32.797,
+      "seconds": 2.08,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.4,
+      "zh_cps": 4.8,
+      "zh_break_needs_eyeball": false,
+      "en": "She said I had missed the point."
+    },
+    {
+      "cue": 14,
+      "show": 33.049,
+      "hide": 36.444,
+      "seconds": 3.39,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 10.6,
+      "zh_cps": 3.5,
+      "zh_break_needs_eyeball": false,
+      "en": "Honestly, I felt warm and satisfied."
+    },
+    {
+      "cue": 15,
+      "show": 37.026,
+      "hide": 39.009,
+      "seconds": 1.98,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.6,
+      "zh_cps": 4.5,
+      "zh_break_needs_eyeball": false,
+      "en": "She woke up to see the sun."
+    },
+    {
+      "cue": 16,
+      "show": 39.214,
+      "hide": 40.962,
+      "seconds": 1.75,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 11.4,
+      "zh_cps": 5.1,
+      "zh_break_needs_eyeball": false,
+      "en": "I woke up to use it."
+    },
+    {
+      "cue": 17,
+      "show": 41.191,
+      "hide": 44.104,
+      "seconds": 2.91,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 10.6,
+      "zh_cps": 4.1,
+      "zh_break_needs_eyeball": false,
+      "en": "Same sun, different priorities."
+    }
+  ],
+  "note": "结构检查不等于画面好看、口型正确或留存更高。",
+  "contrast_white_text_vs_backdrop": {
+    "min_of_worst5pct": 14.74,
+    "per_cue": [
+      {
+        "cue": 1,
+        "worst5pct": 15.91,
+        "median": 18.58,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 2,
+        "worst5pct": 16.1,
+        "median": 18.88,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 3,
+        "worst5pct": 14.74,
+        "median": 18.73,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 4,
+        "worst5pct": 14.94,
+        "median": 18.73,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 5,
+        "worst5pct": 15.33,
+        "median": 18.88,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 6,
+        "worst5pct": 14.94,
+        "median": 18.42,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 7,
+        "worst5pct": 16.1,
+        "median": 18.58,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 8,
+        "worst5pct": 15.13,
+        "median": 18.42,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 9,
+        "worst5pct": 15.33,
+        "median": 18.88,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 10,
+        "worst5pct": 15.72,
+        "median": 18.42,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 11,
+        "worst5pct": 14.94,
+        "median": 18.88,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 12,
+        "worst5pct": 14.74,
+        "median": 18.73,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 13,
+        "worst5pct": 14.74,
+        "median": 18.73,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 14,
+        "worst5pct": 14.94,
+        "median": 18.88,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 15,
+        "worst5pct": 15.13,
+        "median": 18.73,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 16,
+        "worst5pct": 15.91,
+        "median": 18.88,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 17,
+        "worst5pct": 14.94,
+        "median": 18.73,
+        "scrim_alpha": 122
+      }
+    ],
+    "note": "未计入深色描边和投影，实际可读性高于此数。WCAG：大号粗体字 ≥3，正文 ≥4.5。"
+  }
+}
