@@ -1,0 +1,511 @@
+{
+  "tool": "evan_post2 2.0.0-exp",
+  "episode_dir": "episodes/32",
+  "raw_sha256": "7151809377f07f103011abf76e87423b34364f0b8b84b1df4d96dd0af79dd766",
+  "config": "subtitles.v2.json",
+  "config_sha256": "b5a84e550b0a8b3a879d37c567f5e8e26c33353ee86f50dc92b42d67d460a2d5",
+  "preset": "A.json",
+  "preset_sha256": "33672cecf6384fff3ab25a22b2986c072d9dd7f8d85fdfcdd66e52ab88e133e4",
+  "speed": 0.85,
+  "speed_application_count": 1,
+  "output_seconds": 48.818,
+  "cue_count": 16,
+  "card_count": 7,
+  "errors": [],
+  "warnings": [],
+  "review_flags": [],
+  "min_clearance_px": {
+    "above_face": 84,
+    "below_face": 255
+  },
+  "mean_covered_ratio": 0.1525,
+  "face_safe_box": [
+    368,
+    712,
+    760,
+    1096
+  ],
+  "silence_refinements": [
+    {
+      "cue": 13,
+      "asr_start": 31.84,
+      "refined_start": 32.152
+    }
+  ],
+  "hook": {
+    "text": "不是不回，是猫压着手机",
+    "t0": 0.0,
+    "t1": 2.8
+  },
+  "question": {
+    "t0": 2.9499999999999997,
+    "t1": 8.671176470588236,
+    "wanted": 6.62,
+    "fallback": false
+  },
+  "bookend": {
+    "text": "不是不回，是猫压着手机",
+    "t0": 46.36705882352941,
+    "t1": 48.817647058823525
+  },
+  "twist": null,
+  "card_groups": [
+    {
+      "t0": 8.82,
+      "t1": 12.02,
+      "style": "standard",
+      "cards": [
+        "got no reply"
+      ]
+    },
+    {
+      "t0": 12.26,
+      "t1": 15.46,
+      "style": "standard",
+      "cards": [
+        "lose patience"
+      ]
+    },
+    {
+      "t0": 19.24,
+      "t1": 22.44,
+      "style": "standard",
+      "cards": [
+        "a follow-up"
+      ]
+    },
+    {
+      "t0": 27.34,
+      "t1": 32.08,
+      "style": "standard",
+      "cards": [
+        "the whole time",
+        "No wonder"
+      ]
+    },
+    {
+      "t0": 40.73,
+      "t1": 45.32,
+      "style": "standard",
+      "cards": [
+        "taken it personally",
+        "jumped to conclusions"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "n": 1,
+      "en": "got no reply",
+      "zh": "没有收到回复",
+      "spoken_at": 8.82,
+      "from": 8.82,
+      "to": 12.02,
+      "seconds": 3.2,
+      "min_read_seconds": 1.89,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 2,
+      "en": "lose patience",
+      "zh": "失去耐心",
+      "spoken_at": 12.26,
+      "from": 12.26,
+      "to": 15.46,
+      "seconds": 3.2,
+      "min_read_seconds": 1.46,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 3,
+      "en": "a follow-up",
+      "zh": "一次后续跟进／追问",
+      "spoken_at": 19.24,
+      "from": 19.24,
+      "to": 22.44,
+      "seconds": 3.2,
+      "min_read_seconds": 1.82,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 4,
+      "en": "the whole time",
+      "zh": "一直／自始至终",
+      "spoken_at": 27.34,
+      "from": 27.34,
+      "to": 32.08,
+      "seconds": 4.75,
+      "min_read_seconds": 1.89,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 5,
+      "en": "No wonder",
+      "zh": "难怪",
+      "spoken_at": 28.88,
+      "from": 28.88,
+      "to": 32.08,
+      "seconds": 3.2,
+      "min_read_seconds": 1.28,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 6,
+      "en": "taken it personally",
+      "zh": "把这事理解成针对自己",
+      "spoken_at": 40.73,
+      "from": 40.73,
+      "to": 45.32,
+      "seconds": 4.59,
+      "min_read_seconds": 2.25,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 7,
+      "en": "jumped to conclusions",
+      "zh": "过早下结论",
+      "spoken_at": 42.12,
+      "from": 42.12,
+      "to": 45.32,
+      "seconds": 3.2,
+      "min_read_seconds": 1.8,
+      "style": "standard",
+      "group_size": 2
+    }
+  ],
+  "cues": [
+    {
+      "cue": 1,
+      "show": 0.0,
+      "hide": 3.785,
+      "seconds": 3.79,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 12.4,
+      "zh_cps": 4.5,
+      "zh_break_needs_eyeball": false,
+      "en": "Last Friday, I texted my owner from her tablet:"
+    },
+    {
+      "cue": 2,
+      "show": 4.014,
+      "hide": 7.032,
+      "seconds": 3.02,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 16.2,
+      "zh_cps": 4.3,
+      "zh_break_needs_eyeball": false,
+      "en": "\"Please open the bedroom door. It's dinner time.\""
+    },
+    {
+      "cue": 3,
+      "show": 7.379,
+      "hide": 10.044,
+      "seconds": 2.67,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.1,
+      "zh_cps": 6.0,
+      "zh_break_needs_eyeball": false,
+      "en": "For nearly an hour, I got no reply."
+    },
+    {
+      "cue": 4,
+      "show": 10.438,
+      "hide": 13.432,
+      "seconds": 2.99,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 16.7,
+      "zh_cps": 4.3,
+      "zh_break_needs_eyeball": false,
+      "en": "I stared at the screen and began to lose patience."
+    },
+    {
+      "cue": 5,
+      "show": 13.779,
+      "hide": 17.7,
+      "seconds": 3.92,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.0,
+      "zh_cps": 5.1,
+      "zh_break_needs_eyeball": false,
+      "en": "I heard her rushing around outside, yet she ignored me!"
+    },
+    {
+      "cue": 6,
+      "show": 17.92,
+      "hide": 21.879,
+      "seconds": 3.96,
+      "en_lines": 2,
+      "zh_lines": 2,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.6,
+      "zh_cps": 5.3,
+      "zh_break_needs_eyeball": false,
+      "en": "Offended, I sent a follow-up: \"Have you forgotten me?\""
+    },
+    {
+      "cue": 7,
+      "show": 22.155,
+      "hide": 24.265,
+      "seconds": 2.11,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 12.8,
+      "zh_cps": 7.6,
+      "zh_break_needs_eyeball": false,
+      "en": "Instantly, my belly buzzed."
+    },
+    {
+      "cue": 8,
+      "show": 24.485,
+      "hide": 25.685,
+      "seconds": 1.2,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 11.7,
+      "zh_cps": 4.2,
+      "zh_break_needs_eyeball": false,
+      "en": "I looked down."
+    },
+    {
+      "cue": 9,
+      "show": 25.685,
+      "hide": 28.679,
+      "seconds": 2.99,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 16.7,
+      "zh_cps": 5.0,
+      "zh_break_needs_eyeball": false,
+      "en": "I'd been sitting on her warm phone the whole time."
+    },
+    {
+      "cue": 10,
+      "show": 28.885,
+      "hide": 30.735,
+      "seconds": 1.85,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 16.8,
+      "zh_cps": 4.9,
+      "zh_break_needs_eyeball": false,
+      "en": "No wonder she couldn't find it!"
+    },
+    {
+      "cue": 11,
+      "show": 30.955,
+      "hide": 33.802,
+      "seconds": 2.85,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 18.3,
+      "zh_cps": 4.9,
+      "zh_break_needs_eyeball": false,
+      "en": "She opened the door, pulled the phone from under me,"
+    },
+    {
+      "cue": 12,
+      "show": 33.802,
+      "hide": 37.558,
+      "seconds": 3.76,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 7.5,
+      "zh_cps": 2.4,
+      "zh_break_needs_eyeball": false,
+      "en": "and finally replied: \"Move.\""
+    },
+    {
+      "cue": 13,
+      "show": 37.746,
+      "hide": 40.185,
+      "seconds": 2.44,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.9,
+      "zh_cps": 5.7,
+      "zh_break_needs_eyeball": false,
+      "en": "I felt relieved, then embarrassed."
+    },
+    {
+      "cue": 14,
+      "show": 40.579,
+      "hide": 43.574,
+      "seconds": 2.99,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 16.7,
+      "zh_cps": 6.3,
+      "zh_break_needs_eyeball": false,
+      "en": "I'd taken it personally and jumped to conclusions."
+    },
+    {
+      "cue": 15,
+      "show": 44.014,
+      "hide": 46.367,
+      "seconds": 2.35,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.3,
+      "zh_cps": 4.3,
+      "zh_break_needs_eyeball": false,
+      "en": "Clearly, better communication starts"
+    },
+    {
+      "cue": 16,
+      "show": 46.367,
+      "hide": 48.818,
+      "seconds": 2.45,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.9,
+      "zh_cps": 5.7,
+      "zh_break_needs_eyeball": false,
+      "en": "with moving my butt off her phone."
+    }
+  ],
+  "note": "结构检查不等于画面好看、口型正确或留存更高。",
+  "contrast_white_text_vs_backdrop": {
+    "min_of_worst5pct": 14.55,
+    "per_cue": [
+      {
+        "cue": 1,
+        "worst5pct": 14.55,
+        "median": 15.72,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 2,
+        "worst5pct": 14.55,
+        "median": 15.72,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 3,
+        "worst5pct": 14.55,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 4,
+        "worst5pct": 14.55,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 5,
+        "worst5pct": 14.55,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 6,
+        "worst5pct": 14.74,
+        "median": 16.1,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 7,
+        "worst5pct": 14.55,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 8,
+        "worst5pct": 14.74,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 9,
+        "worst5pct": 14.55,
+        "median": 15.72,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 10,
+        "worst5pct": 14.55,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 11,
+        "worst5pct": 14.55,
+        "median": 15.72,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 12,
+        "worst5pct": 14.74,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 13,
+        "worst5pct": 14.74,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 14,
+        "worst5pct": 14.55,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 15,
+        "worst5pct": 14.55,
+        "median": 15.72,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 16,
+        "worst5pct": 14.74,
+        "median": 15.91,
+        "scrim_alpha": 122
+      }
+    ],
+    "note": "未计入深色描边和投影，实际可读性高于此数。WCAG：大号粗体字 ≥3，正文 ≥4.5。"
+  }
+}

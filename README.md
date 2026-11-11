@@ -13,6 +13,7 @@
 - preferences/：用户明确表达的关注点与模型推测分开保存。
 - reviews/：Codex 的核查和选题判断。
 - productions/：后续文案与制作文件。
+- productions/evan-post-redesign-v2-20261111/：Evan 小猫学雅思后期升级 redesign v2 交付。
 - handoff/：读写测试和交接回执。
 
 未收到材料时不造空帖子凑数。用户没有解释选帖理由时可以先收录，用户评价留空，不由模型编写为用户意见。

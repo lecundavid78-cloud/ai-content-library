@@ -1,0 +1,467 @@
+{
+  "tool": "evan_post2 2.0.0-exp",
+  "episode_dir": "episodes/30",
+  "raw_sha256": "f77525f729496ea8cde5af54886499231612c14a0692126b685f54ec2439d39b",
+  "config": "subtitles.v2.json",
+  "config_sha256": "8825cabd1e7cc774b262f27732c6d07c6a2bbffcc4836bdabc21a523fe6e7e6a",
+  "preset": "A.json",
+  "preset_sha256": "33672cecf6384fff3ab25a22b2986c072d9dd7f8d85fdfcdd66e52ab88e133e4",
+  "speed": 0.9,
+  "speed_application_count": 1,
+  "output_seconds": 42.36,
+  "cue_count": 14,
+  "card_count": 7,
+  "errors": [],
+  "warnings": [
+    "本期沿用历史 0.9 倍（仅第30期）；新片默认 0.85"
+  ],
+  "review_flags": [],
+  "min_clearance_px": {
+    "above_face": 68,
+    "below_face": 311
+  },
+  "mean_covered_ratio": 0.153,
+  "face_safe_box": [
+    392,
+    696,
+    760,
+    1040
+  ],
+  "silence_refinements": [],
+  "hook": {
+    "text": "犯一次错，就不值得被爱了吗",
+    "t0": 0.0,
+    "t1": 2.8
+  },
+  "question": {
+    "t0": 2.9499999999999997,
+    "t1": 6.49,
+    "wanted": 3.54,
+    "fallback": false
+  },
+  "bookend": {
+    "text": "犯一次错，就不值得被爱了吗",
+    "t0": 39.38666666666667,
+    "t1": 42.36
+  },
+  "twist": null,
+  "card_groups": [
+    {
+      "t0": 12.16,
+      "t1": 15.36,
+      "style": "standard",
+      "cards": [
+        "dwelling on it"
+      ]
+    },
+    {
+      "t0": 20.39,
+      "t1": 24.84,
+      "style": "standard",
+      "cards": [
+        "box myself in",
+        "trap myself"
+      ]
+    },
+    {
+      "t0": 29.81,
+      "t1": 32.06,
+      "style": "standard",
+      "cards": [
+        "a second chance"
+      ]
+    },
+    {
+      "t0": 32.21,
+      "t1": 35.4,
+      "style": "standard",
+      "cards": [
+        "at ease",
+        "make mistakes"
+      ]
+    },
+    {
+      "t0": 35.55,
+      "t1": 38.75,
+      "style": "standard",
+      "cards": [
+        "beat myself up"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "n": 1,
+      "en": "dwelling on it",
+      "zh": "一直纠结这件事",
+      "spoken_at": 12.16,
+      "from": 12.16,
+      "to": 15.36,
+      "seconds": 3.2,
+      "min_read_seconds": 1.98,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 2,
+      "en": "box myself in",
+      "zh": "把自己困住／自我设限",
+      "spoken_at": 20.39,
+      "from": 20.39,
+      "to": 24.84,
+      "seconds": 4.44,
+      "min_read_seconds": 2.16,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 3,
+      "en": "trap myself",
+      "zh": "把自己困住",
+      "spoken_at": 21.64,
+      "from": 21.64,
+      "to": 24.84,
+      "seconds": 3.2,
+      "min_read_seconds": 1.55,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 4,
+      "en": "a second chance",
+      "zh": "第二次机会",
+      "spoken_at": 29.81,
+      "from": 29.81,
+      "to": 32.06,
+      "seconds": 2.25,
+      "min_read_seconds": 1.8,
+      "style": "standard",
+      "group_size": 1
+    },
+    {
+      "n": 5,
+      "en": "at ease",
+      "zh": "自在／安心",
+      "spoken_at": 32.21,
+      "from": 32.21,
+      "to": 35.4,
+      "seconds": 3.18,
+      "min_read_seconds": 1.46,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 6,
+      "en": "make mistakes",
+      "zh": "犯错",
+      "spoken_at": 33.7,
+      "from": 33.7,
+      "to": 35.4,
+      "seconds": 1.69,
+      "min_read_seconds": 1.28,
+      "style": "standard",
+      "group_size": 2
+    },
+    {
+      "n": 7,
+      "en": "beat myself up",
+      "zh": "过分责怪自己",
+      "spoken_at": 35.55,
+      "from": 35.55,
+      "to": 38.75,
+      "seconds": 3.2,
+      "min_read_seconds": 1.89,
+      "style": "standard",
+      "group_size": 1
+    }
+  ],
+  "cues": [
+    {
+      "cue": 1,
+      "show": 0.0,
+      "hide": 3.389,
+      "seconds": 3.39,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.9,
+      "zh_cps": 4.7,
+      "zh_break_needs_eyeball": false,
+      "en": "Recently,I stopped hiding whenever I messed up."
+    },
+    {
+      "cue": 2,
+      "show": 3.609,
+      "hide": 5.772,
+      "seconds": 2.16,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 17.6,
+      "zh_cps": 4.6,
+      "zh_break_needs_eyeball": false,
+      "en": "Last week, I knocked over a flowerpot."
+    },
+    {
+      "cue": 3,
+      "show": 6.453,
+      "hide": 9.031,
+      "seconds": 2.58,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.7,
+      "zh_cps": 3.9,
+      "zh_break_needs_eyeball": false,
+      "en": "Nothing broke, just some spilled dirt."
+    },
+    {
+      "cue": 4,
+      "show": 9.031,
+      "hide": 12.164,
+      "seconds": 3.13,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.4,
+      "zh_cps": 5.1,
+      "zh_break_needs_eyeball": false,
+      "en": "Still, I hid under the sofa all afternoon,"
+    },
+    {
+      "cue": 5,
+      "show": 12.164,
+      "hide": 14.544,
+      "seconds": 2.38,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.5,
+      "zh_cps": 5.9,
+      "zh_break_needs_eyeball": false,
+      "en": "dwelling on it, and skipped my treat."
+    },
+    {
+      "cue": 6,
+      "show": 14.764,
+      "hide": 18.878,
+      "seconds": 4.11,
+      "en_lines": 2,
+      "zh_lines": 2,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.6,
+      "zh_cps": 3.9,
+      "zh_break_needs_eyeball": false,
+      "en": "Then, a bowl of fish landed by the sofa. \"Dinner, Evan.\""
+    },
+    {
+      "cue": 7,
+      "show": 19.098,
+      "hide": 21.453,
+      "seconds": 2.36,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 17.4,
+      "zh_cps": 5.5,
+      "zh_break_needs_eyeball": false,
+      "en": "I realized I didn't need to box myself in"
+    },
+    {
+      "cue": 8,
+      "show": 21.453,
+      "hide": 24.528,
+      "seconds": 3.07,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.6,
+      "zh_cps": 5.9,
+      "zh_break_needs_eyeball": false,
+      "en": "or trap myself in the dark to prove I was sorry."
+    },
+    {
+      "cue": 9,
+      "show": 24.653,
+      "hide": 26.95,
+      "seconds": 2.3,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 10.9,
+      "zh_cps": 4.4,
+      "zh_break_needs_eyeball": false,
+      "en": "So I came out, ate first,"
+    },
+    {
+      "cue": 10,
+      "show": 27.053,
+      "hide": 31.1,
+      "seconds": 4.05,
+      "en_lines": 2,
+      "zh_lines": 2,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.1,
+      "zh_cps": 5.4,
+      "zh_break_needs_eyeball": false,
+      "en": "pushed one paw of soil back, and gave myself a second chance."
+    },
+    {
+      "cue": 11,
+      "show": 31.32,
+      "hide": 33.083,
+      "seconds": 1.76,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 13.6,
+      "zh_cps": 5.7,
+      "zh_break_needs_eyeball": false,
+      "en": "Now I feel more at ease."
+    },
+    {
+      "cue": 12,
+      "show": 33.387,
+      "hide": 36.833,
+      "seconds": 3.45,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 14.5,
+      "zh_cps": 4.6,
+      "zh_break_needs_eyeball": false,
+      "en": "I still make mistakes, but I don't beat myself up."
+    },
+    {
+      "cue": 13,
+      "show": 37.053,
+      "hide": 39.172,
+      "seconds": 2.12,
+      "en_lines": 1,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 15.1,
+      "zh_cps": 5.2,
+      "zh_break_needs_eyeball": false,
+      "en": "The plant just needed more soil."
+    },
+    {
+      "cue": 14,
+      "show": 39.387,
+      "hide": 42.36,
+      "seconds": 2.97,
+      "en_lines": 2,
+      "zh_lines": 1,
+      "en_px": 54,
+      "zh_px": 42,
+      "en_cps": 16.5,
+      "zh_cps": 5.7,
+      "zh_break_needs_eyeball": false,
+      "en": "I had already packed my toy mouse for a new home."
+    }
+  ],
+  "note": "结构检查不等于画面好看、口型正确或留存更高。",
+  "contrast_white_text_vs_backdrop": {
+    "min_of_worst5pct": 5.1,
+    "per_cue": [
+      {
+        "cue": 1,
+        "worst5pct": 5.17,
+        "median": 15.52,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 2,
+        "worst5pct": 5.1,
+        "median": 16.1,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 3,
+        "worst5pct": 5.17,
+        "median": 16.1,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 4,
+        "worst5pct": 5.17,
+        "median": 15.72,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 5,
+        "worst5pct": 5.17,
+        "median": 15.72,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 6,
+        "worst5pct": 5.25,
+        "median": 15.33,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 7,
+        "worst5pct": 5.17,
+        "median": 15.91,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 8,
+        "worst5pct": 5.17,
+        "median": 15.52,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 9,
+        "worst5pct": 5.17,
+        "median": 16.67,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 10,
+        "worst5pct": 5.25,
+        "median": 15.52,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 11,
+        "worst5pct": 5.25,
+        "median": 16.67,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 12,
+        "worst5pct": 5.25,
+        "median": 15.72,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 13,
+        "worst5pct": 5.25,
+        "median": 16.48,
+        "scrim_alpha": 122
+      },
+      {
+        "cue": 14,
+        "worst5pct": 5.17,
+        "median": 15.52,
+        "scrim_alpha": 122
+      }
+    ],
+    "note": "未计入深色描边和投影，实际可读性高于此数。WCAG：大号粗体字 ≥3，正文 ≥4.5。"
+  }
+}

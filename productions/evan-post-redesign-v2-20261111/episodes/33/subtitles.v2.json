@@ -1,0 +1,46 @@
+{
+  "schema": "evan-post-v2",
+  "episode": 33,
+  "说明": "中英文逐字来自 episodes/33 已确认稿，只调整了分句位置（在中英文都有逗号、语序一致处拆开）。未改任何字词。",
+  "speed": 0.85,
+  "header": {
+    "tag": "雅思口语 Part 2 · 情景练习",
+    "title_zh": "小时候学到的新技能",
+    "title_en": "Describe a new skill you learned when you were a child"
+  },
+  "hook": {"text": "谁在训练谁？", "source": "draft.json 的 cover（已确认封面文案），首次用于片内，请审核"},
+  "safe": {"face": [340, 496, 764, 906], "source": "detect-safe 自动估计，已对照 debug 静帧人工确认"},
+  "story": {
+    "twist_at": "Now, I push it off on purpose.",
+    "pairs": [["by accident", "on purpose"]],
+    "bookend": true
+  },
+  "vocab": [
+    {"match": "play fetch", "en": "play fetch", "zh": "玩扔出去再捡回来的游戏"},
+    {"match": "done my part", "en": "done my part", "zh": "尽了自己的一份力"},
+    {"match": "got the hang of it", "en": "got the hang of it", "zh": "摸到了窍门"},
+    {"match": "proud of myself", "en": "proud of myself", "zh": "为自己感到骄傲"},
+    {"match": "by accident", "en": "by accident", "zh": "不小心"},
+    {"match": "on purpose", "en": "on purpose", "zh": "故意地"},
+    {"match": "every single time", "en": "every single time", "zh": "每一次，无一例外"}
+  ],
+  "cues": [
+    {"en": "When I was a kitten,", "zh": "当我还是只小奶猫时，"},
+    {"en": "my owner taught me to play fetch with a toy mouse.", "zh": "主人拿一只玩具老鼠\n教我玩扔出去再捡回来的游戏。"},
+    {"en": "At first, I’d chase it, sit on it,", "zh": "起初，我追上去，一屁股坐在老鼠上，"},
+    {"en": "and wait for a snack.", "zh": "等着吃小零食。"},
+    {"en": "I thought I’d done my part.", "zh": "我觉得我已经尽了自己的一份力。"},
+    {"en": "She started with short throws, holding a treat.", "zh": "于是她手里捏着零食，从短距离抛掷开始教我。"},
+    {"en": "Whenever I brought it back, she’d roll it again.", "zh": "每次我把老鼠叼回来，她就再扔出去一次。"},
+    {"en": "Soon, I got the hang of it.", "zh": "很快，我就摸到了窍门。"},
+    {"en": "I was so proud of myself,", "zh": "我为自己感到骄傲极了，"},
+    {"en": "I fetched it three times in a row.", "zh": "一口气连着叼回来了三次。"},
+    {"en": "Then one night,", "zh": "后来有一天晚上，"},
+    {"en": "I knocked the mouse off the sofa by accident.", "zh": "我不小心把玩具老鼠碰下了沙发。"},
+    {"en": "She ran over and put it by my paws.", "zh": "她立马小跑过来，把它放回我的爪子边。"},
+    {"en": "Now, I push it off on purpose.", "zh": "现在，我都故意地把它推下沙发。"},
+    {"en": "She brings it back every single time,", "zh": "她每一次，无一例外都会给我捡回来，"},
+    {"en": "and I let her pet me as a reward.", "zh": "而我则恩准她摸摸我作为奖励。"},
+    {"en": "She’s a natural.", "zh": "她还真是块天生的好料子。"}
+  ]
+}
