@@ -1,0 +1,15 @@
+{
+ "source": "G_aze-digital-human-vo-v2_56.9s_1080x1920_25fps_with-audio.mp4",
+ "audio_cut": [
+  3.935,
+  4.055
+ ],
+ "video_drop_frames": [
+  98,
+  101
+ ],
+ "removed_s": 0.11999999999999966,
+ "audio_s": 56.7776875,
+ "video_s": 56.76,
+ "说明": "原片时间 t>4.055 的口播在成片里对应 t-0.12"
+}

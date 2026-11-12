@@ -6,10 +6,10 @@ import '@fontsource/inter-tight/800.css';
 import '@fontsource/inter-tight/900.css';
 import React from 'react';
 import { Composition } from 'remotion';
-import { FPS } from './data';
+import { FPS, FRAMES } from './data';
 import { Film } from './Film';
 
-// 成片 1930 帧 = 64.33s（数字人素材 F 为 64.36s，口播在 64.2s 结束）
+// V2 成片 1703 帧 = 56.77s（素材 G 剪掉 0.12s 口误后：口播 56.78s，画面 56.76s）
 export const Root: React.FC = () => (
-  <Composition id="Film" component={Film as unknown as React.FC<Record<string, unknown>>} width={1080} height={1920} fps={FPS} durationInFrames={1930} defaultProps={{ draft: false }} />
+  <Composition id="Film" component={Film as unknown as React.FC<Record<string, unknown>>} width={1080} height={1920} fps={FPS} durationInFrames={FRAMES} defaultProps={{ draft: false }} />
 );

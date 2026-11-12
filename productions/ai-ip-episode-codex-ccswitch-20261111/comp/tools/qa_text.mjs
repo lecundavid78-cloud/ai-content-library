@@ -18,7 +18,7 @@ for (const c of CUES) c.lines.forEach((l, i) => items.push({ t: l.t, t1: c.lines
 items.sort((x, y) => x.t - y.t);
 
 const strip = (s) => s.replace(/[\s，。、；：？！“”"「」,.;:?!·]/g, '');
-const script = fs.readFileSync(path.join(EP, '文案.md'), 'utf8').split('\n').filter((l) => !l.startsWith('#')).join('');
+const script = fs.readFileSync(path.join(EP, process.env.SCRIPT_MD || '文案_v2.md'), 'utf8').split('\n').filter((l) => !l.startsWith('#') && !l.startsWith('>')).join('');
 const A = strip(script);
 const B = strip(items.map((i) => i.text).join(''));
 let ok = A === B;

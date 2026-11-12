@@ -36,7 +36,7 @@ let last = -1;
 await renderMedia({
   composition, serveUrl, inputProps, browserExecutable,
   codec: 'h264', crf: 16, pixelFormat: 'yuv420p', muted: true, outputLocation: out,
-  timeoutInMilliseconds: 180000,
+  timeoutInMilliseconds: Number(process.env.TIMEOUT_MS || 300000),
   concurrency: Number(process.env.CONCURRENCY || 4),
   onProgress: ({ progress }) => { const p = Math.floor(progress * 20); if (p !== last) { last = p; console.log(`render ${p * 5}%`); } },
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { interpolate } from 'remotion';
-import { CONTRAST, KLINES, PREVIEW_STEPS, T, type KLine } from './data';
-import { C, Pill, Segs, backOut, cardStyle, clamp01, easeOut, enter, leave, pop, useT } from './ui';
+import { CONTRAST, KLINES, PREVIEW_STEPS, PROMPT, T, type KLine } from './data';
+import { C, CheckIcon, Pill, Segs, backOut, cardStyle, clamp01, easeOut, enter, leave, pop, useT } from './ui';
 
 const LEFT = 60;
 
@@ -44,13 +44,12 @@ export const KLines: React.FC = () => {
 /** 左上角栏目名 */
 export const Kicker: React.FC = () => {
   const t = useT();
-  const show = (t < 12.7 ? leave(t, 12.7) : 0) + (t >= T.tip + 0.2 ? enter(t, T.tip + 0.2) : 0);
+  const show = (t < 12.05 ? leave(t, 12.05) : 0) + (t >= T.tip + 0.2 ? enter(t, T.tip + 0.2) : 0);
   if (show <= 0) return null;
-  const tip = t >= T.tip && t < T.outro;
   return (
     <div style={{ position: 'absolute', left: LEFT, top: 168, opacity: show }}>
       <Pill size={28} outline>
-        {tip ? '顺手一提' : '阿泽 · AI 实操'}
+        阿泽 · AI 实操
       </Pill>
     </div>
   );
@@ -58,8 +57,8 @@ export const Kicker: React.FC = () => {
 
 /** 钩子一：C 盘已满的示意条（图形示意，不是系统界面，也不演示清理结果） */
 const DiskBar: React.FC<{ t: number }> = ({ t }) => {
-  if (t > 2.5) return null;
-  const out = leave(t, 2.5, 0.13);
+  if (t > 2.42) return null;
+  const out = leave(t, 2.42, 0.13);
   const fill = interpolate(easeOut(clamp01(t / 0.85)), [0, 1], [58, 97]);
   const shake = t > 0.85 && t < 1.1 ? Math.sin((t - 0.85) * 80) * 5 * (1 - (t - 0.85) / 0.25) : 0;
   return (
@@ -82,45 +81,52 @@ const DiskBar: React.FC<{ t: number }> = ({ t }) => {
   );
 };
 
-/** 钩子二：「一句话」示意。只表现"你要说的那句话"，不演示任何清理过程或结果 */
+/** 钩子二：「一句话」示意输入框 + 绿色效果示意卡（用户 V2 要求）。只是示意，不是真实运行结果 */
 const PromptBubble: React.FC<{ t: number }> = ({ t }) => {
-  const t0 = 2.62;
-  if (t < t0 || t > 7.24) return null;
-  const a = pop(t, t0, 0.24);
-  const out = leave(t, 7.24, 0.13);
-  const text = '帮我清理 C 盘垃圾，把大文件挪到其他盘';
-  const n = Math.floor(interpolate(t, [2.78, 3.7], [0, text.length], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));
+  const P = PROMPT;
+  if (t < P.t0 || t > P.t1) return null;
+  const a = pop(t, P.t0, 0.24);
+  const out = leave(t, P.t1, 0.13);
+  const n = Math.floor(interpolate(t, [P.typeFrom, P.typeTo], [0, P.text.length], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }));
   const caret = Math.floor(t * 3) % 2 === 0;
-  const sent = pop(t, 3.82, 0.2);
+  const sent = pop(t, P.send, 0.2);
+  const done = pop(t, P.done, 0.3);
   return (
-    <div style={{ position: 'absolute', left: LEFT, top: 386, width: 960, opacity: a.opacity * out, transform: `scale(${a.scale})`, transformOrigin: 'left top' }}>
-      <div style={{ height: 170, background: C.white, display: 'flex', alignItems: 'center', padding: '0 28px 0 36px', ...cardStyle(40, 10, 5), overflow: 'visible' }}>
-        <div style={{ flex: 1, fontSize: 44, fontWeight: 700, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
-          {text.slice(0, n)}
-          <span style={{ opacity: caret && n < text.length ? 1 : 0, color: C.red }}>|</span>
+    <div style={{ opacity: out }}>
+      <div style={{ position: 'absolute', left: LEFT, top: 372, width: 960, opacity: a.opacity, transform: `scale(${a.scale})`, transformOrigin: 'left top' }}>
+        <div style={{ height: 150, background: C.white, display: 'flex', alignItems: 'center', padding: '0 26px 0 36px', ...cardStyle(40, 10, 5), overflow: 'visible' }}>
+          <div style={{ flex: 1, fontSize: 44, fontWeight: 700, letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
+            {P.text.slice(0, n)}
+            <span style={{ opacity: caret && n < P.text.length ? 1 : 0, color: C.red }}>|</span>
+          </div>
+          <div style={{ width: 88, height: 88, borderRadius: '50%', background: t >= P.send ? C.red : C.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${t >= P.send ? sent.scale : 1})` }}>
+            <svg width={46} height={46} viewBox="0 0 24 24" fill="none" stroke={C.white} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+          </div>
         </div>
+      </div>
+      {t >= P.done ? (
         <div
           style={{
-            width: 92,
-            height: 92,
-            borderRadius: '50%',
-            background: t >= 3.82 ? C.red : C.ink,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transform: `scale(${t >= 3.82 ? sent.scale : 1})`,
+            position: 'absolute', left: LEFT, top: 552, width: 960, height: 132,
+            background: C.green, color: C.white,
+            display: 'flex', alignItems: 'center', gap: 22, padding: '0 30px',
+            ...cardStyle(30, 10, 5), overflow: 'visible',
+            opacity: done.opacity, transform: `translateY(${(1 - done.scale) * -40}px) scale(${done.scale})`, transformOrigin: 'center top',
           }}
         >
-          <svg width={48} height={48} viewBox="0 0 24 24" fill="none" stroke={C.white} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 19V5M5 12l7-7 7 7" />
-          </svg>
+          <CheckIcon s={78} color={C.green} bg={C.white} />
+          <div style={{ fontSize: 46, fontWeight: 900, whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>
+            <Segs segs={P.doneText} size={46} emColor={C.white} emText={C.green} />
+          </div>
+          <div style={{ position: 'absolute', right: 18, top: -26 }}>
+            <Pill size={24} bg={C.white} color={C.green} style={{ border: `3px solid ${C.ink}` }}>
+              效果示意
+            </Pill>
+          </div>
         </div>
-      </div>
-      <div style={{ position: 'absolute', right: 150, top: -24 }}>
-        <Pill size={24} bg={C.paper} color={C.ink} style={{ border: `3px solid ${C.ink}` }}>
-          示意
-        </Pill>
-      </div>
+      ) : null}
     </div>
   );
 };
@@ -196,12 +202,12 @@ const Contrast: React.FC<{ t: number }> = ({ t }) => {
 
 /** 钩子四：录屏小卡片左侧的三步预告，与实拍快闪逐一对应 */
 const PreviewSteps: React.FC<{ t: number }> = ({ t }) => {
-  if (t < 12.95 || t > T.hookEnd + 0.3) return null;
+  if (t < 12.1 || t > T.hookEnd + 0.3) return null;
   const out = leave(t, T.hookEnd + 0.25, 0.25);
   return (
     <>
       {PREVIEW_STEPS.map((s, i) => {
-        const a = pop(t, 13.0 + i * 0.08, 0.22);
+        const a = pop(t, 12.15 + i * 0.08, 0.22);
         const lit = t >= s.t;
         const hit = pop(t, s.t, 0.2);
         return (

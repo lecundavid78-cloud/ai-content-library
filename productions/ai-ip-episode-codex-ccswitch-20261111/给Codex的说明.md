@@ -1,3 +1,9 @@
+# V2 已出片（先读这段）
+
+V2 成片在 `out/v002/`。当前 `comp/` 源码和 `comp/public/gen/` 媒体是 V2。v001 媒体若保留，在 `comp/public/gen-v001/` 和 `audio/F_vo.m4a`。做 V2 工作请读 `给Codex的说明_v002.md` 和 `out/v002/制作说明.md`。不要覆盖 `out/v001/` 或 `out/v002/`。
+
+---
+
 # 给 Codex 的说明（直接把本文发给 Codex）
 
 工程在 GitHub 仓库 `lecundavid78-cloud/ai-content-library` 的拉取请求 #15 分支上：

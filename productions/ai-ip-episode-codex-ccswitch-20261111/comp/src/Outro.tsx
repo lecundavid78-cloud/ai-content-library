@@ -3,7 +3,7 @@ import { Img, staticFile } from 'remotion';
 import { PREVIEW_STEPS, T } from './data';
 import { C, CheckIcon, cardStyle, leave, pop, useT } from './ui';
 
-/** 三步回顾（真实录屏静帧）+ 片尾关注引导 */
+/** 三步打勾总结（真实录屏静帧，已打码/模糊）+ 片尾关注引导 */
 export const Outro: React.FC = () => {
   const t = useT();
   if (t < T.tip) return null;
@@ -21,7 +21,7 @@ export const Outro: React.FC = () => {
                 <div style={{ position: 'absolute', inset: 0, background: C.white, ...cardStyle(22, 7, 4) }}>
                   <Img src={staticFile(`gen/recap${s.n}.png`)} style={{ position: 'absolute', left: -4, top: -4, width: 284, height: 275 }} />
                   <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 60, background: C.ink, color: C.white, fontSize: 30, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', whiteSpace: 'nowrap' }}>
-                    {s.n}　{s.label}
+                    {'①②③'[s.n - 1]} {s.label}
                   </div>
                 </div>
                 <div style={{ position: 'absolute', right: -18, top: -22, opacity: ck.opacity, transform: `scale(${ck.scale})` }}>

@@ -9,6 +9,8 @@
 2026-11-12 新增一期 AI 个人 IP 成片：阿泽 · Codex 三步换 DeepSeek（v001）。
 成片、字幕、合成源码和质检说明在 [productions/ai-ip-episode-codex-ccswitch-20261111](productions/ai-ip-episode-codex-ccswitch-20261111/)。
 
+这一期的 v002 成片在同一分支 `cursor/ai-ip-episode-codex-ccswitch-20261111-8c42`（拉取请求 #15），路径为该目录下的 `out/v002/`。
+
 ## 文件位置
 
 - sources/：每条帖子一个独立目录，保留原文、真实截图、原始附件和来源表。
