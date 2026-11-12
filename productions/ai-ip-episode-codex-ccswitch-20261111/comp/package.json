@@ -1,0 +1,6 @@
+{
+  "name": "episode-codex-ccswitch-20261111",
+  "private": true,
+  "type": "module",
+  "description": "本期独立合成工程。依赖通过 node_modules 软链接只读复用 master/node_modules，不修改 master。"
+}

@@ -1,0 +1,10 @@
+# Never commit these, even if present on a workstation copy
+**/CONTAINS-SECRET*
+**/secret_scratch/
+raw/
+frames/E_*
+comp/public/gen/human.mp4
+comp/node_modules/
+comp/public/node_modules/
+build/bundle/
+build/secret_scratch/
