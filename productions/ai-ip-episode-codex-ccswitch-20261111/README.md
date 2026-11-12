@@ -2,7 +2,7 @@
 
 2026-11-12 任务一出片交付。成片：`out/v001/阿泽_Codex三步换DeepSeek_v001.mp4`（1080×1920，30fps，64.33 秒）。
 
-本仓库是公开仓库。下面「未收录」里的文件含完整 API Key 或体积超限，**不要补传、不要从工作站拷进来再提交**。
+本仓库是公开仓库。本 PR 现在也包含可重渲染媒体：压缩后的 `comp/public/gen/human.mp4`、已打码的 `comp/public/gen/stage.mp4`、口播 `audio/F_vo.m4a`。检出本分支，把 `给Codex的说明.md` 交给 Codex。`human.mp4` 是工作站原文件的 CRF 22 重压缩，仍是 1080×1920、25fps、1609 帧、64.36 秒；未压缩原文件超过 GitHub 单文件 100 MB 上限，没有上传。原片 E 和未打码帧仍然没有收录，不要补传。
 
 ## 成片文件（`out/v001/`）
 
@@ -22,13 +22,14 @@
 ## 一并收录
 
 - `文案.md`、`素材清单.md`、`口播对齐.md`、`给Claude的本轮任务.md`：本期确认稿和任务书。
-- `comp/`：本期合成工程的源码、剪辑表和工具脚本。依赖只读复用工作站上的 `master/node_modules`，本包不包含 `node_modules`，也没有改过 `master/`。
+- `comp/`：本期合成工程的源码、剪辑表和工具脚本。`package.json` 列出 Remotion 4.0.542，在本机执行 `npm install`。不要使用工作站上的 Linux `node_modules`。本包不包含 `node_modules`，也没有改过 `master/`。
+- 可重渲染媒体：`comp/public/gen/human.mp4`（CRF 22 压缩副本，34849601 字节）、`comp/public/gen/stage.mp4`（已打码录屏轨）、`audio/F_vo.m4a`（口播）。说明见 `可重渲染媒体说明.md`，交给 Codex 的步骤见 `给Codex的说明.md`。
 
 ## 未收录（请勿补传）
 
 - **素材 E 原片**（文件名含 `CONTAINS-SECRET`）以及 E 段未打码的临时帧、`secret_scratch/`：里面有完整 DeepSeek API Key。成片 40.45–41.55 秒的密钥栏已经打码（黑底圆点，并有「画面已打码」条）。这把密钥已经进过录屏，发布前请在 DeepSeek 后台删除并重建。
-- **全部 raw 原片、数字人口播原片、中间录屏轨 `stage.mp4` / `build/raw.mp4`**：不是给公开仓库用的素材包；其中 E 段原片绝不能上传。
-- **`comp/public/gen/human.mp4`**：约 100.6 MB，超过 GitHub 单文件 100 MB 上限。它只是把素材 F 做成画中画用的中间文件，工作站上仍有。
+- **全部 raw 原片、未压缩数字人原片、`build/raw.mp4`**：不是给公开仓库用的素材包；其中 E 段原片绝不能上传。已打码的 `comp/public/gen/stage.mp4` 和压缩后的 `human.mp4` 已在本分支，合成只用这两份。
+- **未压缩的 `human.mp4`**：约 100.6 MB，超过 GitHub 单文件 100 MB 上限，没有上传。仓库里的 `comp/public/gen/human.mp4` 是同一条 1080×1920、25fps、1609 帧、64.36 秒画面的 CRF 22 重压缩。
 
 ## 质检说明
 
@@ -38,4 +39,4 @@
 
 ## 怎么重出一版
 
-工作站上的完整工程在 `/workspace/ai-ip-video/work/episode-codex-ccswitch-20261111/`。本包只有源码，没有中间媒体，单独拿本包不能直接渲染。完整工程里的用法见制作说明末尾。
+检出本分支（这一期还没有合并进 `main`），在 `comp/` 里 `npm install`，按 `给Codex的说明.md` 重渲染。口播用 `audio/F_vo.m4a`。仍然不要补传原片 E 或未打码帧。

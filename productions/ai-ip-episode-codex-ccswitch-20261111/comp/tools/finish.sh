@@ -8,7 +8,13 @@ EP="$(cd .. && pwd)"; OUT="$EP/out/$VER"; BUILD="$EP/build"
 NAME="阿泽_Codex三步换DeepSeek_${VER}"
 mkdir -p "$OUT/stills"
 [ -e "$OUT/$NAME.mp4" ] && { echo "已存在 $OUT/$NAME.mp4，换一个版本号，不覆盖旧版"; exit 1; }
-F="$(ls "$EP"/raw/F_*.mp4)"
+if [ -f "$EP/audio/F_vo.m4a" ]; then
+  F="$EP/audio/F_vo.m4a"
+elif [ -f "$EP/audio/F_vo.wav" ]; then
+  F="$EP/audio/F_vo.wav"
+else
+  F="$(ls "$EP"/raw/F_*.mp4)"
+fi
 # 口播取自素材 F 原音轨，不变速、不重排；两遍 loudnorm 到 -14 LUFS
 M=$(ffmpeg -hide_banner -i "$F" -vn -af loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json -f null - 2>&1 | python3 -I -c "import sys,json;s=sys.stdin.read();j=json.loads(s[s.rindex('{'):s.rindex('}')+1]);print(f\"measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}:measured_thresh={j['input_thresh']}:offset={j['target_offset']}\")")
 ffmpeg -v error -y -i "$BUILD/raw.mp4" -i "$F" -map 0:v -map 1:a -c:v copy \
