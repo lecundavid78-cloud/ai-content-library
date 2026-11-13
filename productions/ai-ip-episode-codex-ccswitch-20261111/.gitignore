@@ -1,0 +1,10 @@
+# Never commit these, even if present on a workstation copy
+**/CONTAINS-SECRET*
+**/secret_scratch/
+raw/
+frames/E_*
+# 超过 100 MB 的未压缩 human 原文件不要提交；本仓库中的 human.mp4 是已压缩、可重渲染的副本
+comp/node_modules/
+comp/public/node_modules/
+build/bundle/
+build/secret_scratch/
