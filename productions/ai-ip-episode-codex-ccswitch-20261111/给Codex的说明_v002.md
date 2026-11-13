@@ -1,5 +1,7 @@
 # 给 Codex 的说明（V2，可直接发给 Codex）
 
+配套图文教程 tuwen-v001 已在本分支：成品在 `out/tuwen-v001/`（13 张图，以及 `群文案.md`、`制作说明.md`、`待确认问题.md`），重做工具在 `comp/tools/tuwen/`。没有新视频。下面的 V2 说明仍然有效，`out/v001/` 与 `out/v002/` 未改。
+
 工程在公开仓库 `lecundavid78-cloud/ai-content-library` 的拉取请求 #15 分支上：
 
 - PR：https://github.com/lecundavid78-cloud/ai-content-library/pull/15
