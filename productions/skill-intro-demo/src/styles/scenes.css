@@ -1,0 +1,73 @@
+/* ==========================================================================
+   scenes.css — 布局原语 + 各场景版式
+   布局原语（.l-*）可复用；场景专属坐标统一用 #场景id 前缀，互不污染。
+   所有坐标都在「主视觉区」内（x 456→1824），不进入左下口播禁区。
+   ========================================================================== */
+
+/* ---------- 布局原语 ---------- */
+/* 主视觉区整列，内容垂直水平居中 */
+.l-col {
+  position: absolute; top: var(--safe-y); bottom: calc(var(--safe-y) + 80px); /* 底部让出字幕行 */
+  left: var(--main-x); width: var(--main-w);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+/* 主视觉区右半列（左半放结构图时用） */
+.l-col.is-right { left: 1076px; width: calc(var(--main-r) - 1076px); }
+.l-row { display: flex; align-items: center; }
+.l-abs { position: absolute; }
+
+/* ==========================================================================
+   S01 · 钩子：要求又得重打一遍
+   ========================================================================== */
+#s01-hook .p-card { width: 600px; }
+#s01-hook .p-card:nth-child(1) { left: 796px; top: 236px; }
+#s01-hook .p-card:nth-child(2) { left: 840px; top: 280px; }
+#s01-hook .p-card:nth-child(3) { left: 884px; top: 324px; }
+#s01-hook .p-card .miss { color: var(--c-red); font-weight: 700; }
+#s01-hook .p-card .miss .q {
+  display: inline-block; margin-left: 6px; padding: 0 10px; border-radius: 6px;
+  border: 2px dashed var(--c-red); line-height: 34px; font-size: 24px;
+}
+#s01-hook .warn { left: 1500px; top: 504px; font-size: 22px; padding: 9px 16px 10px; }
+#s01-hook .cards { position: absolute; inset: 0; }
+#s01-hook .l-col { gap: 44px; padding-top: 250px; }
+
+/* ==========================================================================
+   S02 · 定义：Skill = 写给 AI 的 SOP
+   ========================================================================== */
+#s02-sop .l-col { gap: 0; }
+#s02-sop .eq { gap: 28px; margin-bottom: 18px; }
+#s02-sop .skill-chip {
+  position: relative; display: inline-flex; align-items: center; gap: 16px;
+  height: 92px; padding: 0 30px;
+  font-family: var(--font-mono); font-size: 52px; font-weight: 700; letter-spacing: -0.01em;
+}
+#s02-sop .skill-chip .ico { width: 46px; height: 46px; }
+#s02-sop .eq .sign { font-family: var(--font-mono); font-size: 64px; font-weight: 700; color: var(--c-text-3); }
+#s02-sop .gloss {
+  margin-top: 26px;
+  font-family: var(--font-mono); font-size: 24px; font-weight: 600; color: var(--c-yellow);
+  letter-spacing: 0.06em;
+}
+#s02-sop .gloss .cn { font-family: var(--font-sans); font-weight: 800; letter-spacing: 0.12em; }
+#s02-sop .steps { gap: 12px; margin-top: 60px; }
+#s02-sop .steps .c-chip { height: 68px; padding: 0 22px; font-size: 28px; }
+
+/* ==========================================================================
+   S03 · 结构：文件夹 + SKILL.md
+   ========================================================================== */
+#s03-structure .tree { left: var(--main-x); top: 252px; width: 560px; }
+#s03-structure .tree .c-card-body { padding: 16px 28px 20px; }
+#s03-structure .tree .row .c-pill, #s03-structure .tree .row .c-tag { flex: none; }
+#s03-structure .beat-a { gap: 30px; padding-bottom: 60px; }
+#s03-structure .beat-a .plus {
+  font-size: 52px; font-weight: var(--fw-bold); color: var(--c-text); letter-spacing: 0.02em;
+  display: flex; align-items: center; gap: 22px;
+}
+#s03-structure .beat-a .plus .mono { font-family: var(--font-mono); font-weight: 800; letter-spacing: -0.01em; }
+#s03-structure .doc { left: 1076px; top: 252px; width: 748px; }
+#s03-structure .lab { font-family: var(--font-sans); }
+#s03-structure .doc .ln.fm { margin-bottom: 18px; }
+#s03-structure .lab-name { left: 1462px; top: 380px; }
+#s03-structure .lab-desc { left: 1094px; top: 524px; }
+#s03-structure .hero-req { left: 1076px; width: 748px; top: 568px; text-align: center; }

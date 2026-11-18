@@ -1,0 +1,141 @@
+/* ==========================================================================
+   components.css — 可复用视觉组件（与具体场景无关）
+   命名：.c-*  组件；.is-* 状态；场景布局写在 scenes.css 里。
+   ========================================================================== */
+
+/* ---------- 卡片 ---------- */
+.c-card {
+  position: absolute;
+  background: var(--c-card);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 30px 80px rgba(0,0,0,0.55);
+}
+.c-card .c-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px; padding: 0 28px;
+  border-bottom: 1px solid var(--c-line-soft);
+  font-family: var(--font-mono); font-size: var(--fs-note); color: var(--c-text-3);
+  letter-spacing: 0.04em;
+}
+.c-card .c-card-head b { color: var(--c-text-2); font-weight: 700; }
+.c-card .c-card-body { padding: 22px 28px; }
+
+/* ---------- 胶囊（荧光绿底 + 纯黑字） ---------- */
+.c-pill {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 26px 11px;
+  border-radius: var(--radius-pill);
+  background: var(--c-green); color: var(--c-on-green);
+  font-size: var(--fs-pill); font-weight: var(--fw-bold);
+  line-height: 1; letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.c-pill.is-sm { font-size: 20px; padding: 6px 14px 7px; gap: 6px; }
+.c-pill .mono { font-family: var(--font-mono); letter-spacing: 0; }
+
+/* 描边标签（可选 / 中性） */
+.c-tag {
+  display: inline-flex; align-items: center;
+  padding: 5px 12px 6px; border-radius: var(--radius-pill);
+  border: 1px solid var(--c-line); color: var(--c-text-3);
+  font-size: 18px; font-weight: var(--fw-semi); line-height: 1; letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.c-tag.is-red  { border-color: transparent; background: var(--c-red); color: #fff; }
+.c-tag.is-yellow { border-color: var(--c-yellow); color: var(--c-yellow); }
+
+/* ---------- 提炼大字（大字报）：≤10 字，荧光绿，-6deg 微斜体 ---------- */
+.c-hero {
+  display: inline-block;
+  font-size: var(--fs-hero);
+  font-weight: var(--fw-hero);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-hero);
+  color: var(--c-green);
+  white-space: nowrap;
+  text-shadow: 0 0 48px rgba(184,255,1,0.22), 0 6px 0 rgba(0,0,0,0.35);
+}
+/* 斜切放在内层，外层留给动效（scale/translate），互不覆盖 */
+.c-hero > .skew { display: inline-block; transform: skewX(var(--hero-skew)); }
+.c-hero .en { font-family: var(--font-sans); letter-spacing: -0.01em; }
+.c-hero.is-white { color: var(--c-text); text-shadow: 0 6px 0 rgba(0,0,0,0.35); }
+.c-hero.is-md { font-size: var(--fs-title); }
+
+/* 注意：动效引擎使用独立的 scale / translate 属性做动画，
+   组件自身不要再用 translate 定位，居中请用布局容器（见 scenes.css 的 .l-*）。 */
+
+/* ---------- 虚线框（SVG 绘制动画，由 components.js 自动注入） ----------
+   用法：<span class="c-frame" data-pad="14">文字</span>
+   cue：{ fx: 'draw' } 绘制；绘制后自动「行军蚁」微动。 */
+.c-frame { position: relative; display: inline-block; }
+.c-frame > svg.dash {
+  position: absolute; overflow: visible; pointer-events: none;
+}
+.c-frame > svg.dash .dash-line {
+  fill: none; stroke: var(--c-yellow); stroke-width: var(--dash-w);
+  stroke-dasharray: var(--dash-pattern); stroke-linecap: round;
+}
+.c-frame > svg.dash .dash-mask { fill: none; stroke: #fff; stroke-width: 8; }
+
+/* ---------- 文档卡（任何「可读正文」都必须用它，便于铁律校验） ---------- */
+.c-doc .ln {
+  font-family: var(--font-mono);
+  font-size: 26px; line-height: 46px;
+  color: var(--c-text-2);
+  white-space: nowrap;
+  letter-spacing: 0;
+  width: fit-content;
+}
+.c-doc .ln .k { color: var(--c-blue); }
+.c-doc .ln .v { color: var(--c-text); }
+.c-doc .ln .muted { color: var(--c-text-3); }
+.c-doc .ln .h { color: var(--c-text); font-weight: 700; }
+.c-doc .ln.cn { font-family: var(--font-sans); font-size: 28px; letter-spacing: 0.02em; }
+
+/* 被「提起」的行（铁律：文档压暗后，关键行以高亮副本浮在上方） */
+.c-lifted {
+  position: absolute;
+  background: var(--c-card-hi);
+  border-radius: 10px;
+  padding: 0 14px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+}
+.c-lifted .k { color: var(--c-yellow) !important; font-weight: 700; }
+
+/* ---------- 文件树 ---------- */
+.c-tree .row {
+  display: flex; align-items: center; gap: 16px;
+  height: 64px;
+  font-family: var(--font-mono); font-size: 30px; color: var(--c-text);
+  letter-spacing: 0;
+}
+.c-tree .row .branch { color: var(--c-text-3); width: 44px; flex: none; }
+.c-tree .row .ico { width: 34px; height: 34px; flex: none; }
+.c-tree .row .name { flex: 1; }
+.c-tree .row.is-opt { color: var(--c-text-3); }
+.c-tree .row.is-key {
+  background: rgba(184,255,1,0.07);
+  box-shadow: inset 3px 0 0 var(--c-green);
+  margin: 0 -28px; padding: 0 28px;
+}
+.c-tree .row.is-key .name { color: var(--c-green); font-weight: 700; }
+
+/* ---------- 步骤芯片 ---------- */
+.c-chip {
+  display: inline-flex; align-items: center; gap: 12px;
+  height: 72px; padding: 0 26px;
+  background: var(--c-card); border: var(--border); border-radius: var(--radius);
+  font-size: 30px; font-weight: var(--fw-bold); color: var(--c-text);
+  white-space: nowrap; letter-spacing: 0.04em;
+}
+.c-chip .no { font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--c-green); letter-spacing: 0; }
+.c-arrow { color: var(--c-text-3); font-family: var(--font-mono); font-size: 28px; }
+
+/* 删除线（红） */
+.c-strike { position: relative; }
+.c-strike::after { content: none; }
+.c-strike > .bar {
+  position: absolute; left: -4px; right: -4px; top: 52%; height: 3px;
+  background: var(--c-red); border-radius: 2px; transform-origin: 0 50%;
+}
