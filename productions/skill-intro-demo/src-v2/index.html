@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skill 入门 · 视觉样片 v2</title>
+<!-- 开发入口：样式 / 脚本 / 字体全部本地引用；tools/build.py --src src-v2 --out demo-v2/index.html 会把它们内联成单文件 -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/scenes.css">
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bg-dark"></div>
+  <div class="layer" id="bg-light"></div>
+  <div class="layer" id="scenes"></div>
+  <div class="layer" id="chapters"></div>
+  <div class="layer" id="chrome"></div>
+  <div class="layer" id="subs"></div>
+  <div class="layer" id="slot"></div>
+  <div class="layer" id="guides"></div>
+</div>
+
+<div id="player">
+  <button data-act="play">▶ 播放</button>
+  <input type="range" min="0" max="1" step="0.001" value="0">
+  <span class="time">00.00</span>
+  <button class="ghost" data-act="guides" title="G">参考线</button>
+  <button class="ghost" data-act="subs" title="S">字幕</button>
+  <button class="ghost" data-act="slot" title="K">口播框</button>
+</div>
+<div id="lint"></div>
+
+<script src="js/engine.js"></script>
+<script src="js/components.js"></script>
+<!-- 场景顺序 = 时间轴顺序 -->
+<script src="js/scenes/s01-repeat.js"></script>
+<script src="js/scenes/s02-save.js"></script>
+<script src="js/scenes/s03-sop.js"></script>
+<script src="js/scenes/s04-folder.js"></script>
+<script src="js/scenes/s05-fields.js"></script>
+<script src="js/scenes/s06-parts.js"></script>
+<script>Studio.boot();</script>
+</body>
+</html>
