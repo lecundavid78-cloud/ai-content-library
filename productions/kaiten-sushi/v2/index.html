@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#f6e1c3">
+<title>回转寿司</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #d9b48a; }
+  body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+  #game { display: block; position: fixed; left: 0; top: 0; touch-action: none; }
+  #boot { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; padding: 24px; text-align: center; font: 700 18px "PingFang SC","Noto Sans CJK SC",sans-serif; color: #7a4a26; background: #f6e1c3; }
+  #boot small { margin-top: 14px; font-size: 13px; font-weight: 400; line-height: 1.6; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="boot" role="status" aria-busy="true">回转寿司 · 正在开店…<small>如长时间无法进入，请退出后重新打开。</small></div>
+<!-- 核心逻辑（无 DOM 依赖，Node 测试共用） -->
+<script defer src="./src/core/ns.js"></script>
+<script defer src="./src/core/path.js"></script>
+<script defer src="./src/core/sushi-types.js"></script>
+<script defer src="./src/core/layout.js"></script>
+<script defer src="./src/core/model.js"></script>
+<!-- 关卡配置 -->
+<script defer src="./src/levels/level1.js"></script>
+<script defer src="./src/levels/level2.js"></script>
+<script defer src="./src/levels/level3.js"></script>
+<script defer src="./src/levels/free-u.js"></script>
+<script defer src="./src/levels/free-z.js"></script>
+<script defer src="./src/levels/free-double.js"></script>
+<!-- 美术 -->
+<script defer src="./src/art/sushi-art.js"></script>
+<script defer src="./src/art/scene-art.js"></script>
+<!-- 游戏 -->
+<script defer src="./src/game/platform.js"></script>
+<script defer src="./src/game/progress.js"></script>
+<script defer src="./src/game/audio.js"></script>
+<script defer src="./src/game/fx.js"></script>
+<script defer src="./src/game/menu.js"></script>
+<script defer src="./src/game/play.js"></script>
+<script defer src="./src/main.js"></script>
+</body>
+</html>
