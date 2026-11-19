@@ -1,0 +1,12 @@
+{
+  "name": "kaiten-sushi-tools",
+  "private": true,
+  "description": "开发期测试/截图工具（游戏本体不依赖这些）",
+  "scripts": {
+    "test": "node ../tests/sim.test.js",
+    "e2e": "node ../tests/e2e.js"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.43.1"
+  }
+}
