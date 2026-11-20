@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skill 入门 · 第七章 值不值得做 + 总结</title>
+<!-- 开发入口：tools/build.py --src src-ch07 --out demo-ch07/index.html 会把样式 / 脚本 / 字体内联；口播视频以本地相对路径引用 -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/scenes.css">
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bg-dark"></div>
+  <div class="layer" id="bg-light"></div>
+  <div class="layer" id="scenes"></div>
+  <div class="layer" id="chapters"></div>
+  <div class="layer" id="chrome"></div>
+  <div class="layer" id="subs"></div>
+  <div class="layer" id="slot"></div>
+  <div class="layer" id="guides"></div>
+</div>
+
+<div id="start"><div><span>▶ 播放第七章（有声）</span><small>空格 暂停 · ←/→ 跳 2 秒 · G 参考线 · S 字幕</small></div></div>
+<div id="player">
+  <button data-act="play">▶ 播放</button>
+  <input type="range" min="0" max="1" step="0.001" value="0">
+  <span class="time">00.00</span>
+  <button class="ghost" data-act="guides" title="G">参考线</button>
+  <button class="ghost" data-act="subs" title="S">字幕</button>
+  <button class="ghost" data-act="slot" title="K">口播框</button>
+</div>
+<div id="lint"></div>
+
+<script src="js/timeline.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/components.js"></script>
+<script>
+  // 口播窗口：与第一章同一裁切（540×960 @ 282,14 → 280×498）；本章片段 = 原片 500.50–585.64s
+  Studio.config.slot = { name: '', video: '../demo-ch07/media/presenter.mp4' };   // 名牌只在全片开场（第一章）出现
+  Studio.config.series = 'Skill 入门 · 第 7 章';
+</script>
+<!-- 一个文件 = 一个「部分」；时间为章节内秒数（= 口播原片秒数 − 500.50） -->
+<script src="js/parts/pA-worth.js"></script>
+<script src="js/parts/pB-summary.js"></script>
+<script src="js/parts/pC-questions.js"></script>
+<script>
+  Studio.boot();
+  document.getElementById('start').onclick = (e) => { e.currentTarget.remove(); Studio.play(); };
+</script>
+</body>
+</html>
