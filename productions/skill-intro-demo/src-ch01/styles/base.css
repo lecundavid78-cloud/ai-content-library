@@ -1,0 +1,179 @@
+/* ==========================================================================
+   ch01 · base.css — 舞台、深/浅背景、字幕条、章节角标、口播框、参考线、播放器
+   ========================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
+body { -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+
+#stage {
+  position: absolute; left: 0; top: 0;
+  width: var(--canvas-w); height: var(--canvas-h);
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: var(--stage-dark);
+  font-family: var(--font-sans);
+  font-feature-settings: normal;   /* 不挤压标点：逗号、问号留足呼吸 */
+  color: var(--ink);
+}
+.layer { position: absolute; inset: 0; pointer-events: none; }
+
+/* ---------- 深 / 浅两种舞台（引擎按场景交叉切换 #bg-light 的透明度） ---------- */
+#bg-dark {
+  background:
+    radial-gradient(900px 600px at 64% 40%, rgba(255,255,255,0.035), transparent 70%),
+    radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.35) 100%),
+    var(--stage-dark);
+}
+#bg-light {
+  background:
+    radial-gradient(1400px 900px at 60% 45%, var(--stage-light) 55%, var(--stage-light-edge) 100%);
+  opacity: 0;
+}
+
+/* ---------- 场景 ---------- */
+.scene { position: absolute; inset: 0; }
+.scene > .cam { position: absolute; inset: 0; transform-origin: 960px 520px; perspective: 1800px; perspective-origin: 960px 480px; }
+.scene.is-dark  { color: var(--paper); }
+.scene.is-light { color: var(--ink); }
+.scene .persp { perspective: 1800px; }
+
+/* ---------- 字幕条：黑底小圆角，白字，主视觉列底部居中 ---------- */
+#subs .sub-row {
+  position: absolute; left: var(--col-x); width: var(--col-w);   /* 以 960 为中心 */
+  bottom: 62px;
+  display: flex; justify-content: center;
+}
+#subs .sub {
+  padding: 8px 18px 9px;
+  border-radius: 8px;
+  background: rgba(14,14,16,0.92);
+  color: #fff;
+  font-size: var(--fs-sub);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+  font-feature-settings: normal;
+  white-space: nowrap;
+}
+.no-subs #subs { display: none; }
+
+/* ---------- 章节角标：数字小方块 + 标题（参考「翻页数字」） ---------- */
+.chapter {
+  position: absolute; left: var(--safe-x); top: var(--safe-y);
+  display: flex; align-items: center; gap: 8px;
+}
+.chapter .digit {
+  width: 40px; height: 54px; border-radius: 8px;
+  display: grid; place-items: center;
+  background: var(--card-dark); color: #fff;
+  font-family: var(--font-sans); font-size: 34px; font-weight: 900;
+  box-shadow: inset 0 -27px 0 rgba(255,255,255,0.03), 0 6px 16px rgba(0,0,0,0.18);
+}
+.chapter .title {
+  margin-left: 14px;
+  font-size: 34px; font-weight: 900; letter-spacing: 0.02em;
+}
+/* 右上角系列标记 */
+.series {
+  position: absolute; right: var(--safe-x); top: calc(var(--safe-y) + 12px);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 22px; font-weight: 700; letter-spacing: 0.08em;
+}
+.series i { width: 9px; height: 9px; border-radius: 50%; background: var(--violet); }
+
+/* ---------- 口播预留框 ---------- */
+.slot {
+  position: absolute;
+  left: var(--slot-x); top: var(--slot-y); width: var(--slot-w); height: var(--slot-h);
+  border-radius: var(--radius);
+  background: var(--card-dark);
+  border: 1px solid var(--card-line-dark);
+  box-shadow: var(--shadow-on-light);
+  overflow: hidden;
+}
+.slot .corner { position: absolute; width: 20px; height: 20px; border: 0 solid rgba(255,255,255,0.28); }
+.slot .corner.tl { left: 16px; top: 16px; border-left-width: 2px; border-top-width: 2px; border-top-left-radius: 6px; }
+.slot .corner.tr { right: 16px; top: 16px; border-right-width: 2px; border-top-width: 2px; border-top-right-radius: 6px; }
+.slot .corner.bl { left: 16px; bottom: 16px; border-left-width: 2px; border-bottom-width: 2px; border-bottom-left-radius: 6px; }
+.slot .corner.br { right: 16px; bottom: 16px; border-right-width: 2px; border-bottom-width: 2px; border-bottom-right-radius: 6px; }
+.slot .info {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+}
+.slot .info svg { width: 48px; height: 48px; opacity: 0.35; }
+.slot .info .t { font-size: 24px; font-weight: 800; color: rgba(255,255,255,0.55); letter-spacing: 0.14em; }
+.slot .info .m { font-family: var(--font-mono); font-size: 16px; color: rgba(255,255,255,0.3); line-height: 1.6; text-align: center; }
+.slot .name {
+  position: absolute; left: 28px; bottom: 44px;
+  padding: 5px 14px 6px; border-radius: var(--radius-pill);
+  background: #fff; color: var(--ink);
+  font-size: 19px; font-weight: 800; letter-spacing: 0.08em;
+}
+/* 口播视频：铺满窗口（已在 ffmpeg 里按 540×960@(282,14) 裁成 9:16） */
+.slot .vo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #d9d8dc; }
+.slot:has(.vo) .corner, .slot:has(.vo) .info { display: none; }
+/* 导出模式：视频由 ffmpeg 叠加，HTML 只画窗口外框与投影；名牌也由叠加层负责 */
+.capture .slot .vo { display: none; }
+.capture .slot .name { display: none; }
+.capture .slot { background: #1F1E23; }
+/* 有声播放的开始按钮 */
+#start {
+  position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+  background: rgba(10,10,12,0.55); backdrop-filter: blur(6px); cursor: pointer;
+  font: 800 28px/1.4 "SkillSans", sans-serif; color: #fff; letter-spacing: 0.06em;
+}
+#start span { padding: 18px 34px; border-radius: 999px; background: #fff; color: #141416; }
+#start small { display: block; margin-top: 14px; font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.7); text-align: center; }
+body.capture #start { display: none; }
+.slot-key .slot { background: #00FF00; border-color: transparent; box-shadow: none; }
+.slot-key .slot > *:not(.name) { display: none; }
+.slot-alpha .slot { background: transparent; border-color: transparent; box-shadow: none; }
+.slot-alpha .slot > *:not(.name) { display: none; }
+
+/* ---------- 参考线 ---------- */
+#guides { display: none; }
+.show-guides #guides { display: block; }
+#guides .g-safe { position: absolute; left: 96px; top: 54px; right: 96px; bottom: 54px; outline: 1px dashed rgba(56,189,248,0.8); }
+#guides .g-main { position: absolute; left: var(--col-x); width: var(--col-w); top: 54px; bottom: 54px; background: rgba(56,189,248,0.05); outline: 1px solid rgba(56,189,248,0.4); }
+#guides .g-axis { position: absolute; left: 959px; width: 2px; top: 54px; bottom: 54px; background: rgba(56,189,248,0.5); }
+#guides .g-zone {
+  position: absolute; left: 0; top: calc(var(--slot-y) - var(--slot-gutter));
+  width: calc(var(--slot-x) + var(--slot-w) + var(--slot-gutter)); bottom: 0;
+  background: repeating-linear-gradient(45deg, rgba(229,72,77,0.16) 0 6px, transparent 6px 16px);
+  outline: 1px dashed rgba(229,72,77,0.8);
+}
+#guides .g-label { position: absolute; font: 15px/1.4 var(--font-mono); color: #38BDF8; background: rgba(0,0,0,0.65); padding: 2px 8px; }
+
+/* ---------- 播放器（舞台外，不进成片） ---------- */
+#player {
+  position: fixed; left: 50%; bottom: 18px; translate: -50% 0;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: 14px;
+  background: rgba(24,24,28,0.88); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  font: 500 13px/1 "SkillMono", ui-monospace, monospace; color: #ccc;
+  z-index: 10; transition: opacity .4s; user-select: none;
+}
+#player button {
+  background: #fff; color: #111; border: 0; border-radius: 8px;
+  font: 700 13px/1 inherit; font-family: inherit; padding: 8px 12px; cursor: pointer;
+}
+#player button.ghost { background: transparent; color: #ccc; border: 1px solid rgba(255,255,255,0.16); }
+#player input[type=range] { width: 380px; accent-color: #7B5CF0; }
+#player .time { min-width: 110px; text-align: right; }
+body.idle #player { opacity: 0; }
+body.capture #player, body.capture #lint { display: none !important; }
+#lint {
+  position: fixed; right: 12px; top: 12px; max-width: 440px; z-index: 11;
+  font: 12px/1.5 ui-monospace, monospace; color: #E5484D;
+  background: rgba(0,0,0,0.82); padding: 8px 10px; border-radius: 8px; display: none;
+}
+
+/* ---------- 导出用叠加层（tools/render.mjs overlay 模式，透明背景截图） ---------- */
+body.ov #stage { background: transparent !important; }
+body.ov .layer:not(#slot) { display: none !important; }
+body.ov .slot { box-shadow: none !important; border-color: transparent !important; background: transparent !important; }
+body.ov .slot > * { display: none !important; }
+body.ov-name .slot > .name { display: block !important; }
+body.ov-mask .slot { background: #fff !important; }
+html:has(body.ov), body.ov { background: transparent !important; }

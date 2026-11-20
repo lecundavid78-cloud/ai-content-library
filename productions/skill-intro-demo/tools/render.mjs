@@ -14,7 +14,8 @@ import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const HTML = process.env.HTML ? resolve(process.env.HTML) : join(ROOT, 'demo', 'index.html');  // HTML=src/index.html 可直接检查开发入口
+const OUTDIR = join(ROOT, process.env.OUT || 'demo');   // OUT=demo-v2 → 渲染 v2
+const HTML = process.env.HTML ? resolve(process.env.HTML) : join(OUTDIR, 'index.html');  // HTML=src/index.html 可直接检查开发入口
 const CHROME = process.env.CHROME || 'google-chrome';
 const args = process.argv.slice(2);
 const mode = args[0] || 'check';
@@ -85,11 +86,21 @@ const shot = async (t) => {
   return Buffer.from(data, 'base64');
 };
 
-if (mode === 'check') {
+if (mode === 'overlay') {
+  // 透明背景截图：name = 只有口播窗口名牌；mask = 口播窗口的白色圆角形状（做视频遮罩）
+  await send('Emulation.setDefaultBackgroundColorOverride', { color: { r: 0, g: 0, b: 0, a: 0 } });
+  mkdirSync(OUTDIR + '/media', { recursive: true });
+  for (const kind of ['name', 'mask']) {
+    await evaluate(`document.body.classList.remove('ov-name','ov-mask'); document.body.classList.add('ov','ov-${kind}'); Studio.frame(0)`);
+    const { data } = await send('Page.captureScreenshot', { format: 'png', clip: { x: 0, y: 0, width: 1920, height: 1080, scale: 1 } });
+    writeFileSync(join(OUTDIR, 'media', `slot-${kind}.png`), Buffer.from(data, 'base64'));
+    console.log(`  media/slot-${kind}.png`);
+  }
+} else if (mode === 'check') {
   console.log(JSON.stringify(info, null, 2));
 } else if (mode === 'stills') {
   const times = nums.length ? nums : [1.0, 2.6, 7.6, 11.5, 14.9];
-  const dir = join(ROOT, 'demo', 'stills');
+  const dir = join(OUTDIR, 'stills');
   mkdirSync(dir, { recursive: true });
   const tag = [...flags].map((f) => f.replace(/^--/, '').replace('=', '-')).join('_');
   for (const t of times) {
@@ -99,11 +110,13 @@ if (mode === 'check') {
   }
 } else if (mode === 'video') {
   const fps = nums[0] || 30;
-  const out = join(ROOT, 'demo', 'preview.mp4');
+  const out = process.env.VIDEO_OUT ? resolve(process.env.VIDEO_OUT) : join(OUTDIR, 'preview.mp4');
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-',
     '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
   const total = Math.round(info.duration * fps);
-  for (let f = 0; f <= total; f++) {
+  // 分段渲染：F0 ≤ f < F1（默认整片）。分段文件编码参数相同，可直接 concat -c copy
+  const f0 = +(process.env.F0 || 0), f1 = Math.min(+(process.env.F1 || total + 1), total + 1);
+  for (let f = f0; f < f1; f++) {
     const buf = await shot(f / fps);
     if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
     if (f % fps === 0) process.stdout.write(`\r  frame ${f}/${total}`);
