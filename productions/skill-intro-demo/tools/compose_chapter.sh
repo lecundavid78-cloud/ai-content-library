@@ -21,9 +21,12 @@ NSEG=$(( (FRAMES + 639) / 640 ))
 #    已存在且帧数正确的分段会跳过 → 命令被打断后可以直接重跑续上
 #    SKIP_COMPOSE=1 只渲染不合成（把长任务拆成多条前台命令）
 PAR="${PAR:-1}"
-seg_ok() {  # 分段文件存在且帧数正确
+seg_ok() {  # 分段文件存在且帧数正确（最后一段允许 ±1 帧：页面时长与 presenter 时长取整可能差 1 帧）
   local i=$1 want=$(( (i+1)*640 < FRAMES ? 640 : FRAMES - i*640 ))
-  [ -s "$SEG/seg$i.mp4" ] && [ "$(ffprobe -v error -count_frames -select_streams v -show_entries stream=nb_read_frames -of csv=p=0 "$SEG/seg$i.mp4" 2>/dev/null | tr -dc 0-9)" = "$want" ]
+  [ -s "$SEG/seg$i.mp4" ] || return 1
+  local got=$(ffprobe -v error -count_frames -select_streams v -show_entries stream=nb_read_frames -of csv=p=0 "$SEG/seg$i.mp4" 2>/dev/null | tr -dc 0-9)
+  [ -n "$got" ] || return 1
+  if [ $(( (i+1)*640 )) -lt "$FRAMES" ]; then [ "$got" = "$want" ]; else [ $(( got - want )) -ge -1 ] && [ $(( got - want )) -le 1 ]; fi
 }
 if [ -z "${SKIP_RENDER:-}" ]; then
   [ -n "${FRESH:-}" ] && rm -f "$SEG"/seg*.mp4

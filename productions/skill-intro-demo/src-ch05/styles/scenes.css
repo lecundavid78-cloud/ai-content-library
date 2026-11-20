@@ -1,0 +1,52 @@
+/* ==========================================================================
+   ch05 · scenes.css — 第五章「为什么按需加载」
+   构图沿用前几章：中轴 x=960；与口播框同高区域（y>488）只用 416→1504；浅舞台。
+   ========================================================================== */
+.l-at { position: absolute; }
+.ttl { position: absolute; left: 0; width: 1920px; text-align: center; top: 150px; }
+.hero-wrap { position: absolute; left: 0; width: 1920px; top: 356px; text-align: center; }
+.hero-wrap .c-hero { font-size: 112px; }
+.is-light em.red { color: var(--red); }
+
+/* 上下文容量卡（两个部分共用的视觉语言：一条占用条） */
+.ctx .face, .ctx { padding: 26px 30px; }
+.ctx .hd { display: flex; align-items: baseline; justify-content: space-between; }
+.ctx .hd b { font-size: 28px; font-weight: 900; letter-spacing: 0.04em; }
+.ctx .hd span { font-size: 22px; font-weight: 700; color: var(--ink-3); }
+.ctx .track { position: absolute; left: 30px; right: 30px; top: 92px; height: 44px; border-radius: 22px; background: #EEEEF2; }
+.ctx .fl  { left: 30px; top: 92px; width: 44px; height: 44px; border-radius: 22px; background: var(--violet); }
+.ctx .flr { left: 30px; top: 92px; height: 44px; border-radius: 22px; background: var(--red); }
+.ctx .lg { position: absolute; left: 30px; top: 160px; display: flex; gap: 14px; }
+.ctx .lg .c-chip { position: static; height: 52px; font-size: 24px; padding: 0 18px; box-shadow: none; outline: 1px solid var(--card-line-light); }
+.ctx .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--violet); }
+.ctx .dot.g { background: #C9C9D2; }
+.ctx .bad { color: var(--red); }
+.ctx > .c-badge { right: 18px; top: 18px; }
+
+/* ---------- 部分 A · 上下文容量有限 ---------- */
+#pA-context .pre { left: 0; width: 1920px; top: 470px; display: flex; justify-content: center; align-items: center; gap: 14px; }
+#pA-context .pre .c-chip { position: static; height: 68px; font-size: 28px; }
+#pA-context .pre .c-chip .n { color: var(--violet); font-weight: 900; }
+#pA-context .pre .ar { font-family: var(--font-mono); font-size: 30px; font-weight: 800; color: var(--violet); }
+#pA-context .pre .all { position: absolute; top: 96px; left: 0; right: 0; margin: 0 auto; width: fit-content; background: transparent; box-shadow: none; outline: 2px dashed rgba(20,20,22,0.25); outline-offset: -2px; color: var(--ink-2); }
+#pA-context .ctx { left: 510px; top: 380px; width: 900px; height: 250px; }
+#pA-context .ctx .flr { width: 840px; }
+
+/* ---------- 部分 B · 查字典式分层 ---------- */
+#pB-layers .layers { left: 560px; top: 290px; width: 800px; height: 404px; padding: 24px 30px; }
+#pB-layers .layers .hd2 { display: flex; justify-content: space-between; align-items: baseline; padding: 0 56px 14px 0; }
+#pB-layers .layers .hd2 b { font-size: 26px; font-weight: 900; letter-spacing: 0.04em; }
+#pB-layers .layers .hd2 span { font-size: 21px; font-weight: 700; color: var(--ink-3); }
+#pB-layers .ly {
+  position: relative; display: flex; align-items: center; height: 64px; padding: 0 18px; margin-bottom: 10px; border-radius: 12px;
+  outline: 1.5px dashed rgba(20,20,22,0.18); outline-offset: -1.5px; font-size: 27px; font-weight: 800; white-space: nowrap;
+}
+#pB-layers .ly .fill { display: flex; align-items: center; gap: 16px; width: 100%; }
+#pB-layers .ly .no { font-family: var(--font-mono); font-size: 20px; font-weight: 800; color: var(--violet); }
+#pB-layers .ly .sub { margin-left: auto; font-size: 22px; font-weight: 700; color: var(--ink-3); }
+#pB-layers .ly .sub .bad { color: var(--red); }
+#pB-layers .layers > .c-badge { right: 18px; top: 18px; }
+#pB-layers .ctx { left: 560px; top: 716px; width: 800px; height: 166px; }
+#pB-layers .ctx .track, #pB-layers .ctx .fl { top: 76px; height: 36px; border-radius: 18px; }
+#pB-layers .ctx .note { position: absolute; left: 30px; right: 30px; top: 124px; font-size: 22px; font-weight: 700; color: var(--ink-2); text-align: right; }
+#pB-layers .ctx .note em { font-style: normal; color: var(--violet); }
