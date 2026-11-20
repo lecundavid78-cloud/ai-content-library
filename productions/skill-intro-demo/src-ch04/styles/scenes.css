@@ -1,0 +1,94 @@
+/* ==========================================================================
+   ch04 · scenes.css — 第四章「AI 怎么发现和调用 Skill」
+   构图沿用前几章：中轴 x=960；与口播框同高区域（y>488）只用 416→1504；浅舞台。
+   ========================================================================== */
+.l-at { position: absolute; }
+.ttl { position: absolute; left: 0; width: 1920px; text-align: center; top: 150px; }
+.hero-wrap { position: absolute; left: 0; width: 1920px; top: 356px; text-align: center; }
+.hero-wrap .c-hero { font-size: 112px; }
+.is-light em.red { color: var(--red); }
+.row-c { position: absolute; left: 0; width: 1920px; display: flex; justify-content: center; gap: 16px; }
+.row-c .c-chip { position: static; }
+
+/* ---------- 部分 A · 桌面 → 指定目录 → 识别 ---------- */
+#pA-find .desk { left: 470px; top: 400px; width: 420px; height: 280px; padding: 24px 28px; }
+#pA-find .dir  { left: 1030px; top: 400px; width: 420px; height: 280px; }
+#pA-find .card-t { font-size: 22px; font-weight: 800; letter-spacing: 0.06em; color: var(--ink-3); }
+#pA-find .dir .face { padding: 24px 28px; }
+#pA-find .dir .card-t { color: var(--paper-3); }
+#pA-find .dir .path { margin-top: 6px; font-family: var(--font-mono); font-size: 22px; color: var(--paper-2); }
+#pA-find .dir .drop { position: absolute; left: 28px; right: 28px; top: 120px; height: 84px; border-radius: 14px; outline: 1.5px dashed rgba(255,255,255,0.14); outline-offset: -1.5px; }
+#pA-find .dir .c-badge { right: 18px; top: 18px; }
+#pA-find .dir .ok-tag { position: absolute; left: 28px; bottom: 22px; }
+#pA-find .fchip { left: 502px; top: 520px; width: 356px; height: 84px; z-index: 2; white-space: nowrap;
+  display: flex; align-items: center; gap: 14px; padding: 0 22px; border-radius: 14px;
+  background: var(--card-dark); color: var(--paper); box-shadow: var(--shadow-on-light);
+  font-family: var(--font-mono); font-size: 26px; font-weight: 800; }
+#pA-find .fchip .ico { width: 34px; height: 34px; }
+#pA-find .eye { left: 470px; width: 420px; top: 704px; text-align: center; }
+
+/* ---------- 部分 B · 五步调用 ---------- */
+/* 顶部五步进度条（贯穿整个部分） */
+#pB-steps .bar { top: 266px; gap: 12px; }
+#pB-steps .stp {
+  display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 20px; border-radius: 999px;
+  outline: 1.5px dashed rgba(20,20,22,0.24); outline-offset: -1.5px;
+  font-size: 24px; font-weight: 800; white-space: nowrap; color: var(--ink);
+}
+#pB-steps .stp .no { font-family: var(--font-mono); font-size: 20px; font-weight: 800; color: var(--violet); }
+/* 舞台主卡：清单 ⇄ SKILL.md 正文 */
+#pB-steps .box { left: 580px; top: 410px; width: 760px; height: 330px; }
+#pB-steps .box .face { padding: 24px 30px; background: var(--card-light); color: var(--ink); }
+#pB-steps .box .head { padding: 0 64px 12px 0; font-family: var(--font-mono); font-size: 22px; letter-spacing: 0; color: var(--ink-3); font-weight: 500; }
+#pB-steps .box .head b { color: var(--ink); font-family: var(--font-sans); font-weight: 900; font-size: 24px; letter-spacing: 0.04em; }
+#pB-steps .cols, #pB-steps .cr { display: flex; align-items: center; gap: 0; }
+#pB-steps .cols { height: 34px; font-family: var(--font-mono); font-size: 20px; font-weight: 700; color: var(--violet); }
+#pB-steps .cols .c1, #pB-steps .cr .nm { width: 270px; flex: none; }
+#pB-steps .cr { position: relative; isolation: isolate; height: 62px; margin-top: 8px; padding: 0 14px; margin-left: -14px; margin-right: -14px; border-radius: 12px; }
+#pB-steps .cr .nm { font-family: var(--font-mono); font-size: 26px; font-weight: 800; }
+#pB-steps .cr .ds { font-size: 25px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+#pB-steps .cr .lock { margin-left: auto; }
+#pB-steps .cr .hl3 { position: absolute; inset: 0; border-radius: 12px; background: var(--violet-soft); z-index: -1; }
+#pB-steps .cr .c-badge { right: -12px; top: -12px; width: 36px; height: 36px; }
+#pB-steps .cr .c-badge svg { width: 18px; height: 18px; }
+#pB-steps .box > .c-badge { right: 18px; top: 18px; }
+#pB-steps .dstp { display: flex; align-items: center; gap: 14px; height: 52px; margin-top: 10px; padding: 0 16px; border-radius: 12px;
+  outline: 1.5px dashed rgba(20,20,22,0.14); outline-offset: -1.5px; font-size: 26px; font-weight: 800; }
+#pB-steps .dstp .fill { display: flex; gap: 14px; align-items: center; }
+#pB-steps .dstp .no { font-family: var(--font-mono); font-size: 20px; color: var(--violet); }
+#pB-steps .h2 { margin-top: 6px; font-family: var(--font-mono); font-size: 24px; font-weight: 800; }
+/* 全文堆（「不会全文读一遍」） */
+#pB-steps .full { width: 300px; height: 300px; padding: 22px 24px; }
+#pB-steps .full .card-t { font-family: var(--font-mono); font-size: 20px; color: var(--ink-3); }
+#pB-steps .full .c-skel { height: 12px; margin: 14px 0 0; background: #ECECEF; }
+#pB-steps .full.u1 { left: 560px; top: 420px; } #pB-steps .full.u2 { left: 810px; top: 400px; } #pB-steps .full.u3 { left: 1060px; top: 420px; }
+#pB-steps .full .c-badge { right: -14px; top: -14px; }
+/* 指令气泡 */
+#pB-steps .ask { top: 334px; }
+#pB-steps .ask .c-chip { height: 56px; font-size: 25px; }
+#pB-steps .ask .who { font-size: 20px; font-weight: 800; color: var(--ink-3); }
+/* 资源卡（第四步） */
+#pB-steps .res { left: 1060px; width: 404px; height: 140px; padding: 22px 24px; }
+#pB-steps .res.q1 { top: 340px; } #pB-steps .res.q2 { top: 500px; } #pB-steps .res.q3 { top: 660px; }
+#pB-steps .res .rn { display: flex; align-items: center; gap: 12px; font-family: var(--font-mono); font-size: 26px; font-weight: 800; }
+#pB-steps .res .rd { margin-top: 12px; font-size: 22px; font-weight: 700; color: var(--paper-2); }
+#pB-steps .res .c-pill { position: absolute; right: 20px; top: 22px; }
+/* 交付卡（第五步） */
+#pB-steps .out { left: 660px; top: 470px; width: 600px; height: 200px; padding: 28px 32px; }
+#pB-steps .out .ot { font-size: 34px; font-weight: 900; }
+#pB-steps .out .od { margin-top: 12px; font-size: 24px; font-weight: 700; color: var(--ink-2); }
+#pB-steps .out .od2 { margin-top: 8px; font-size: 24px; font-weight: 800; color: var(--violet); }
+#pB-steps .out .c-badge { right: 18px; top: 18px; }
+/* 串起来：四个动作 */
+#pB-steps .chain { top: 520px; gap: 14px; align-items: center; }
+#pB-steps .chain .lk { display: inline-flex; align-items: center; height: 72px; padding: 0 26px; border-radius: 16px; background: var(--ink); color: #fff; font-size: 30px; font-weight: 900; box-shadow: var(--shadow-on-light); }
+#pB-steps .chain .ar { font-family: var(--font-mono); font-size: 32px; font-weight: 800; color: var(--violet); }
+
+/* ---------- 部分 C · 自动触发不是百分百 ---------- */
+#pC-caveat .why { top: 440px; }
+#pC-caveat .why .c-chip { height: 68px; font-size: 28px; }
+#pC-caveat .why .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+#pC-caveat .res2 { top: 580px; }
+#pC-caveat .res2 .c-chip { height: 72px; font-size: 30px; font-weight: 900; }
+#pC-caveat .res2 .no { margin-left: 6px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--red); color: #fff; }
+#pC-caveat .res2 .no svg { width: 18px; height: 18px; }

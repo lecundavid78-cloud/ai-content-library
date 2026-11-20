@@ -89,7 +89,10 @@ def split_lines(text):
         if width(p) <= HARD:
             pieces.append(p); continue
         cur = ''
-        for q in re.findall(r'[^、]+、?', p):     # 超长：按顿号切
+        subs_ = re.split(r'(?<=——)', p) if '——' in p else [p]   # 超长：先在破折号处切
+        if len(subs_) > 1:
+            pieces.extend(x for x in subs_ if x.strip()); continue
+        for q in re.findall(r'[^、]+、?', p):     # 再按顿号切
             if cur and width(cur + q) > HARD * 0.7:
                 pieces.append(cur); cur = q
             else:
@@ -98,7 +101,7 @@ def split_lines(text):
             pieces.append(cur)
     lines, cur = [], ''
     for p in pieces:
-        hard_end = re.search(r'[。？！][」）]*$', cur) or (re.search(r'：$', cur) and width(cur) > 4)
+        hard_end = re.search(r'[。？！；][」）]*$', cur) or (re.search(r'：$', cur) and width(cur) > 4)
         tail = width(p) <= 5 and not re.search(r'[：:]$', cur)      # 「范围太宽」这类尾巴短句并到上一行
         if cur and not hard_end and (width(cur) <= 6 or width(cur + p) <= SOFT or tail) and width(cur + p) <= HARD:
             cur += p
@@ -114,7 +117,8 @@ def split_lines(text):
 def clean(line):
     line = line.strip().replace('“', '「').replace('”', '」')
     line = re.sub(r'^[、，]', '', line)
-    line = re.sub(r'[，。、；：]+(?=[」）]*$)', '', line)   # 去掉句末标点（保留？）
+    line = line.replace(' -> ', ' → ').replace('->', '→')
+    line = re.sub(r'(——|[，。、；：])+(?=[」）]*$)', '', line)   # 去掉句末标点 / 破折号（保留？）
     if line.count('「') > line.count('」'): line += '」'
     if line.count('」') > line.count('「'): line = '「' + line
     return line
