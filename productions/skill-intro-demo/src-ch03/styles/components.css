@@ -1,0 +1,153 @@
+/* ==========================================================================
+   v3 · components.css — 可复用组件（与具体场景无关）
+   .c-*  组件；深/浅舞台由场景类 .is-dark / .is-light 自动适配
+   ========================================================================== */
+
+/* ---------- 主句 / 标题（逐字打出用 .c-type） ---------- */
+.c-hero {
+  font-size: var(--fs-hero); font-weight: 900; line-height: 1.12;
+  letter-spacing: var(--tracking-hero); white-space: nowrap;
+}
+.c-title {
+  font-size: var(--fs-title); font-weight: 900; line-height: 1.15;
+  letter-spacing: var(--tracking-hero); white-space: nowrap;
+}
+.c-lead {
+  display: inline-block;
+  font-size: var(--fs-lead); font-weight: 700; line-height: 1.3; letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.is-dark .c-lead { color: var(--paper-2); }
+.is-light .c-lead { color: var(--ink-2); }
+/* 强调词：深舞台金色，浅舞台紫色 */
+.is-dark em  { font-style: normal; color: var(--gold); }
+.is-light em { font-style: normal; color: var(--violet); }
+.c-type .ch { display: inline-block; white-space: pre; }
+.mono { font-family: var(--font-mono); letter-spacing: -0.01em; }
+
+/* 紫色荧光笔：<span class="c-mark">…<i class="hl"></i></span> */
+.c-mark { position: relative; display: inline-block; isolation: isolate; }
+.c-mark > .hl {
+  position: absolute; left: -6px; right: -6px; bottom: 0.06em; height: 0.46em;
+  background: var(--violet-soft); border-radius: 6px; z-index: -1;
+  transform-origin: 0 50%;
+}
+
+/* ---------- 胶囊 ---------- */
+.c-pill {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 28px 13px; border-radius: var(--radius-pill);
+  font-size: 34px; font-weight: 900; letter-spacing: 0.03em; line-height: 1;
+  white-space: nowrap;
+  background: var(--ink); color: #fff;
+  box-shadow: 0 10px 24px rgba(20,20,30,0.18);
+}
+.c-pill em { color: #A891FF !important; }
+.c-pill.is-sm { font-size: 22px; padding: 7px 16px 8px; font-weight: 800; box-shadow: none; }
+.c-pill.is-white { background: #fff; color: var(--ink); }
+.c-pill.is-ghost { background: transparent; color: inherit; border: 1.5px solid currentColor; opacity: .55; box-shadow: none; }
+
+/* ---------- 卡片 ---------- */
+.c-card {
+  position: absolute;
+  border-radius: var(--radius);
+  background: var(--card-dark); color: var(--paper);
+  border: 1px solid var(--card-line-dark);
+}
+.is-dark .c-card  { box-shadow: var(--shadow-on-dark); }
+.is-light .c-card { box-shadow: var(--shadow-on-light); }
+.c-card.is-white { background: var(--card-light); color: var(--ink); border-color: var(--card-line-light); }
+.c-card .head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 26px 30px 0;
+  font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.06em; color: var(--paper-3);
+}
+.c-card.is-white .head { color: var(--ink-3); }
+.c-card .body { padding: 22px 30px 30px; }
+
+/* 卡片里的行：占位（虚线）→ 填入 */
+.c-row {
+  position: relative;
+  display: flex; align-items: center; gap: 16px;
+  height: 62px; padding: 0 20px; margin-bottom: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--card-dark-2);
+  font-size: var(--fs-card); font-weight: 800; letter-spacing: 0.02em;
+}
+.c-row:last-child { margin-bottom: 0; }
+.c-row.is-slot { background: transparent; outline: 1.5px dashed rgba(255,255,255,0.12); outline-offset: -1.5px; }
+.c-row .no { font-family: var(--font-mono); font-size: 22px; font-weight: 800; color: var(--gold); width: 34px; }
+.c-row .k { font-size: 24px; font-weight: 700; color: var(--paper-3); width: 64px; flex: none; }
+.c-row .v { flex: 1; }
+.c-row.is-bad .v { color: var(--red); }
+.c-row .fill { display: flex; align-items: center; gap: 16px; }
+
+/* 骨架条（表示「正文」，不给可读文字，避免和字幕抢视线） */
+.c-skel { height: 16px; border-radius: 8px; background: #ECECEF; margin: 14px 0; }
+.is-dark .c-skel, .c-card:not(.is-white) .c-skel { background: rgba(255,255,255,0.08); }
+
+/* ---------- 小圆徽标：对勾 / 叉 ---------- */
+.c-badge {
+  position: absolute; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--ink); color: #fff;
+  box-shadow: 0 0 0 4px var(--stage-light), 0 6px 14px rgba(0,0,0,0.2);
+}
+.is-dark .c-badge { background: #fff; color: var(--ink); box-shadow: 0 0 0 4px var(--stage-dark); }
+.c-badge.is-red { background: var(--red); color: #fff; }
+.c-badge svg { width: 22px; height: 22px; }
+
+/* ---------- 文件 / 文件夹图标 ---------- */
+.ico { width: 34px; height: 34px; flex: none; }
+
+/* ---------- 方块（四件套） ---------- */
+.c-tile {
+  position: absolute; width: 300px; height: 210px;
+  border-radius: var(--radius);
+  background: var(--card-dark); color: var(--paper);
+  box-shadow: var(--shadow-on-light);
+  padding: 28px 28px 26px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.c-tile .file { display: flex; align-items: center; gap: 12px; font-family: var(--font-mono); font-size: 27px; font-weight: 700; }
+.c-tile .role { font-size: 40px; font-weight: 900; letter-spacing: 0.02em; }
+.c-tile .tag { position: absolute; right: 24px; bottom: 34px; }
+
+/* ==========================================================================
+   v3 新增：同一张卡上的「变化」
+   ========================================================================== */
+/* 状态容器：子元素 [data-state] 叠在同一格，引擎用 fx:'state' 在它们之间过渡。
+   用法：<div class="c-morph"><div data-state="a">…</div><div data-state="b">…</div></div> */
+.c-morph { display: inline-grid; }
+.c-morph > [data-state] { grid-area: 1 / 1; justify-self: center; align-self: center; }
+.c-morph.is-start > [data-state] { justify-self: start; }
+.c-morph.is-block { display: grid; width: 100%; }
+
+/* 会变形的卡：尺寸 / 位置由引擎 fx:'move' 驱动，内容被裁在卡内 */
+.c-card.is-morph { overflow: hidden; }
+.c-card .face { position: absolute; inset: -1px; border-radius: inherit; }
+
+/* 文件行（文件夹卡里的一行） */
+.c-file {
+  display: flex; align-items: center; gap: 18px;
+  height: 84px; padding: 0 24px; margin-bottom: 12px;
+  border-radius: 14px; background: var(--card-dark-2);
+  font-family: var(--font-mono); font-size: 34px; font-weight: 800; letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.c-file .ico { width: 40px; height: 40px; }
+.c-file .role { margin-left: auto; font-family: var(--font-sans); font-size: 28px; font-weight: 800; color: var(--paper-2); letter-spacing: 0.04em; }
+.c-file .c-pill { margin-left: 14px; }
+.c-file.is-opt { background: transparent; outline: 1.5px solid rgba(255,255,255,0.08); outline-offset: -1.5px; }
+.c-file.is-opt .name { color: var(--paper-2); }
+
+/* 小任务芯片（白卡，浅舞台） */
+.c-chip {
+  position: absolute; display: flex; align-items: center; gap: 14px;
+  height: 72px; padding: 0 22px; border-radius: 16px;
+  background: #fff; color: var(--ink); box-shadow: var(--shadow-on-light);
+  font-size: 28px; font-weight: 800; letter-spacing: 0.02em; white-space: nowrap;
+}
+.c-chip .ok { margin-left: auto; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: #fff; }
+.c-chip .ok svg { width: 18px; height: 18px; }
+.c-chip .arrow { color: var(--ink-3); font-family: var(--font-mono); font-size: 24px; }

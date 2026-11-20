@@ -2,8 +2,9 @@
 """
 build.py —— 字体子集化 + 打包成自包含的 demo/index.html
 
-  python3 tools/build.py            # 子集化字体 + 打包
+  python3 tools/build.py            # v1：src/ → demo/index.html
   python3 tools/build.py --no-fonts # 只打包（字体已是最新时）
+  python3 tools/build.py --src src-v2 --out demo-v2/index.html   # v2
 
 1) 扫描 src/ 下所有 .html/.js/.css 里出现的字符 + 常用标点/ASCII，
    从 assets/fonts/source/ 的 OFL 原字体中子集化，写到 src/fonts/*.woff2
@@ -16,7 +17,12 @@ build.py —— 字体子集化 + 打包成自包含的 demo/index.html
 import base64, re, sys, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC, OUT = ROOT / "src", ROOT / "demo" / "index.html"
+def _arg(name, default):
+    return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else default
+
+
+SRC = ROOT / _arg("--src", "src")
+OUT = ROOT / _arg("--out", "demo/index.html")
 FONT_SRC = ROOT / "assets" / "fonts" / "source"
 
 FONTS = [  # (family, source file, output stem, extra chars)

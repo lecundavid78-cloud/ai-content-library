@@ -80,9 +80,11 @@ const info = await evaluate(`({ duration: Studio.duration, lint: Studio.lint, sl
   external: [...document.querySelectorAll('[src],[href]')].map(e => e.getAttribute('src') || e.getAttribute('href')).filter(u => /^(https?:)?\\/\\//.test(u)),
   fonts: [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family) })`);
 
-const shot = async (t) => {
+// SHOT=jpeg：视频分段用 JPEG(q95) 截图，省掉 PNG 编码，渲染更快；静帧仍用 PNG
+const SHOT = process.env.SHOT === 'jpeg' ? 'jpeg' : 'png';
+const shot = async (t, fmt = 'png') => {
   await evaluate(`Studio.frame(${t})`);
-  const { data } = await send('Page.captureScreenshot', { format: 'png', clip: { x: 0, y: 0, width: 1920, height: 1080, scale: 1 } });
+  const { data } = await send('Page.captureScreenshot', { format: fmt, ...(fmt === 'jpeg' ? { quality: 95 } : {}), clip: { x: 0, y: 0, width: 1920, height: 1080, scale: 1 } });
   return Buffer.from(data, 'base64');
 };
 
@@ -111,13 +113,15 @@ if (mode === 'overlay') {
 } else if (mode === 'video') {
   const fps = nums[0] || 30;
   const out = process.env.VIDEO_OUT ? resolve(process.env.VIDEO_OUT) : join(OUTDIR, 'preview.mp4');
-  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-',
+  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps),
+    ...(SHOT === 'jpeg' ? ['-c:v', 'mjpeg'] : []), '-i', '-',
+    ...(SHOT === 'jpeg' ? ['-vf', 'scale=in_range=full:out_range=tv'] : []),
     '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-preset', 'medium', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
   const total = Math.round(info.duration * fps);
   // 分段渲染：F0 ≤ f < F1（默认整片）。分段文件编码参数相同，可直接 concat -c copy
   const f0 = +(process.env.F0 || 0), f1 = Math.min(+(process.env.F1 || total + 1), total + 1);
   for (let f = f0; f < f1; f++) {
-    const buf = await shot(f / fps);
+    const buf = await shot(f / fps, SHOT);
     if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
     if (f % fps === 0) process.stdout.write(`\r  frame ${f}/${total}`);
   }
