@@ -1,0 +1,3608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#f6e1c3">
+<title>回转寿司 V4｜十分钟无尽挑战</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #d9b48a; }
+  body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+  #game { display: block; position: fixed; left: 0; top: 0; touch-action: none; }
+  #boot { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; padding: 24px; text-align: center; font: 700 18px "PingFang SC","Noto Sans CJK SC",sans-serif; color: #7a4a26; background: #f6e1c3; }
+  #boot small { margin-top: 14px; font-size: 13px; font-weight: 400; line-height: 1.6; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="boot" role="status" aria-busy="true">回转寿司 · 正在开店…<small>如长时间无法进入，请退出后重新打开。</small></div>
+<!-- 核心逻辑（无 DOM 依赖，Node 测试共用） -->
+<script>
+/* 全局命名空间。所有模块挂在 KS 下，使用普通 <script> 加载，file:// 直接打开也能运行。 */
+/* Chrome 61 尚无 globalThis：先给旧 WebView 提供局部兼容入口。 */
+if (typeof globalThis === 'undefined' && typeof window !== 'undefined') window.globalThis = window;
+(function (g) {
+  'use strict';
+  g.KS = g.KS || {};
+  var KS = g.KS;
+  KS.version = '4.0.0';
+  /** 主线三关（只放主线；按 id 1..3 排序，下标 = id-1） */
+  KS.LEVELS = KS.LEVELS || [];
+  /** 自由选图（独立列表，不并入主线，避免第三关后误进自由地图） */
+  KS.FREE_MAPS = KS.FREE_MAPS || [];
+  KS.ENDLESS = null;
+  /** 主线关卡注册：src/levels/level*.js 调用 */
+  KS.registerLevel = function (cfg) {
+    cfg.mode = 'tutorial';
+    if (!cfg.key) cfg.key = 'main-' + cfg.id;
+    KS.LEVELS.push(cfg);
+    KS.LEVELS.sort(function (a, b) { return a.id - b.id; });
+  };
+  /** 自由地图注册：src/levels/free-*.js 调用；order 决定列表顺序 */
+  KS.registerFreeMap = function (cfg) {
+    cfg.mode = 'free';
+    KS.FREE_MAPS.push(cfg);
+    KS.FREE_MAPS.sort(function (a, b) { return a.order - b.order; });
+  };
+  /** 按 key（main-1 / free-u …）查找任意地图；无效 key 返回 null */
+  KS.findMap = function (key) {
+    var all = KS.LEVELS.concat(KS.FREE_MAPS); if(KS.ENDLESS) all.push(KS.ENDLESS);
+    for (var i = 0; i < all.length; i++) if (all[i].key === key) return all[i];
+    return null;
+  };
+  /** 可复现随机数（mulberry32） */
+  KS.rng = function (seed) {
+    var a = (seed >>> 0) || 1;
+    var f = function () {
+      a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    f.int = function (n) { return Math.floor(f() * n); };
+    f.range = function (lo, hi) { return lo + f() * (hi - lo); };
+    f.pick = function (arr) { return arr[Math.floor(f() * arr.length)]; };
+    f.shuffle = function (arr) {
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(f() * (i + 1));
+        var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+      }
+      return arr;
+    };
+    return f;
+  };
+  KS.clamp = function (v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; };
+  KS.lerp = function (a, b, t) { return a + (b - a) * t; };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/*
+ * 轨道路径系统（与关卡、坐标、屏幕尺寸无关的通用实现）
+ *
+ * 关卡里写的是“轨道空间”(TRACK_SPACE: 390×360) 下的控制点，
+ * 运行时根据传送带区域的实际矩形做等比映射，然后：
+ *   - polyline：折线 + 圆角(圆弧过渡)，适合直线 / U 形 / S 形 / 多段折返
+ *   - smooth  ：Catmull-Rom 曲线，适合任意蛇形弯曲
+ * 最终统一重采样为“每 1 个逻辑像素一个点”的弧长参数化表，
+ * 寿司只需要一个弧长参数 s ∈ [0, length) 就能得到位置与切线方向。
+ */
+(function (KS) {
+  'use strict';
+
+  KS.TRACK_SPACE = { w: 390, h: 360 };
+
+  function Path(xs, ys, length, step) {
+    this.xs = xs; this.ys = ys; this.length = length; this.step = step;
+    this.n = xs.length;
+  }
+
+  /** 返回弧长 s 处的位置与切线（单位向量） */
+  Path.prototype.at = function (s, out) {
+    out = out || {};
+    var step = this.step, n = this.n;
+    var f = s / step;
+    if (f < 0) f = 0;
+    if (f > n - 1.0001) f = n - 1.0001;
+    var i = Math.floor(f), t = f - i;
+    var x0 = this.xs[i], y0 = this.ys[i], x1 = this.xs[i + 1], y1 = this.ys[i + 1];
+    out.x = x0 + (x1 - x0) * t;
+    out.y = y0 + (y1 - y0) * t;
+    // 切线取前后两点，稍微平滑一点
+    var a = Math.max(0, i - 1), b = Math.min(n - 1, i + 2);
+    var dx = this.xs[b] - this.xs[a], dy = this.ys[b] - this.ys[a];
+    var d = Math.sqrt(dx * dx + dy * dy) || 1;
+    out.tx = dx / d; out.ty = dy / d;
+    return out;
+  };
+
+  /** 包围盒 */
+  Path.prototype.bounds = function () {
+    var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (var i = 0; i < this.n; i++) {
+      var x = this.xs[i], y = this.ys[i];
+      if (x < minX) minX = x; if (x > maxX) maxX = x;
+      if (y < minY) minY = y; if (y > maxY) maxY = y;
+    }
+    return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+  };
+
+  /** 找到路径在矩形内的第一段/最后一段弧长（用于计算可拿取范围、出入口门帘位置） */
+  Path.prototype.visibleRange = function (rect, margin) {
+    margin = margin || 0;
+    var first = -1, last = -1;
+    for (var i = 0; i < this.n; i++) {
+      var x = this.xs[i], y = this.ys[i];
+      var inside = x >= rect.x + margin && x <= rect.x + rect.w - margin &&
+                   y >= rect.y + margin && y <= rect.y + rect.h - margin;
+      if (inside) { if (first < 0) first = i; last = i; }
+    }
+    if (first < 0) return null;
+    return { start: first * this.step, end: last * this.step };
+  };
+
+  // ---------- 构建 ----------
+
+  /** 把一串稠密点按弧长等距重采样 */
+  function resample(raw, step) {
+    var cum = [0];
+    for (var i = 1; i < raw.length; i++) {
+      var dx = raw[i][0] - raw[i - 1][0], dy = raw[i][1] - raw[i - 1][1];
+      cum.push(cum[i - 1] + Math.sqrt(dx * dx + dy * dy));
+    }
+    var total = cum[cum.length - 1];
+    var n = Math.max(2, Math.floor(total / step) + 1);
+    var xs = new Float32Array(n), ys = new Float32Array(n);
+    var j = 0;
+    for (var k = 0; k < n; k++) {
+      var s = k * step;
+      while (j < cum.length - 2 && cum[j + 1] < s) j++;
+      var seg = cum[j + 1] - cum[j] || 1;
+      var t = KS.clamp((s - cum[j]) / seg, 0, 1);
+      xs[k] = raw[j][0] + (raw[j + 1][0] - raw[j][0]) * t;
+      ys[k] = raw[j][1] + (raw[j + 1][1] - raw[j][1]) * t;
+    }
+    return new Path(xs, ys, (n - 1) * step, step);
+  }
+
+  /** 折线 + 圆角。radius 可以是数字或与点等长的数组（每个拐点单独半径） */
+  function filletPolyline(pts, radius) {
+    var out = [pts[0].slice()];
+    var n = pts.length;
+    // 每条边可用于圆角的长度：两端都有拐点时各占一半
+    var segLen = [];
+    for (var i = 0; i < n - 1; i++) {
+      segLen.push(Math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]));
+    }
+    for (var v = 1; v < n - 1; v++) {
+      var P = pts[v], A = pts[v - 1], B = pts[v + 1];
+      var l1 = segLen[v - 1], l2 = segLen[v];
+      var d1x = (P[0] - A[0]) / l1, d1y = (P[1] - A[1]) / l1;
+      var d2x = (B[0] - P[0]) / l2, d2y = (B[1] - P[1]) / l2;
+      var dot = KS.clamp(d1x * d2x + d1y * d2y, -1, 1);
+      var theta = Math.acos(dot);
+      var r = Array.isArray(radius) ? radius[v] : radius;
+      if (theta < 1e-3 || !r) { out.push(P.slice()); continue; }
+      var tan = Math.tan(theta / 2);
+      var t = r * tan;
+      var max1 = v - 1 === 0 ? l1 : l1 / 2;
+      var max2 = v + 1 === n - 1 ? l2 : l2 / 2;
+      t = Math.min(t, max1, max2);
+      var rr = t / tan;
+      var sx = P[0] - d1x * t, sy = P[1] - d1y * t;
+      var cross = d1x * d2y - d1y * d2x;
+      var nx = cross > 0 ? -d1y : d1y, ny = cross > 0 ? d1x : -d1x;
+      var cx = sx + nx * rr, cy = sy + ny * rr;
+      var a0 = Math.atan2(sy - cy, sx - cx);
+      var sweep = cross > 0 ? theta : -theta;
+      var steps = Math.max(4, Math.ceil(Math.abs(sweep) * rr / 2));
+      for (var k = 0; k <= steps; k++) {
+        var a = a0 + sweep * (k / steps);
+        out.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr]);
+      }
+    }
+    out.push(pts[n - 1].slice());
+    return out;
+  }
+
+  /** Catmull-Rom（均匀）曲线采样 */
+  function catmull(pts) {
+    var out = [];
+    var n = pts.length;
+    for (var i = 0; i < n - 1; i++) {
+      var p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(n - 1, i + 2)];
+      var len = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+      var steps = Math.max(6, Math.ceil(len / 2));
+      for (var k = 0; k < steps; k++) {
+        var t = k / steps, t2 = t * t, t3 = t2 * t;
+        var x = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3);
+        var y = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3);
+        out.push([x, y]);
+      }
+    }
+    out.push(pts[n - 1].slice());
+    return out;
+  }
+
+  /**
+   * 计算轨道空间 → 屏幕逻辑坐标的映射（等比缩放、居中）
+   * rect: 传送带区域 {x,y,w,h}
+   */
+  Path.mapping = function (rect, space) {
+    var TS = space || KS.TRACK_SPACE;
+    var scale = Math.min(rect.w / TS.w, rect.h / TS.h, 1.15);
+    return {
+      scale: scale,
+      cx: rect.x + rect.w / 2, cy: rect.y + rect.h / 2,
+      map: function (p) {
+        return [this.cx + (p[0] - TS.w / 2) * scale, this.cy + (p[1] - TS.h / 2) * scale];
+      }
+    };
+  };
+
+  /**
+   * 从关卡 track 配置构建路径
+   * track = { type:'polyline'|'smooth', points:[[x,y],...], radius }
+   * 多段轨道可以用 segments:[{type,points,radius}, ...]，会按顺序首尾相接
+   */
+  Path.fromTrack = function (track, rect) {
+    var m = Path.mapping(rect, track.space);
+    var parts = track.segments || [track];
+    var raw = [];
+    parts.forEach(function (seg) {
+      var pts = seg.points.map(function (p) { return m.map(p); });
+      var r = (seg.radius != null ? seg.radius : 0);
+      r = Array.isArray(r) ? r.map(function (x) { return x * m.scale; }) : r * m.scale;
+      var dense = (seg.type === 'smooth') ? catmull(pts) : filletPolyline(pts, r);
+      if (raw.length) dense.shift();
+      raw = raw.concat(dense);
+    });
+    var path = resample(raw, 1);
+    path.scale = m.scale;
+    return path;
+  };
+
+  /** 闭合环形（菜单装饰用）：圆角矩形 */
+  Path.roundedLoop = function (cx, cy, w, h, r) {
+    var x0 = cx - w / 2, y0 = cy - h / 2, x1 = cx + w / 2, y1 = cy + h / 2;
+    var pts = [[x0 + r, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0], [x0 + r + 0.01, y0]];
+    var dense = filletPolyline(pts, r);
+    var p = resample(dense, 1);
+    p.closed = true;
+    return p;
+  };
+
+  KS.Path = Path;
+})(globalThis.KS);
+
+</script>
+<script>
+/*
+ * 寿司种类目录。关卡里用 key 引用。
+ * name   ：界面显示
+ * plate  ：传送带瓷盘的边沿颜色（辅助辨识）
+ * colors ：消除时粒子颜色
+ * 画法在 src/art/sushi-art.js 中按 key 实现。
+ */
+(function (KS) {
+  'use strict';
+  KS.SUSHI_TYPES = {
+    salmon: { name: '三文鱼', plate: '#f2b8a8', colors: ['#f58a4b', '#ffd2b0', '#fff6e8'] },
+    tuna:   { name: '金枪鱼', plate: '#bcd39a', colors: ['#d8394a', '#f27b84', '#fff6e8'] },
+    tamago: { name: '玉子烧', plate: '#f2d48a', colors: ['#f7cf55', '#3b4a35', '#fff6e8'] },
+    maki:   { name: '黄瓜卷', plate: '#b9d5c8', colors: ['#8cc152', '#2f3a2c', '#fff6e8'] },
+    ebi:    { name: '甜虾',   plate: '#f4c6cf', colors: ['#f6875f', '#ffe1d2', '#e2463a'] },
+    ikura:  { name: '三文鱼籽', plate: '#d8c3e6', colors: ['#ff7a2f', '#ffb36b', '#2f3a2c'] },
+    inari:  { name: '豆皮寿司', plate: '#d6b98f', colors: ['#c98636', '#f2c27a', '#fff6e8'] },
+    hotate: { name: '扇贝',     plate: '#a9c9e6', colors: ['#fff4e2', '#f4cdb8', '#bfe0f2'] }
+  };
+  /** 固定的类型顺序：开局洗牌前先按此排序，保证不同内核下同一 seed 得到同一局面（不依赖对象键顺序） */
+  KS.SUSHI_ORDER = ['salmon', 'tuna', 'tamago', 'maki', 'ebi', 'ikura', 'inari', 'hotate'];
+})(globalThis.KS);
+
+</script>
+<script>
+/* V4: 把绝大部分竖屏留给跑道；托盘视觉收紧，触控区域单独放大。 */
+(function(KS){
+ 'use strict';
+ var W=390;
+ KS.Layout={W:W,MIN_H:650,MAX_H:940,
+ TRAY_W:230,TRAY_H:43,TRAY_PITCH:53,SLOT_GAP:70,
+ BUFFER_W:346,BUFFER_H:56,BUFFER_SLOT_GAP:61,
+ compute:function(vw,vh,safeTop,safeBottom){
+  var scale=vw/W, H=vh/scale;
+  if(H<650){H=650;scale=vh/H}
+  if(H>940)H=940;
+  var offX=(vw-W*scale)/2,offY=(vh-H*scale)/2;
+  var top=(safeTop||0)/scale;
+  var bottom=Math.max(8,(safeBottom||0)/scale+5);
+  var L={W:W,H:H,scale:scale,offX:offX,offY:offY,top:top};
+  L.btnBack={x:12,y:top+8,w:44,h:44};
+  L.btnRestart={x:64,y:top+8,w:44,h:44};
+  L.btnSound={x:W-57,y:top+8,w:44,h:44};
+  L.btnPause={x:W-109,y:top+8,w:44,h:44};
+  L.title={x:W/2,y:top+29};
+  L.hud={x:0,y:top,w:W,h:68};
+  L.clockPill={x:W/2-60,y:top+49,w:120,h:27};
+  L.buffer={x:(W-this.BUFFER_W)/2,y:H-bottom-this.BUFFER_H,w:this.BUFFER_W,h:this.BUFFER_H};
+  L.bufferLabel={x:W/2,y:L.buffer.y-4};
+  L.bufferSlots=[];
+  for(var i=0;i<5;i++){
+   var x=W/2+(i-2)*this.BUFFER_SLOT_GAP;
+   L.bufferSlots.push({cx:x,cy:L.buffer.y+this.BUFFER_H/2+2,x:x-27,y:L.buffer.y+2,w:54,h:this.BUFFER_H-2});
+  }
+  L.trays=[];
+  var lastCenter=L.buffer.y-32;
+  for(var t=0;t<3;t++){
+   var cy=lastCenter-(2-t)*this.TRAY_PITCH;
+   var tr={cx:W/2,cy:cy,x:(W-this.TRAY_W)/2,y:cy-this.TRAY_H/2,w:this.TRAY_W,h:this.TRAY_H,slots:[]};
+   for(var k=0;k<3;k++) tr.slots.push({x:W/2+(k-1)*this.SLOT_GAP,y:cy-2});
+   tr.hit={x:tr.x-36,y:cy-this.TRAY_PITCH/2,w:tr.w+72,h:this.TRAY_PITCH};
+   L.trays.push(tr);
+  }
+  L.woodTop=L.trays[0].y-17;
+  L.conveyor={x:0,y:top+77,w:W,h:L.woodTop-top-83};
+  L.bufferHit={x:0,y:L.buffer.y-6,w:W,h:this.BUFFER_H+bottom+7};
+  return L;
+ }
+ };
+})(globalThis.KS);
+
+</script>
+<script>
+/*
+ * 纯逻辑游戏模型（无渲染、无 DOM），浏览器与 Node 测试共用。
+ *
+ * 每个寿司有唯一 id 和一个 loc（所在位置）：
+ *   kitchen  厨房队列（出口→入口之间的不可见部分，排队等待重新上带）
+ *   belt     传送带上（有弧长 s）
+ *   held     被玩家手指拿着（若来自传送带，仍占着传送带上的空盘位）
+ *   tray     托盘中（tray 下标 + slot 下标）
+ *   buffer   暂存区（slot 下标）
+ *   cleared  已消除
+ * 不变量：各位置数量之和恒等于开局总数，且每个 id 只出现在一个容器中。
+ */
+(function (KS) {
+  'use strict';
+
+  var TRAY_COUNT = 3, TRAY_SIZE = 3, BUFFER_SIZE = 5;
+  var CLEAR_DELAY = 0.62;   // 第三个寿司放入 → 真正消除 的时长（留给飞行和消除动画）
+
+  function Model(level, path, opts) {
+    opts = opts || {};
+    this.level = level;
+    this.path = path;
+    this.L = path.length;
+    var k = path.scale || 1;
+    this.speed = level.speed * k;               // 关卡里的速度/间距以轨道空间计，这里换算成屏幕逻辑像素
+    this.spacing = level.spacing * k;
+    this.endless = level.mode === 'endless';
+    this.timeLimit = this.endless ? 600 : 0;
+    this.timeLeft = this.timeLimit;
+    this.activeTypes = this.endless ? Object.keys(level.sushi) : [];
+    this.stage = 1;
+    this._lastRefill = 0;
+    this.elapsed = 0;
+    this.beltOffset = 0;                         // 传送带累计位移（用于画履带纹理）
+    // 补货加速：传送带上寿司稀疏且厨房还有存货时，整条带子临时加速（所有盘子同速，间距不变）
+    this.refillBoost = level.refillBoost != null ? level.refillBoost : 0.9;
+    this.speedMul = 1;
+    // 固定局面：优先用调试覆盖的 seed，其次用关卡配置里的稳定 seed；两者都没有才随机
+    this.seed = opts.seed != null ? opts.seed : level.seed != null ? level.seed : (Math.random() * 1e9) | 0;
+    this.rng = KS.rng(this.seed);
+    // 可拿取判定：默认整段可拿；浏览器里传入“是否在屏幕内”
+    this.pickRange = opts.pickRange || { start: 0, end: this.L };
+
+    var types = [];
+    var self = this;
+    var typeKeys = Object.keys(level.sushi).sort(function (a, b) {
+      return KS.SUSHI_ORDER.indexOf(a) - KS.SUSHI_ORDER.indexOf(b);
+    });
+    typeKeys.forEach(function (type) {
+      var n = level.sushi[type];
+      if (n % 3 !== 0) throw new Error('关卡 ' + level.id + ' 的 ' + type + ' 数量 ' + n + ' 不是 3 的倍数');
+      if (!KS.SUSHI_TYPES[type]) throw new Error('未知寿司类型: ' + type);
+      for (var i = 0; i < n; i++) types.push(type);
+    });
+    this.rng.shuffle(types);
+    this.sushi = types.map(function (type, id) {
+      return { id: id, type: type, loc: 'kitchen', s: -1, tray: -1, slot: -1 };
+    });
+    this.total = this.sushi.length;
+    this.typeTotals = {};
+    types.forEach(function (t) { self.typeTotals[t] = (self.typeTotals[t] || 0) + 1; });
+
+    this.belt = [];      // 按 s 从大到小（越靠近出口越靠前）
+    this.kitchen = [];
+    this.trays = [];
+    for (var t = 0; t < TRAY_COUNT; t++) this.trays.push({ type: null, slots: [null, null, null], clearing: false, clearT: 0 });
+    this.buffer = [];
+    for (var b = 0; b < BUFFER_SIZE; b++) this.buffer.push(null);
+    this.held = null;    // { id, from:'belt'|'buffer', index }
+    this.clearedCount = 0;
+    this.matches = 0;
+    this.status = 'ready';   // ready → playing → (winning →) won | lost
+    this.events = [];
+
+    // 开局：从出口附近往入口方向铺满传送带，其余在厨房排队
+    var s = Math.min(this.L - this.spacing * 0.6, this.pickRange.end - this.spacing * 0.3);
+    for (var i2 = 0; i2 < this.total; i2++) {
+      var sh = this.sushi[i2];
+      if (s >= 0) { sh.loc = 'belt'; sh.s = s; this.belt.push(sh.id); s -= this.spacing; }
+      else { this.kitchen.push(sh.id); }
+    }
+  }
+
+  Model.TRAY_COUNT = TRAY_COUNT; Model.TRAY_SIZE = TRAY_SIZE; Model.BUFFER_SIZE = BUFFER_SIZE;
+  Model.CLEAR_DELAY = CLEAR_DELAY;
+
+  var P = Model.prototype;
+
+  P.emit = function (ev) { this.events.push(ev); };
+  P.drainEvents = function () { var e = this.events; this.events = []; return e; };
+
+  P.start = function () { if (this.status === 'ready') { this.status = 'playing'; this.emit({ type: 'start' }); } };
+
+  P.isActive = function () { return this.status === 'playing' || this.status === 'winning'; };
+
+  P.update = function (dt) {
+    if (!this.isActive()) return;
+    this.elapsed += dt;
+    // 1) 传送带前进（稀疏时补货加速）
+    var cap = Math.max(1, Math.floor(this.L / this.spacing));
+    var fill = this.belt.length / cap;
+    var target = this.kitchen.length ? 1 + this.refillBoost * KS.clamp((0.6 - fill) / 0.45, 0, 1) : 1;
+    this.speedMul += (target - this.speedMul) * Math.min(1, dt * 1.6);
+    var ds = this.speed * this.speedMul * dt;
+    this.beltOffset += ds;
+    for (var i = 0; i < this.belt.length; i++) this.sushi[this.belt[i]].s += ds;
+    // 2) 到达出口 → 回到厨房队尾（身份不变、数量不变）
+    while (this.belt.length && this.sushi[this.belt[0]].s >= this.L) {
+      var id = this.belt.shift();
+      var sh = this.sushi[id];
+      if (sh.loc === 'held') {
+        sh.s = -1;  // 手里拿着的寿司，空盘已被带走；若取消则回厨房
+      } else {
+        sh.loc = 'kitchen'; sh.s = -1;
+        this.kitchen.push(id);
+        this.emit({ type: 'exit', id: id });
+      }
+    }
+    // 3) 入口有空位 → 厨房队首重新上带
+    while (this.kitchen.length) {
+      var minS = this.belt.length ? this.sushi[this.belt[this.belt.length - 1]].s : Infinity;
+      if (minS < this.spacing) break;
+      var nid = this.kitchen.shift();
+      var ns = this.sushi[nid];
+      ns.loc = 'belt';
+      ns.s = this.belt.length ? KS.clamp(minS - this.spacing, 0, 4) : 0;
+      this.belt.push(nid);
+      this.emit({ type: 'spawn', id: nid });
+    }
+    // 4) 托盘消除计时
+    for (var t = 0; t < this.trays.length; t++) {
+      var tr = this.trays[t];
+      if (!tr.clearing) continue;
+      tr.clearT += dt;
+      if (tr.clearT >= CLEAR_DELAY) {
+        var ids = tr.slots.slice();
+        for (var k = 0; k < ids.length; k++) {
+          var c = this.sushi[ids[k]];
+          c.loc = 'cleared'; c.tray = -1; c.slot = -1;
+        }
+        this.clearedCount += ids.length;
+        this.matches++;
+        this.emit({ type: 'cleared', tray: t, sushiType: tr.type, ids: ids });
+        tr.type = null; tr.slots = [null, null, null]; tr.clearing = false; tr.clearT = 0;
+        if (!this.endless && this.clearedCount === this.total) { this.status = 'won'; this.emit({ type: 'win' }); }
+      }
+    }
+    // 5) 持续补货与寿司种类进阶。每个寿司仍有唯一身份，库存数随新货增加。
+    if (this.endless && this.status === 'playing') this.endlessRestock();
+    // 6) 仅无尽模式有 10 分钟结算；教学和自由选图只记录正向用时。
+    if (this.endless && this.status === 'playing') {
+      this.timeLeft -= dt;
+      if (this.timeLeft <= 0) {
+        this.timeLeft = 0;
+        if (this.held) this.cancelHeld();
+        this.status = 'ended';
+        this.emit({ type: 'end', reason: 'time' });
+      }
+    }
+  };
+
+  /** 用寿司消除总量决定种类解锁：4 → 5 → 6 → 7 → 8。 */
+  P.endlessRestock = function () {
+    if (!this.endless || this.status !== 'playing') return;
+    var gates=this.level.unlockAt||[], additions=this.level.unlockTypes||[];
+    while(this.stage<=gates.length && this.clearedCount>=gates[this.stage-1]) {
+      var type=additions[this.stage-1];
+      if(type && this.activeTypes.indexOf(type)<0){
+        this.activeTypes.push(type);
+        this.addBatch(type, 6);
+        this.emit({type:'unlock', sushiType:type, stage:this.stage+1});
+      }
+      this.stage++;
+    }
+    // 玩家把寿司放进托盘/暂存区时就补货，避免出现长时间空带。
+    // 按类均衡补货，不追求让玩家失败；成绩取决于单位时间的消除量。
+    var inFlow=this.kitchen.length+this.belt.length;
+    var target=20+this.activeTypes.length;
+    if(inFlow >= target) return;
+    var stock={}, i;
+    for(i=0;i<this.activeTypes.length;i++)stock[this.activeTypes[i]]=0;
+    for(i=0;i<this.sushi.length;i++) {
+      var s=this.sushi[i];
+      if(s.loc!=='cleared')stock[s.type]=(stock[s.type]||0)+1;
+    }
+    var candidates=this.activeTypes.slice(), self=this;
+    candidates.sort(function(a,b){return (stock[a]||0)-(stock[b]||0)});
+    // 混入轻微变化但优先库存少的寿司，防止新增种类被长时间淹没
+    var k=Math.min(2,candidates.length), chosen=candidates[this.rng.int(k)];
+    this.addBatch(chosen,3);
+  };
+
+  /** 运行期间增加一小组寿司；全部进入厨房，沿真实入口依次出场。 */
+  P.addBatch = function(type,count){
+    if(!KS.SUSHI_TYPES[type])throw Error('未知寿司种类 '+type);
+    for(var i=0;i<count;i++){
+      var id=this.sushi.length;
+      this.sushi.push({id:id,type:type,loc:'kitchen',s:-1,tray:-1,slot:-1});
+      this.kitchen.push(id);
+    }
+    this.total+=count;
+    this.typeTotals[type]=(this.typeTotals[type]||0)+count;
+  };
+
+  /** 提前结束无尽对局，不算失败，按照当前消除数结算。 */
+  P.finishEndless=function(reason){
+    if(!this.endless || this.status==='ended')return false;
+    if(this.held)this.cancelHeld();
+    this.status='ended';
+    this.emit({type:'end',reason:reason||'manual'});
+    return true;
+  };
+
+  // ---------- 查询 ----------
+
+  P.isPickableOnBelt = function (id) {
+    var sh = this.sushi[id];
+    return sh.loc === 'belt' && sh.s >= this.pickRange.start && sh.s <= this.pickRange.end;
+  };
+
+  P.trayAccepts = function (t, type) {
+    var tr = this.trays[t];
+    if (tr.clearing) return 'clearing';
+    if (tr.slots.indexOf(null) < 0) return 'full';
+    if (tr.type !== null && tr.type !== type) return 'type';
+    return 'ok';
+  };
+
+  P.freeBufferSlot = function () { return this.buffer.indexOf(null); };
+
+  /** 自动选择目标托盘：同类型未满 > 空托盘 */
+  P.autoTray = function (type) {
+    for (var t = 0; t < this.trays.length; t++) {
+      if (this.trays[t].type === type && this.trayAccepts(t, type) === 'ok') return t;
+    }
+    for (var u = 0; u < this.trays.length; u++) {
+      if (this.trays[u].type === null && this.trayAccepts(u, type) === 'ok') return u;
+    }
+    return -1;
+  };
+
+  // ---------- 操作 ----------
+
+  /** 拿起：来自传送带或暂存区。返回是否成功 */
+  P.pick = function (id) {
+    if (this.status !== 'playing' || this.held) return false;
+    var sh = this.sushi[id];
+    if (sh.loc === 'belt') {
+      if (!this.isPickableOnBelt(id)) return false;
+      sh.loc = 'held';           // 仍留在 belt 数组里占位（空盘继续走）
+      this.held = { id: id, from: 'belt', index: -1 };
+    } else if (sh.loc === 'buffer') {
+      this.buffer[sh.slot] = null;
+      this.held = { id: id, from: 'buffer', index: sh.slot };
+      sh.loc = 'held'; sh.slot = -1;
+    } else return false;
+    this.emit({ type: 'pick', id: id, from: this.held.from });
+    return true;
+  };
+
+  /** 把手里的寿司从原来源中移除（成功放置时调用） */
+  P._detachHeld = function () {
+    var h = this.held, sh = this.sushi[h.id];
+    if (h.from === 'belt' && sh.s >= 0) {
+      var i = this.belt.indexOf(h.id);
+      if (i >= 0) this.belt.splice(i, 1);
+    }
+    sh.s = -1;
+    this.held = null;
+    return sh;
+  };
+
+  P._putTray = function (sh, t) {
+    var tr = this.trays[t];
+    var slot = tr.slots.indexOf(null);
+    tr.slots[slot] = sh.id;
+    tr.type = sh.type;
+    sh.loc = 'tray'; sh.tray = t; sh.slot = slot;
+    this.emit({ type: 'place', id: sh.id, to: 'tray', tray: t, slot: slot });
+    if (tr.slots.indexOf(null) < 0) {
+      tr.clearing = true; tr.clearT = 0;
+      this.emit({ type: 'match', tray: t, sushiType: tr.type });
+      // 场上已无任何未处理寿司 → 收尾阶段，冻结计时
+      var pending = 0;
+      for (var i = 0; i < this.sushi.length; i++) {
+        var l = this.sushi[i].loc;
+        if (l === 'cleared') continue;
+        if (l === 'tray' && this.trays[this.sushi[i].tray].clearing) continue;
+        pending++;
+      }
+      if (!this.endless && pending === 0 && this.status === 'playing') this.status = 'winning';
+    }
+  };
+
+  P._putBuffer = function (sh, b) {
+    this.buffer[b] = sh.id;
+    sh.loc = 'buffer'; sh.slot = b; sh.tray = -1;
+    this.emit({ type: 'place', id: sh.id, to: 'buffer', slot: b });
+  };
+
+  /**
+   * 放下手里的寿司
+   * target: {kind:'tray', index} | {kind:'buffer', index?} | null(取消)
+   * 返回 {ok, reason?}
+   */
+  P.drop = function (target) {
+    if (!this.held) return { ok: false, reason: 'none' };
+    var sh = this.sushi[this.held.id];
+    if (!target) { this.cancelHeld(); return { ok: false, reason: 'cancel' }; }
+    if (target.kind === 'tray') {
+      var why = this.trayAccepts(target.index, sh.type);
+      if (why !== 'ok') {
+        this.emit({ type: 'reject', id: sh.id, tray: target.index, reason: 'tray-' + why });
+        this.cancelHeld();
+        return { ok: false, reason: 'tray-' + why };
+      }
+      this._detachHeld();
+      this._putTray(sh, target.index);
+      return { ok: true };
+    }
+    if (target.kind === 'buffer') {
+      var b = target.index;
+      if (b == null || b < 0 || this.buffer[b] !== null) b = this.nearestFreeBuffer(target.index);
+      if (b < 0) {
+        this.emit({ type: 'reject', id: sh.id, reason: 'buffer-full' });
+        this.cancelHeld();
+        return { ok: false, reason: 'buffer-full' };
+      }
+      this._detachHeld();
+      this._putBuffer(sh, b);
+      return { ok: true };
+    }
+    this.cancelHeld();
+    return { ok: false, reason: 'cancel' };
+  };
+
+  P.nearestFreeBuffer = function (pref) {
+    if (pref == null || pref < 0) return this.freeBufferSlot();
+    var best = -1, bd = 99;
+    for (var i = 0; i < this.buffer.length; i++) {
+      if (this.buffer[i] === null && Math.abs(i - pref) < bd) { bd = Math.abs(i - pref); best = i; }
+    }
+    return best;
+  };
+
+  /** 轻点：自动放置。传送带寿司：同类托盘 > 空托盘 > 暂存区；暂存区寿司：同类托盘 > 空托盘 */
+  P.autoPlaceHeld = function () {
+    if (!this.held) return { ok: false, reason: 'none' };
+    var sh = this.sushi[this.held.id];
+    var t = this.autoTray(sh.type);
+    if (t >= 0) return this.drop({ kind: 'tray', index: t });
+    if (this.held.from === 'belt') {
+      if (this.freeBufferSlot() >= 0) return this.drop({ kind: 'buffer' });
+      this.emit({ type: 'reject', id: sh.id, reason: 'all-full' });
+      this.cancelHeld();
+      return { ok: false, reason: 'all-full' };
+    }
+    this.emit({ type: 'reject', id: sh.id, reason: 'no-tray' });
+    this.cancelHeld();
+    return { ok: false, reason: 'no-tray' };
+  };
+
+  /** 取消：回到原处（传送带空盘还在 → 回盘；空盘已离开 → 回厨房排队；暂存区 → 回原格） */
+  P.cancelHeld = function () {
+    if (!this.held) return;
+    var h = this.held, sh = this.sushi[h.id];
+    this.held = null;
+    if (h.from === 'belt') {
+      if (sh.s >= 0 && this.belt.indexOf(sh.id) >= 0) { sh.loc = 'belt'; }
+      else { sh.loc = 'kitchen'; sh.s = -1; this.kitchen.push(sh.id); }
+    } else {
+      var b = this.buffer[h.index] === null ? h.index : this.freeBufferSlot();
+      if (b >= 0) { this.buffer[b] = sh.id; sh.loc = 'buffer'; sh.slot = b; }
+      else { sh.loc = 'kitchen'; sh.s = -1; this.kitchen.push(sh.id); }
+    }
+    this.emit({ type: 'return', id: sh.id });
+  };
+
+  /** 便捷：轻点某个寿司 = 拿起 + 自动放置 */
+  P.tap = function (id) {
+    if (!this.pick(id)) return { ok: false, reason: 'cannot-pick' };
+    return this.autoPlaceHeld();
+  };
+
+  // ---------- 统计与不变量 ----------
+
+  P.counts = function () {
+    var c = { kitchen: 0, belt: 0, held: 0, tray: 0, buffer: 0, cleared: 0 };
+    for (var i = 0; i < this.sushi.length; i++) c[this.sushi[i].loc]++;
+    c.total = this.total;
+    c.remaining = this.total - c.cleared;
+    return c;
+  };
+
+  /** 返回违反不变量的描述数组（空数组 = 一切正常） */
+  P.checkInvariants = function () {
+    var err = [];
+    var self = this;
+    var seen = {};
+    function mark(id, where) {
+      if (id === null) return;
+      if (seen[id] !== undefined) err.push('寿司 #' + id + ' 同时出现在 ' + seen[id] + ' 和 ' + where);
+      seen[id] = where;
+    }
+    var lastS = Infinity;
+    this.belt.forEach(function (id, i) {
+      mark(id, 'belt');
+      var sh = self.sushi[id];
+      if (sh.loc !== 'belt' && sh.loc !== 'held') err.push('belt 中的 #' + id + ' loc=' + sh.loc);
+      if (sh.s < 0 || sh.s >= self.L + 1e-6) err.push('#' + id + ' s 越界 ' + sh.s);
+      if (i > 0 && lastS - sh.s < self.spacing - 1e-3) err.push('传送带上 #' + id + ' 与前一个重叠 (间距 ' + (lastS - sh.s).toFixed(2) + ')');
+      lastS = sh.s;
+    });
+    this.kitchen.forEach(function (id) { mark(id, 'kitchen'); if (self.sushi[id].loc !== 'kitchen') err.push('kitchen 中 #' + id + ' loc=' + self.sushi[id].loc); });
+    this.trays.forEach(function (tr, t) {
+      var n = 0;
+      tr.slots.forEach(function (id, s) {
+        if (id === null) return;
+        n++;
+        mark(id, 'tray' + t);
+        var sh = self.sushi[id];
+        if (sh.loc !== 'tray' || sh.tray !== t || sh.slot !== s) err.push('托盘 ' + t + ' 槽 ' + s + ' 的 #' + id + ' 状态不一致');
+        if (sh.type !== tr.type) err.push('托盘 ' + t + ' 混入了不同种类');
+      });
+      if (n === 0 && tr.type !== null) err.push('空托盘 ' + t + ' 仍锁定类型');
+      if (tr.clearing && n !== 3) err.push('托盘 ' + t + ' 消除中但不足 3 个');
+    });
+    this.buffer.forEach(function (id, b) {
+      if (id === null) return;
+      mark(id, 'buffer');
+      var sh = self.sushi[id];
+      if (sh.loc !== 'buffer' || sh.slot !== b) err.push('暂存区 ' + b + ' 的 #' + id + ' 状态不一致');
+    });
+    if (this.held) {
+      var hs = this.sushi[this.held.id];
+      if (hs.loc !== 'held') err.push('held 状态不一致');
+      if (!(this.held.from === 'belt' && seen[this.held.id] === 'belt')) mark(this.held.id, 'held');
+    }
+    var c = this.counts();
+    if (c.kitchen + c.belt + c.held + c.tray + c.buffer + c.cleared !== this.total) err.push('数量守恒失败');
+    if (c.held !== (this.held ? 1 : 0)) err.push('held 计数不一致');
+    if (c.cleared !== this.clearedCount) err.push('已消除计数不一致');
+    if (c.kitchen !== this.kitchen.length) err.push('厨房计数不一致');
+    var beltHeld = this.held && this.held.from === 'belt' && this.belt.indexOf(this.held.id) >= 0 ? 1 : 0;
+    if (c.belt + beltHeld !== this.belt.length) err.push('传送带计数不一致');
+    // 每种寿司的总数不变，已消除的每种都是 3 的倍数
+    var perType = {}, clearedType = {};
+    this.sushi.forEach(function (sh) {
+      perType[sh.type] = (perType[sh.type] || 0) + 1;
+      if (sh.loc === 'cleared') clearedType[sh.type] = (clearedType[sh.type] || 0) + 1;
+    });
+    Object.keys(this.typeTotals).forEach(function (t) {
+      if (perType[t] !== self.typeTotals[t]) err.push(t + ' 总数变化');
+      if ((clearedType[t] || 0) % 3 !== 0) err.push(t + ' 已消除数不是 3 的倍数');
+    });
+    for (var id = 0; id < this.total; id++) {
+      var l = this.sushi[id].loc;
+      if (l !== 'cleared' && seen[id] === undefined) err.push('寿司 #' + id + ' 丢失（loc=' + l + '）');
+    }
+    return err;
+  };
+
+  KS.Model = Model;
+})(globalThis.KS);
+
+</script>
+<!-- 关卡配置 -->
+<script>
+/* 专门的无计时教学图：两种九颗，凑齐自动消除。 */
+KS.registerLevel({id:1,key:'tutorial',name:'新手教学',shape:'直线',difficulty:1,seed:101,
+ track:{space:{w:390,h:520},type:'polyline',points:[[-80,250],[470,250]],radius:0},
+ beltWidth:86,wall:14,spacing:98,speed:44,time:0,
+ sushi:{salmon:6,tamago:3},star3:32,star2:65,decor:[]});
+
+</script>
+<script>
+/* V4 核心模式。出口排队 → 同一寿司重新从入口进入；拿走的寿司由新批次补足。 */
+KS.ENDLESS={id:0,key:'endless',mode:'endless',name:'无尽回转',shape:'茶屋四层',seed:2406,
+ track:{space:{w:390,h:520},type:'polyline',points:[[-80,61],[328,61],[328,190],[59,190],[59,320],[328,320],[328,450],[-80,450]],radius:57},
+ beltWidth:57,wall:9,spacing:78,speed:57,time:600,
+ sushi:{salmon:6,tuna:6,tamago:6,maki:6},
+ unlockAt:[24,60,108,168], unlockTypes:['ebi','ikura','inari','hotate'],
+ decor:[{kind:'teaGarden',x:193,y:257,w:145,h:90}]};
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-u","name":"轻松回转","shape":"U 形","difficulty":1,"order":1,"seed":401,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-80,92],[320,92],[320,432],[-80,432]],"radius":75},"beltWidth":54,"wall":9,"spacing":90,"speed":44,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6},"star3":59,"star2":107,"decor":[]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-z","name":"三折回廊","shape":"Z 型","difficulty":2,"order":2,"seed":501,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-80,85],[320,85],[320,240],[65,240],[65,435],[470,435]],"radius":60},"beltWidth":54,"wall":9,"spacing":84,"speed":49,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6},"star3":68,"star2":123,"decor":[]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-double","name":"双层折返","shape":"双层","difficulty":3,"order":3,"seed":601,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-80,76],[326,76],[326,206],[60,206],[60,328],[326,328],[326,450],[-80,450]],"radius":58},"beltWidth":54,"wall":9,"spacing":76,"speed":58,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":3,"ikura":3,"inari":3,"hotate":3},"star3":77,"star2":139,"decor":[]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-s","name":"海风蛇行","shape":"S 型","difficulty":2,"order":4,"seed":701,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-80,58],[335,58],[335,190],[57,190],[57,320],[335,320],[335,452],[-80,452]],"radius":55},"beltWidth":54,"wall":9,"spacing":78,"speed":53,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6},"star3":68,"star2":123,"decor":[]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-spiral","name":"回字深巷","shape":"回字","difficulty":4,"order":5,"seed":801,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-65,59],[338,59],[338,460],[48,460],[48,165],[240,165],[240,350],[128,350]],"radius":40},"beltWidth":54,"wall":9,"spacing":82,"speed":57,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6,"ikura":6,"inari":6},"star3":86,"star2":154,"decor":[]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-garden","name":"庭院回廊","shape":"庭院","difficulty":3,"order":6,"seed":901,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-65,74],[334,74],[334,444],[50,444],[50,194],[240,194],[240,340],[128,340]],"radius":44},"beltWidth":54,"wall":9,"spacing":85,"speed":54,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6,"ikura":6,"inari":6},"star3":86,"star2":154,"decor":[{"kind":"teaGarden","x":193,"y":258,"w":130,"h":90}]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-wave","name":"海风曲线","shape":"波浪","difficulty":2,"order":7,"seed":1001,"track":{"space":{"w":390,"h":520},"type":"smooth","points":[[-50,75],[100,100],[257,64],[338,150],[260,225],[90,260],[60,355],[195,448],[470,452]],"radius":40},"beltWidth":54,"wall":9,"spacing":82,"speed":51,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6},"star3":68,"star2":123,"decor":[]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-fan","name":"折扇山路","shape":"折扇","difficulty":3,"order":8,"seed":1101,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-60,95],[330,75],[310,185],[64,210],[80,315],[324,325],[298,442],[-60,452]],"radius":40},"beltWidth":54,"wall":9,"spacing":80,"speed":57,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6,"ikura":6},"star3":77,"star2":139,"decor":[]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-bamboo","name":"竹林折廊","shape":"竹林","difficulty":3,"order":9,"seed":1201,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-50,62],[325,62],[325,155],[80,155],[80,248],[325,248],[325,350],[80,350],[80,446],[470,446]],"radius":38},"beltWidth":54,"wall":9,"spacing":70,"speed":60,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6,"ikura":6,"inari":6},"star3":86,"star2":154,"decor":[]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-maple","name":"枫叶回廊","shape":"枫叶","difficulty":3,"order":10,"seed":1301,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-65,62],[330,62],[330,443],[56,443],[56,178],[233,178],[233,325],[125,325]],"radius":45},"beltWidth":54,"wall":9,"spacing":83,"speed":57,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6,"ikura":6,"hotate":6},"star3":86,"star2":154,"decor":[{"kind":"teaGarden","x":193,"y":258,"w":130,"h":90}]});
+
+</script>
+<script>
+KS.registerFreeMap({"key":"free-five","name":"五层蛇行","shape":"五层","difficulty":4,"order":11,"seed":1401,"track":{"space":{"w":390,"h":520},"type":"polyline","points":[[-80,42],[333,42],[333,147],[58,147],[58,252],[333,252],[333,357],[58,357],[58,465],[470,465]],"radius":45},"beltWidth":49,"wall":9,"spacing":71,"speed":65,"time":0,"sushi":{"salmon":6,"tuna":6,"tamago":6,"maki":6,"ebi":6,"ikura":6,"inari":6,"hotate":6},"star3":95,"star2":170,"decor":[]});
+
+</script>
+<!-- 美术 -->
+<script>
+/*
+ * 寿司与瓷盘的原创矢量绘制（Canvas 2D）。
+ * 所有图形在“单位空间”中绘制：寿司宽约 100 单位，原点在寿司底部中心附近。
+ * 首次使用时按当前 DPR 预渲染成高分辨率精灵图缓存，运行时只做 drawImage，保证流畅。
+ *
+ * 想换美术：只需替换这里各个 draw 函数（或改成加载 PNG 精灵），游戏逻辑不受影响。
+ */
+(function (KS) {
+  'use strict';
+  var INK = '#4a3122';
+  var Art = KS.Art = KS.Art || {};
+  Art.INK = INK;
+
+  Art.makeCanvas = function (w, h) {
+    var c = document.createElement('canvas');
+    c.width = Math.max(1, Math.ceil(w)); c.height = Math.max(1, Math.ceil(h));
+    return c;
+  };
+
+  function ellipse(ctx, x, y, rx, ry) { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); }
+  Art.ellipse = ellipse;
+
+  function ink(ctx, w) { ctx.lineWidth = w || 3.2; ctx.strokeStyle = INK; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke(); }
+  Art.ink = ink;
+
+  // ---------------- 米饭 ----------------
+  function rice(ctx, w, top, bottom) {
+    w = w || 72; top = top == null ? -12 : top; bottom = bottom == null ? 24 : bottom;
+    var hw = w / 2;
+    ctx.beginPath();
+    ctx.moveTo(-hw, top + 18);
+    ctx.quadraticCurveTo(-hw - 1, top, -hw + 14, top);
+    ctx.lineTo(hw - 14, top);
+    ctx.quadraticCurveTo(hw + 1, top, hw, top + 18);
+    ctx.quadraticCurveTo(hw, bottom - 2, hw - 10, bottom);
+    var bumps = 6, x = hw - 10, step = (2 * hw - 20) / bumps;
+    for (var i = 0; i < bumps; i++) {
+      ctx.quadraticCurveTo(x - step / 2, bottom + 4.5, x - step, bottom);
+      x -= step;
+    }
+    ctx.quadraticCurveTo(-hw, bottom - 2, -hw, top + 18);
+    ctx.closePath();
+    var g = ctx.createLinearGradient(0, top, 0, bottom);
+    g.addColorStop(0, '#fffdf6'); g.addColorStop(0.7, '#fbf3e4'); g.addColorStop(1, '#efe1c9');
+    ctx.fillStyle = g; ctx.fill();
+    ink(ctx);
+    // 米粒
+    ctx.save();
+    ctx.strokeStyle = 'rgba(176,150,118,0.55)'; ctx.lineWidth = 1.5; ctx.lineCap = 'round';
+    var grains = [[-24, 10, 0.3], [-12, 16, -0.4], [2, 12, 0.2], [14, 17, -0.2], [25, 9, 0.5], [-28, 18, -0.6], [8, 20, 0.6], [-4, 6, -0.1], [22, 19, 0.1]];
+    grains.forEach(function (g2) {
+      ctx.beginPath();
+      ctx.ellipse(g2[0], g2[1], 3.2, 1.4, g2[2], Math.PI * 0.1, Math.PI * 1.1);
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
+
+  // ---------------- 鱼片（握寿司通用） ----------------
+  function fishPath(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(-46, 4);
+    ctx.bezierCurveTo(-51, -8, -46, -24, -31, -27);
+    ctx.bezierCurveTo(-10, -31, 18, -33, 35, -28);
+    ctx.bezierCurveTo(48, -24, 52, -8, 45, 1);
+    ctx.bezierCurveTo(32, 9, 12, 11, -8, 9);
+    ctx.bezierCurveTo(-26, 8, -40, 11, -46, 4);
+    ctx.closePath();
+  }
+
+  function gloss(ctx, x, y, rx, ry, a) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,' + (a || 0.6) + ')';
+    ctx.beginPath(); ctx.ellipse(x, y, rx, ry, -0.18, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x + rx + 5, y - 0.5, 2.2, 1.6, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  function drawSalmon(ctx) {
+    rice(ctx);
+    fishPath(ctx);
+    var g = ctx.createLinearGradient(0, -32, 0, 10);
+    g.addColorStop(0, '#ffa766'); g.addColorStop(0.55, '#f8873f'); g.addColorStop(1, '#ea6a2c');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.save(); fishPath(ctx); ctx.clip();
+    // 脂肪纹理
+    ctx.strokeStyle = '#ffe2c4'; ctx.lineCap = 'round';
+    for (var i = 0; i < 5; i++) {
+      var x = -34 + i * 17;
+      ctx.lineWidth = 4.2 - i * 0.2;
+      ctx.beginPath(); ctx.moveTo(x + 9, -33); ctx.quadraticCurveTo(x + 1, -14, x - 8, 10); ctx.stroke();
+      ctx.lineWidth = 1.4; ctx.strokeStyle = 'rgba(255,240,225,0.7)';
+      ctx.beginPath(); ctx.moveTo(x + 17, -32); ctx.quadraticCurveTo(x + 10, -14, x + 2, 10); ctx.stroke();
+      ctx.strokeStyle = '#ffe2c4';
+    }
+    // 底部厚度阴影
+    ctx.fillStyle = 'rgba(190,70,20,0.25)';
+    ctx.beginPath(); ctx.ellipse(0, 12, 52, 9, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    fishPath(ctx); ink(ctx);
+    gloss(ctx, -22, -19, 9, 3.4, 0.7);
+  }
+
+  function drawTuna(ctx) {
+    rice(ctx);
+    fishPath(ctx);
+    var g = ctx.createLinearGradient(0, -32, 0, 10);
+    g.addColorStop(0, '#f05a64'); g.addColorStop(0.6, '#d83a4b'); g.addColorStop(1, '#bd2a3c');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.save(); fishPath(ctx); ctx.clip();
+    ctx.strokeStyle = 'rgba(255,150,160,0.55)'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+    for (var i = 0; i < 6; i++) {
+      var x = -36 + i * 15;
+      ctx.beginPath(); ctx.moveTo(x + 10, -33); ctx.quadraticCurveTo(x + 4, -12, x - 6, 10); ctx.stroke();
+    }
+    ctx.fillStyle = 'rgba(120,10,30,0.22)';
+    ctx.beginPath(); ctx.ellipse(0, 12, 52, 9, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    fishPath(ctx); ink(ctx);
+    gloss(ctx, -22, -19, 11, 3.6, 0.72);
+  }
+
+  function drawEbi(ctx) {
+    rice(ctx);
+    // 虾尾
+    ctx.beginPath();
+    ctx.moveTo(38, -18);
+    ctx.bezierCurveTo(48, -30, 58, -34, 62, -26);
+    ctx.bezierCurveTo(60, -20, 64, -14, 60, -6);
+    ctx.bezierCurveTo(56, 0, 48, -2, 40, -4);
+    ctx.closePath();
+    var tg = ctx.createLinearGradient(40, -30, 62, 0);
+    tg.addColorStop(0, '#ff6a4a'); tg.addColorStop(1, '#d93a2c');
+    ctx.fillStyle = tg; ctx.fill(); ink(ctx, 2.8);
+    ctx.beginPath(); ctx.moveTo(44, -12); ctx.lineTo(58, -24); ctx.moveTo(45, -9); ctx.lineTo(60, -12);
+    ctx.strokeStyle = 'rgba(120,20,10,0.55)'; ctx.lineWidth = 1.6; ctx.stroke();
+    // 虾身
+    var ebiBody = function () {
+      ctx.beginPath();
+      ctx.moveTo(-44, 4);
+      ctx.bezierCurveTo(-50, -8, -44, -24, -30, -26);
+      ctx.bezierCurveTo(-8, -30, 20, -30, 38, -22);
+      ctx.bezierCurveTo(46, -17, 46, -6, 40, -1);
+      ctx.bezierCurveTo(28, 8, 10, 10, -8, 9);
+      ctx.bezierCurveTo(-26, 8, -38, 11, -44, 4);
+      ctx.closePath();
+    };
+    ebiBody();
+    ctx.save();
+    ctx.fillStyle = '#fff3ea'; ctx.fill(); ctx.clip();
+    ctx.fillStyle = '#f7784f';
+    for (var i = 0; i < 5; i++) {
+      var x = -38 + i * 18;
+      ctx.beginPath();
+      ctx.moveTo(x + 4, -34); ctx.quadraticCurveTo(x - 2, -12, x - 8, 12);
+      ctx.lineTo(x + 2, 12); ctx.quadraticCurveTo(x + 8, -12, x + 14, -34);
+      ctx.closePath(); ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(200,80,40,0.18)';
+    ctx.beginPath(); ctx.ellipse(0, 12, 52, 9, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    // V1 这里描边的是阴影椭圆（留下一圈多余的线），V2 改为描边虾身
+    ebiBody(); ink(ctx);
+    gloss(ctx, -24, -18, 8, 3, 0.75);
+  }
+
+  function drawTamago(ctx) {
+    rice(ctx);
+    // 顶面
+    ctx.beginPath();
+    ctx.moveTo(-44, -14);
+    ctx.quadraticCurveTo(-44, -30, -30, -31);
+    ctx.lineTo(32, -31);
+    ctx.quadraticCurveTo(44, -30, 44, -14);
+    ctx.closePath();
+    ctx.fillStyle = '#ffe07c'; ctx.fill();
+    // 正面
+    ctx.beginPath();
+    ctx.moveTo(-44, -16);
+    ctx.lineTo(44, -16);
+    ctx.lineTo(44, 0);
+    ctx.quadraticCurveTo(44, 8, 36, 8);
+    ctx.lineTo(-36, 8);
+    ctx.quadraticCurveTo(-44, 8, -44, 0);
+    ctx.closePath();
+    var g = ctx.createLinearGradient(0, -16, 0, 8);
+    g.addColorStop(0, '#f8c94b'); g.addColorStop(1, '#eeb233');
+    ctx.fillStyle = g; ctx.fill();
+    // 整体轮廓
+    ctx.beginPath();
+    ctx.moveTo(-44, -14);
+    ctx.quadraticCurveTo(-44, -30, -30, -31);
+    ctx.lineTo(32, -31);
+    ctx.quadraticCurveTo(44, -30, 44, -14);
+    ctx.lineTo(44, 0); ctx.quadraticCurveTo(44, 8, 36, 8);
+    ctx.lineTo(-36, 8); ctx.quadraticCurveTo(-44, 8, -44, 0);
+    ctx.closePath(); ink(ctx);
+    ctx.beginPath(); ctx.moveTo(-42, -16); ctx.quadraticCurveTo(0, -14, 42, -16);
+    ctx.strokeStyle = 'rgba(160,100,20,0.55)'; ctx.lineWidth = 2; ctx.stroke();
+    // 层次纹
+    ctx.strokeStyle = 'rgba(200,130,30,0.45)'; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(-38, -6); ctx.lineTo(-14, -6); ctx.moveTo(14, -6); ctx.lineTo(38, -6);
+    ctx.moveTo(-36, 2); ctx.lineTo(-16, 2); ctx.moveTo(16, 2); ctx.lineTo(36, 2); ctx.stroke();
+    // 焦痕
+    ctx.fillStyle = 'rgba(190,120,40,0.35)';
+    ctx.beginPath(); ctx.ellipse(-28, -24, 6, 2, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(26, -22, 5, 1.8, 0, 0, Math.PI * 2); ctx.fill();
+    gloss(ctx, -26, -26, 7, 2, 0.55);
+    // 海苔带
+    ctx.beginPath();
+    ctx.moveTo(-10, -32); ctx.lineTo(10, -32);
+    ctx.quadraticCurveTo(12, -8, 11, 22);
+    ctx.quadraticCurveTo(0, 24, -11, 22);
+    ctx.quadraticCurveTo(-12, -8, -10, -32);
+    ctx.closePath();
+    var ng = ctx.createLinearGradient(-10, 0, 10, 0);
+    ng.addColorStop(0, '#26332a'); ng.addColorStop(0.5, '#3a4a3c'); ng.addColorStop(1, '#222e26');
+    ctx.fillStyle = ng; ctx.fill(); ink(ctx, 2.8);
+    ctx.strokeStyle = 'rgba(140,170,130,0.45)'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(-4, -28); ctx.lineTo(-5, 16); ctx.moveTo(4, -26); ctx.lineTo(5, 4); ctx.stroke();
+  }
+
+  function makiPiece(ctx, cx, cy, r) {
+    var ry = r * 0.56, h = r * 1.05;
+    // 侧面（海苔）
+    ctx.beginPath();
+    ctx.moveTo(cx - r, cy);
+    ctx.lineTo(cx - r, cy + h);
+    ctx.ellipse(cx, cy + h, r, ry, 0, Math.PI, 0, true);
+    ctx.lineTo(cx + r, cy);
+    ctx.closePath();
+    var g = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
+    g.addColorStop(0, '#1f2a22'); g.addColorStop(0.3, '#3d4d3f'); g.addColorStop(0.6, '#2a372d'); g.addColorStop(1, '#1b241d');
+    ctx.fillStyle = g; ctx.fill(); ink(ctx);
+    // 顶面
+    ellipse(ctx, cx, cy, r, ry);
+    ctx.fillStyle = '#26322a'; ctx.fill(); ink(ctx);
+    ellipse(ctx, cx, cy + 0.5, r - 4, ry - 2.6);
+    ctx.fillStyle = '#fffaf0'; ctx.fill();
+    ctx.strokeStyle = 'rgba(170,150,120,0.6)'; ctx.lineWidth = 1.2; ctx.stroke();
+    // 米粒点
+    ctx.fillStyle = 'rgba(190,170,140,0.6)';
+    for (var a = 0; a < 6; a++) {
+      var ang = a / 6 * Math.PI * 2 + 0.3;
+      ctx.beginPath(); ctx.ellipse(cx + Math.cos(ang) * (r - 7.5), cy + Math.sin(ang) * (ry - 4.5), 1.6, 0.9, ang, 0, Math.PI * 2); ctx.fill();
+    }
+    // 黄瓜芯
+    ellipse(ctx, cx, cy + 0.5, r * 0.42, ry * 0.42);
+    ctx.fillStyle = '#8cc152'; ctx.fill();
+    ctx.strokeStyle = '#4f7f2a'; ctx.lineWidth = 1.8; ctx.stroke();
+    ellipse(ctx, cx - 1, cy, r * 0.22, ry * 0.2);
+    ctx.fillStyle = '#c9e58f'; ctx.fill();
+  }
+
+  function drawMaki(ctx) {
+    makiPiece(ctx, 0, -26, 19);
+    makiPiece(ctx, -22, -6, 19);
+    makiPiece(ctx, 22, -6, 19);
+  }
+
+  function drawIkura(ctx) {
+    // 黄瓜片点缀
+    ctx.beginPath(); ctx.ellipse(24, -22, 13, 8, -0.3, Math.PI, Math.PI * 2.05);
+    ctx.closePath();
+    ctx.fillStyle = '#9fd065'; ctx.fill(); ink(ctx, 2.6);
+    // 海苔外壁
+    var rx = 38, ry = 13, top = -10, bottom = 18;
+    ctx.beginPath();
+    ctx.moveTo(-rx, top);
+    ctx.lineTo(-rx, bottom);
+    ctx.ellipse(0, bottom, rx, ry, 0, Math.PI, 0, true);
+    ctx.lineTo(rx, top);
+    ctx.closePath();
+    var g = ctx.createLinearGradient(-rx, 0, rx, 0);
+    g.addColorStop(0, '#1d271f'); g.addColorStop(0.28, '#3e4f40'); g.addColorStop(0.55, '#2a382d'); g.addColorStop(1, '#19211b');
+    ctx.fillStyle = g; ctx.fill(); ink(ctx);
+    ctx.strokeStyle = 'rgba(140,170,130,0.35)'; ctx.lineWidth = 1.3;
+    ctx.beginPath(); ctx.moveTo(-20, top + 6); ctx.lineTo(-21, bottom + 8); ctx.moveTo(12, top + 8); ctx.lineTo(12, bottom + 10); ctx.stroke();
+    // 内口
+    ellipse(ctx, 0, top, rx, ry);
+    ctx.fillStyle = '#26322a'; ctx.fill(); ink(ctx);
+    // 鱼籽堆
+    var pts = [];
+    var rows = [[-6, [-26, -15, -4, 7, 18, 28]], [-13, [-21, -9, 3, 15, 25]], [-21, [-14, -2, 10, 20]], [-28, [-6, 6]]];
+    rows.forEach(function (r) { r[1].forEach(function (x) { pts.push([x, r[0]]); }); });
+    pts.forEach(function (p, i) {
+      var rr = 6.4 + (i % 3) * 0.4;
+      ellipse(ctx, p[0], p[1], rr, rr);
+      var rg = ctx.createRadialGradient(p[0] - 2, p[1] - 2, 1, p[0], p[1], rr);
+      rg.addColorStop(0, '#ffc07a'); rg.addColorStop(0.5, '#ff7f2e'); rg.addColorStop(1, '#e0561a');
+      ctx.fillStyle = rg; ctx.fill();
+      ctx.strokeStyle = 'rgba(150,50,10,0.75)'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.beginPath(); ctx.ellipse(p[0] - 2.2, p[1] - 2.4, 1.8, 1.2, -0.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(200,70,10,0.8)';
+      ctx.beginPath(); ctx.arc(p[0] + 1.2, p[1] + 1.2, 1.1, 0, Math.PI * 2); ctx.fill();
+    });
+  }
+
+
+  // ---------------- V2 新寿司：豆皮寿司（琥珀色圆鼓鼓的豆皮袋 + 顶部露出米饭） ----------------
+  function inariBody(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(-41, -12);
+    ctx.bezierCurveTo(-50, 2, -46, 22, -26, 26);
+    ctx.quadraticCurveTo(0, 30, 26, 26);
+    ctx.bezierCurveTo(46, 22, 50, 2, 41, -12);
+    ctx.ellipse(0, -12, 41, 13, 0, 0, Math.PI, false);
+    ctx.closePath();
+  }
+  function drawInari(ctx) {
+    // 背面袋口（深色）
+    ellipse(ctx, 0, -14, 40, 13);
+    ctx.fillStyle = '#9c5f22'; ctx.fill(); ink(ctx);
+    // 米饭从袋口鼓出来
+    ctx.beginPath();
+    ctx.moveTo(-34, -12);
+    ctx.bezierCurveTo(-34, -30, -14, -36, 0, -34);
+    ctx.bezierCurveTo(16, -36, 35, -30, 34, -12);
+    ctx.closePath();
+    var rg = ctx.createLinearGradient(0, -36, 0, -10);
+    rg.addColorStop(0, '#fffdf6'); rg.addColorStop(1, '#f1e4cc');
+    ctx.fillStyle = rg; ctx.fill(); ink(ctx, 2.6);
+    // 芝麻
+    var seeds = [[-18, -26, 0.4], [-6, -30, -0.3], [8, -27, 0.6], [20, -23, -0.5], [-24, -18, 0.2], [2, -20, 0.1], [14, -16, -0.2], [-10, -15, 0.5]];
+    seeds.forEach(function (p, i) {
+      ctx.fillStyle = i % 3 === 0 ? '#3a2a1e' : '#e9d3a6';
+      ctx.beginPath(); ctx.ellipse(p[0], p[1], 2.2, 1.1, p[2], 0, Math.PI * 2); ctx.fill();
+    });
+    // 袋身
+    inariBody(ctx);
+    var g = ctx.createLinearGradient(0, -14, 0, 28);
+    g.addColorStop(0, '#f0b562'); g.addColorStop(0.55, '#d98f3c'); g.addColorStop(1, '#b8722a');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.save(); inariBody(ctx); ctx.clip();
+    // 豆皮气孔与褶皱
+    ctx.fillStyle = 'rgba(140,75,20,0.35)';
+    var dots = [[-28, 4], [-16, 12], [-4, 2], [10, 14], [24, 6], [30, 18], [-30, 18], [0, 20], [16, -2], [-20, -4]];
+    dots.forEach(function (d) { ctx.beginPath(); ctx.ellipse(d[0], d[1], 2.4, 1.5, 0.3, 0, Math.PI * 2); ctx.fill(); });
+    ctx.strokeStyle = 'rgba(130,70,20,0.45)'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-34, 10); ctx.quadraticCurveTo(-26, 16, -18, 10);
+    ctx.moveTo(14, 20); ctx.quadraticCurveTo(22, 24, 30, 18);
+    ctx.moveTo(-6, 10); ctx.quadraticCurveTo(0, 14, 6, 9); ctx.stroke();
+    ctx.restore();
+    // 袋口前沿的翻边
+    ctx.beginPath(); ctx.ellipse(0, -12, 41, 13, 0, 0.05, Math.PI - 0.05);
+    ctx.strokeStyle = '#f4c57c'; ctx.lineWidth = 3.2; ctx.stroke();
+    inariBody(ctx); ink(ctx);
+    gloss(ctx, -24, 2, 7, 3, 0.55);
+  }
+
+  // ---------------- V2 新寿司：扇贝（米白色扇形贝肉，带放射棱纹） ----------------
+  function shellPath(ctx) {
+    var lobes = 7, r = 44, a0 = Math.PI * 1.08, a1 = Math.PI * 1.92;
+    ctx.beginPath();
+    ctx.moveTo(-9, 10);
+    ctx.lineTo(Math.cos(a0) * r * 0.98, 6 + Math.sin(a0) * r * 0.98);
+    for (var i = 0; i < lobes; i++) {
+      var s0 = a0 + (a1 - a0) * i / lobes, s1 = a0 + (a1 - a0) * (i + 1) / lobes, sm = (s0 + s1) / 2;
+      ctx.quadraticCurveTo(Math.cos(sm) * (r + 7), 6 + Math.sin(sm) * (r + 7), Math.cos(s1) * r, 6 + Math.sin(s1) * r);
+    }
+    ctx.lineTo(9, 10);
+    ctx.closePath();
+  }
+  function drawHotate(ctx) {
+    rice(ctx, 70, -6, 24);
+    // 贝壳“耳朵”
+    ctx.beginPath(); ctx.moveTo(-15, 4); ctx.lineTo(-17, 15); ctx.lineTo(17, 15); ctx.lineTo(15, 4); ctx.closePath();
+    ctx.fillStyle = '#efd9bf'; ctx.fill(); ink(ctx, 2.6);
+    shellPath(ctx);
+    var g = ctx.createRadialGradient(0, 6, 4, 0, 6, 50);
+    g.addColorStop(0, '#f7d7c2'); g.addColorStop(0.45, '#fff3e1'); g.addColorStop(1, '#f7e3c8');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.save(); shellPath(ctx); ctx.clip();
+    // 放射棱纹
+    ctx.lineCap = 'round';
+    for (var i = 0; i <= 7; i++) {
+      var a = Math.PI * 1.08 + (Math.PI * 0.84) * i / 7;
+      ctx.strokeStyle = 'rgba(205,160,120,0.55)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, 8); ctx.lineTo(Math.cos(a) * 54, 6 + Math.sin(a) * 54); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(1.5, 8); ctx.lineTo(Math.cos(a + 0.05) * 54, 6 + Math.sin(a + 0.05) * 54); ctx.stroke();
+    }
+    // 同心生长纹
+    ctx.strokeStyle = 'rgba(210,170,130,0.4)'; ctx.lineWidth = 1.2;
+    [18, 30].forEach(function (rr) { ctx.beginPath(); ctx.arc(0, 6, rr, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke(); });
+    ctx.restore();
+    shellPath(ctx); ink(ctx);
+    gloss(ctx, -16, -22, 8, 3, 0.75);
+  }
+
+  Art.SUSHI_DRAW = { salmon: drawSalmon, tuna: drawTuna, tamago: drawTamago, maki: drawMaki, ebi: drawEbi, ikura: drawIkura, inari: drawInari, hotate: drawHotate };
+
+  // ---------------- 瓷盘 ----------------
+  function drawPlate(ctx, rim) {
+    var rx = 50, ry = 34;
+    // 投影
+    ctx.fillStyle = 'rgba(90,55,30,0.22)';
+    ellipse(ctx, 0, 6, rx + 1, ry + 1); ctx.fill();
+    // 盘底厚度
+    ellipse(ctx, 0, 3, rx, ry);
+    ctx.fillStyle = '#e8d6b8'; ctx.fill(); ink(ctx);
+    // 盘面
+    ellipse(ctx, 0, 0, rx, ry);
+    var g = ctx.createRadialGradient(-12, -10, 4, 0, 0, rx);
+    g.addColorStop(0, '#fffdf7'); g.addColorStop(1, '#f6ead3');
+    ctx.fillStyle = g; ctx.fill(); ink(ctx);
+    // 彩色边沿
+    ctx.save();
+    ellipse(ctx, 0, 0, rx - 1.5, ry - 1.5);
+    ctx.ellipse(0, 1, rx - 10, ry - 8, 0, 0, Math.PI * 2, true);
+    ctx.fillStyle = rim; ctx.fill('evenodd');
+    ctx.restore();
+    ellipse(ctx, 0, 1, rx - 10, ry - 8);
+    ctx.strokeStyle = 'rgba(120,90,60,0.45)'; ctx.lineWidth = 1.6; ctx.stroke();
+    // 边沿小纹
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    for (var i = 0; i < 10; i++) {
+      var a = i / 10 * Math.PI * 2;
+      ctx.beginPath(); ctx.arc(Math.cos(a) * (rx - 5.5), Math.sin(a) * (ry - 4.5), 1.4, 0, Math.PI * 2); ctx.fill();
+    }
+    // 高光
+    ctx.beginPath(); ctx.ellipse(0, 0, rx - 4, ry - 3, 0, Math.PI * 1.1, Math.PI * 1.45);
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 2.4; ctx.stroke();
+  }
+  Art.drawPlate = drawPlate;
+
+  // ---------------- 精灵缓存 ----------------
+  var SPR_W = 136, SPR_H = 104, ORG_X = 68, ORG_Y = 64;
+  var cache = {};
+  Art.spriteRes = 3;
+  Art.setResolution = function (pxPerUnit) {
+    if (Math.abs(pxPerUnit - Art.spriteRes) > 0.05) { Art.spriteRes = pxPerUnit; cache = {}; }
+  };
+  function sprite(key, drawFn) {
+    var c = cache[key];
+    if (c) return c;
+    var r = Art.spriteRes;
+    c = Art.makeCanvas(SPR_W * r, SPR_H * r);
+    var ctx = c.getContext('2d');
+    ctx.scale(r, r); ctx.translate(ORG_X, ORG_Y);
+    drawFn(ctx);
+    cache[key] = c;
+    return c;
+  }
+  Art.sushiSprite = function (type) { return sprite('s_' + type, Art.SUSHI_DRAW[type]); };
+  Art.plateSprite = function (type) {
+    var rim = (KS.SUSHI_TYPES[type] || {}).plate || '#e7c9a0';
+    return sprite('p_' + type, function (ctx) { drawPlate(ctx, rim); });
+  };
+  Art.plainPlateSprite = function () { return sprite('p__', function (ctx) { drawPlate(ctx, '#e9d3ad'); }); };
+
+  /** 在 (x,y) 以缩放 k（单位→逻辑像素）绘制精灵；sx/sy 为额外的挤压拉伸 */
+  Art.drawSprite = function (ctx, spr, x, y, k, sx, sy, rot, alpha) {
+    var w = SPR_W * k, h = SPR_H * k;
+    ctx.save();
+    // 以底部（单位 y=22）为挤压/旋转支点，落地弹跳更自然
+    ctx.translate(x, y + 22 * k);
+    if (rot) ctx.rotate(rot);
+    ctx.scale(sx || 1, sy || 1);
+    if (alpha != null && alpha < 1) ctx.globalAlpha *= alpha;
+    ctx.drawImage(spr, -ORG_X * k, (-ORG_Y - 22) * k, w, h);
+    ctx.restore();
+  };
+  Art.SPR = { W: SPR_W, H: SPR_H, OX: ORG_X, OY: ORG_Y };
+})(globalThis.KS);
+
+</script>
+<script>
+/*
+ * 场景美术：纸纹背景、木桌、传送带、托盘、暂存区、HUD 按钮/标题/进度条。
+ * 全部为程序化原创绘制，静态部分会预渲染到离屏画布。
+ */
+(function (KS) {
+  'use strict';
+  var Art = KS.Art;
+  var INK = Art.INK;
+  var FONT = '"PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Source Han Sans SC","Microsoft YaHei",sans-serif';
+  Art.FONT = FONT;
+  Art.font = function (size, weight) { return (weight || 900) + ' ' + size + 'px ' + FONT; };
+
+  Art.roundRect = function (ctx, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  };
+  var roundRect = Art.roundRect;
+
+  // ---------- 纹理 ----------
+  var noiseCache = {};
+  Art.noise = function (key, size, color, density, alphaMax) {
+    if (noiseCache[key]) return noiseCache[key];
+    var c = Art.makeCanvas(size, size), ctx = c.getContext('2d');
+    var r = KS.rng(key.length * 9973 + size);
+    for (var i = 0; i < size * size * density; i++) {
+      ctx.fillStyle = 'rgba(' + color + ',' + (r() * alphaMax).toFixed(3) + ')';
+      var s = r() < 0.85 ? 1 : 2;
+      ctx.fillRect(r() * size, r() * size, s, s);
+    }
+    noiseCache[key] = c;
+    return c;
+  };
+
+  /** 奶油色纸张背景 */
+  Art.paper = function (ctx, x, y, w, h) {
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    var g = ctx.createRadialGradient(x + w / 2, y + h * 0.4, 20, x + w / 2, y + h * 0.5, Math.max(w, h) * 0.8);
+    g.addColorStop(0, '#fbebd2'); g.addColorStop(1, '#f1d6b2');
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    ctx.fillStyle = ctx.createPattern(Art.noise('paper', 128, '120,80,40', 0.35, 0.09), 'repeat');
+    ctx.fillRect(x, y, w, h);
+    // 纤维
+    var r = KS.rng(77);
+    ctx.strokeStyle = 'rgba(150,100,60,0.07)'; ctx.lineWidth = 0.8;
+    for (var i = 0; i < w * h / 900; i++) {
+      var px = x + r() * w, py = y + r() * h, a = r() * Math.PI, l = 4 + r() * 10;
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.quadraticCurveTo(px + Math.cos(a) * l * 0.5 + 2, py + Math.sin(a) * l * 0.5, px + Math.cos(a) * l, py + Math.sin(a) * l); ctx.stroke();
+    }
+    ctx.restore();
+  };
+
+  /** 木纹桌面 */
+  Art.wood = function (ctx, x, y, w, h) {
+    ctx.save();
+    ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    var g = ctx.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, '#e3a669'); g.addColorStop(1, '#d48f52');
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    var r = KS.rng(4242);
+    for (var i = 0; i < h / 3.2; i++) {
+      var yy = y + i * 3.2 + r() * 2;
+      ctx.strokeStyle = 'rgba(160,90,40,' + (0.08 + r() * 0.16).toFixed(3) + ')';
+      ctx.lineWidth = 0.6 + r() * 1.3;
+      ctx.beginPath(); ctx.moveTo(x, yy);
+      var amp = 0.6 + r() * 1.8, ph = r() * 6, fr = 0.01 + r() * 0.02;
+      for (var xx = x; xx <= x + w; xx += 12) ctx.lineTo(xx, yy + Math.sin(xx * fr + ph) * amp);
+      ctx.stroke();
+    }
+    // 节疤
+    for (var k = 0; k < 3; k++) {
+      var kx = x + r() * w, ky = y + 60 + r() * (h - 80);
+      ctx.strokeStyle = 'rgba(150,80,35,0.18)'; ctx.lineWidth = 1.2;
+      for (var j = 0; j < 3; j++) { ctx.beginPath(); ctx.ellipse(kx, ky, 10 + j * 6, 2.5 + j * 2, 0, 0, Math.PI * 2); ctx.stroke(); }
+    }
+    ctx.fillStyle = ctx.createPattern(Art.noise('wood', 128, '90,40,10', 0.3, 0.08), 'repeat');
+    ctx.fillRect(x, y, w, h);
+    // 桌沿
+    ctx.fillStyle = 'rgba(120,60,20,0.35)'; ctx.fillRect(x, y, w, 3);
+    ctx.fillStyle = 'rgba(255,230,190,0.45)'; ctx.fillRect(x, y + 3, w, 2);
+    var sg = ctx.createLinearGradient(0, y + 5, 0, y + 24);
+    sg.addColorStop(0, 'rgba(110,55,20,0.25)'); sg.addColorStop(1, 'rgba(110,55,20,0)');
+    ctx.fillStyle = sg; ctx.fillRect(x, y + 5, w, 19);
+    ctx.restore();
+  };
+
+  // ---------- 传送带 ----------
+  function strokePath(ctx, path, from, to) {
+    ctx.beginPath();
+    var st = 3, i0 = Math.max(0, Math.floor(from || 0)), i1 = Math.min(path.n - 1, to == null ? path.n - 1 : Math.floor(to));
+    ctx.moveTo(path.xs[i0], path.ys[i0]);
+    for (var i = i0 + st; i < i1; i += st) ctx.lineTo(path.xs[i], path.ys[i]);
+    ctx.lineTo(path.xs[i1], path.ys[i1]);
+    if (path.closed) ctx.closePath();
+  }
+
+  /**
+   * 传送带静态层（围挡 + 带面），画到给定 ctx（通常是离屏静态层）
+   * W：带面宽；wall：围挡厚度（均为逻辑像素）
+   */
+  Art.belt = function (ctx, path, W, wall, canvasW, canvasH, dpr) {
+    var off = Art.makeCanvas(canvasW * dpr, canvasH * dpr);
+    var o = off.getContext('2d');
+    o.scale(dpr, dpr);
+    o.lineJoin = 'round'; o.lineCap = 'butt';
+    var outer = W + wall * 2;
+    // 投影
+    o.save(); o.translate(0, 5);
+    strokePath(o, path); o.strokeStyle = 'rgba(100,60,30,0.25)'; o.lineWidth = outer + 6; o.stroke();
+    o.restore();
+    // 围挡：描边 → 底色 → 高光
+    strokePath(o, path); o.strokeStyle = '#4b4430'; o.lineWidth = outer + 5; o.stroke();
+    strokePath(o, path); o.strokeStyle = '#879058'; o.lineWidth = outer; o.stroke();
+    strokePath(o, path); o.strokeStyle = '#a3a873'; o.lineWidth = W + wall * 1.1; o.stroke();
+    strokePath(o, path); o.strokeStyle = '#94995f'; o.lineWidth = W + wall * 0.55; o.stroke();
+    // 围挡斑驳纹理（只作用在已画像素上）
+    o.globalCompositeOperation = 'source-atop';
+    o.fillStyle = o.createPattern(Art.noise('wall', 96, '40,50,20', 0.5, 0.22), 'repeat');
+    o.fillRect(0, 0, canvasW, canvasH);
+    o.globalCompositeOperation = 'source-over';
+    // 带面
+    strokePath(o, path); o.strokeStyle = '#5a4430'; o.lineWidth = W + 4; o.stroke();
+    strokePath(o, path); o.strokeStyle = '#b38b66'; o.lineWidth = W; o.stroke();
+    strokePath(o, path); o.strokeStyle = '#c7a07a'; o.lineWidth = W - 9; o.stroke();
+    strokePath(o, path); o.strokeStyle = '#cfa984'; o.lineWidth = W - 26; o.stroke();
+    ctx.drawImage(off, 0, 0, canvasW, canvasH);
+  };
+
+  /** 动态履带缝（随传送带移动），每帧调用 */
+  Art.beltSlats = function (ctx, path, W, offset, gap, vis) {
+    var tmp = {};
+    var hw = W / 2 - 1.5;
+    var start = (offset % gap);
+    ctx.beginPath();
+    for (var s = start; s < path.length; s += gap) {
+      if (vis && (s < vis.start - 40 || s > vis.end + 40)) continue;
+      path.at(s, tmp);
+      var nx = -tmp.ty, ny = tmp.tx;
+      ctx.moveTo(tmp.x + nx * hw, tmp.y + ny * hw);
+      ctx.lineTo(tmp.x - nx * hw, tmp.y - ny * hw);
+    }
+    ctx.strokeStyle = 'rgba(105,70,42,0.30)'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+    ctx.stroke();
+    ctx.beginPath();
+    for (var s2 = start + 2; s2 < path.length; s2 += gap) {
+      if (vis && (s2 < vis.start - 40 || s2 > vis.end + 40)) continue;
+      path.at(s2, tmp);
+      var mx = -tmp.ty, my = tmp.tx;
+      ctx.moveTo(tmp.x + mx * hw, tmp.y + my * hw);
+      ctx.lineTo(tmp.x - mx * hw, tmp.y - my * hw);
+    }
+    ctx.strokeStyle = 'rgba(255,235,205,0.22)'; ctx.lineWidth = 1;
+    ctx.stroke();
+  };
+
+  /** 围挡上的方向箭头（避开彼此和屏幕外） */
+  Art.beltArrows = function (ctx, path, W, wall, screen) {
+    var placed = [], tmp = {};
+    var d = W / 2 + wall / 2;
+    for (var s = 70; s < path.length - 40; s += 9) {
+      path.at(s, tmp);
+      for (var side = -1; side <= 1; side += 2) {
+        var x = tmp.x - tmp.ty * d * side, y = tmp.y + tmp.tx * d * side;
+        if (x < 22 || x > screen.w - 22 || y < screen.y + 10 || y > screen.y + screen.h - 10) continue;
+        var near = false;
+        for (var i = 0; i < placed.length; i++) {
+          var p = placed[i];
+          if ((x - p[0]) * (x - p[0]) + (y - p[1]) * (y - p[1]) < 110 * 110) { near = true; break; }
+        }
+        if (near) continue;
+        placed.push([x, y, s]);
+        ctx.save();
+        ctx.translate(x, y); ctx.rotate(Math.atan2(tmp.ty, tmp.tx));
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.beginPath(); ctx.moveTo(-8, 0); ctx.lineTo(7, 0); ctx.moveTo(2, -5); ctx.lineTo(8, 0); ctx.lineTo(2, 5);
+        ctx.strokeStyle = 'rgba(60,55,35,0.65)'; ctx.lineWidth = 5; ctx.stroke();
+        ctx.strokeStyle = '#f6ecd0'; ctx.lineWidth = 2.4; ctx.stroke();
+        ctx.restore();
+      }
+    }
+  };
+
+  /** 出入口木门帘（盖住传送带两端，寿司从下面钻出/钻入） */
+  Art.gate = function (ctx, x, y, angle, span, label) {
+    ctx.save();
+    ctx.translate(x, y); ctx.rotate(angle);
+    var d = 24;
+    // 阴影
+    ctx.fillStyle = 'rgba(70,40,20,0.25)';
+    roundRect(ctx, -d / 2 + 3, -span / 2 + 4, d, span, 6); ctx.fill();
+    // 木梁
+    roundRect(ctx, -d / 2, -span / 2, d, span, 6);
+    var g = ctx.createLinearGradient(-d / 2, 0, d / 2, 0);
+    g.addColorStop(0, '#9a6238'); g.addColorStop(0.5, '#b57947'); g.addColorStop(1, '#8a552f');
+    ctx.fillStyle = g; ctx.fill();
+    ctx.lineWidth = 2.6; ctx.strokeStyle = INK; ctx.stroke();
+    ctx.strokeStyle = 'rgba(80,40,15,0.4)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(-5, -span / 2 + 6); ctx.lineTo(-5, span / 2 - 6); ctx.moveTo(4, -span / 2 + 10); ctx.lineTo(4, span / 2 - 14); ctx.stroke();
+    // 布帘
+    var strips = 3, sw = (span - 14) / strips;
+    for (var i = 0; i < strips; i++) {
+      var sy = -span / 2 + 7 + i * sw;
+      roundRect(ctx, d / 2 - 4, sy + 1, 13, sw - 3, 3);
+      ctx.fillStyle = i === 1 ? '#c9473d' : '#3f5f80'; ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = INK; ctx.stroke();
+      ctx.fillStyle = 'rgba(255,245,225,0.85)';
+      ctx.beginPath(); ctx.arc(d / 2 + 2.5, sy + sw / 2 - 0.5, 2.6, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+    // 文字（竖排，保持正向）
+    if (label) {
+      ctx.save();
+      ctx.font = Art.font(11);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      var lx = x + Math.cos(angle) * 0, ly = y;
+      ctx.lineWidth = 3; ctx.strokeStyle = '#5b3418'; ctx.fillStyle = '#fff1d6';
+      for (var c = 0; c < label.length; c++) {
+        ctx.strokeText(label[c], lx, ly - 7 + c * 13);
+        ctx.fillText(label[c], lx, ly - 7 + c * 13);
+      }
+      ctx.restore();
+    }
+  };
+
+  // ---------- 托盘 ----------
+  function wavyRect(ctx, x, y, w, h, r, amp, seed) {
+    var rnd = KS.rng(seed);
+    var ph1 = rnd() * 6, ph2 = rnd() * 6;
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    for (var t = x + r; t <= x + w - r; t += 6) ctx.lineTo(t, y + Math.sin(t * 0.07 + ph1) * amp);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w + Math.sin(ph2) * amp * 0.6, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    for (var u = x + w - r; u >= x + r; u -= 6) ctx.lineTo(u, y + h + Math.sin(u * 0.06 + ph2) * amp);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x - Math.sin(ph1) * amp * 0.6, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function sakura(ctx, x, y, r, color) {
+    ctx.save(); ctx.translate(x, y);
+    ctx.fillStyle = color || '#f6b3bf';
+    for (var i = 0; i < 5; i++) {
+      ctx.rotate(Math.PI * 2 / 5);
+      ctx.beginPath(); ctx.ellipse(0, -r * 0.6, r * 0.42, r * 0.62, 0, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = '#fff3c9'; ctx.beginPath(); ctx.arc(0, 0, r * 0.22, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  Art.sakura = sakura;
+
+  function leaf(ctx, x, y, len, ang, color) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.quadraticCurveTo(len * 0.5, -len * 0.32, len, 0); ctx.quadraticCurveTo(len * 0.5, len * 0.32, 0, 0);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = 'rgba(60,90,40,0.6)'; ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.moveTo(1, 0); ctx.lineTo(len * 0.85, 0); ctx.stroke();
+    ctx.restore();
+  }
+
+  function waves(ctx, x, y, r, color) {
+    ctx.save();
+    ctx.strokeStyle = color; ctx.lineWidth = 1.4;
+    for (var k = 0; k < 3; k++) {
+      var cx = x + k * r * 1.6;
+      for (var j = 0; j < 3; j++) { ctx.beginPath(); ctx.arc(cx, y, r - j * r * 0.3, Math.PI, Math.PI * 2); ctx.stroke(); }
+    }
+    ctx.restore();
+  }
+  Art.waves = waves;
+
+  /** 单个托盘（含花纹餐垫、木脚），返回离屏画布；中心在画布中心 */
+  Art.traySprite = function (index, w, h, dpr) {
+    var pad = 24;
+    var cw = w + pad * 2, ch = h + pad * 2 + 6;
+    var c = Art.makeCanvas(cw * dpr, ch * dpr), ctx = c.getContext('2d');
+    ctx.scale(dpr, dpr); ctx.translate(cw / 2, ch / 2 - 3);
+    var x = -w / 2, y = -h / 2;
+    // 餐垫
+    var mx = x - 12, my = y + 12, mw = w + 24, mh = h - 2;
+    ctx.save(); ctx.translate(3, 3); roundRect(ctx, mx, my, mw, mh, 6); ctx.fillStyle = 'rgba(100,45,20,0.25)'; ctx.fill(); ctx.restore();
+    roundRect(ctx, mx, my, mw, mh, 6);
+    ctx.fillStyle = '#c6625b'; ctx.fill();
+    ctx.save(); ctx.clip();
+    ctx.strokeStyle = 'rgba(140,50,45,0.6)'; ctx.lineWidth = 1;
+    for (var dx = -mw; dx < mw * 2; dx += 9) { ctx.beginPath(); ctx.moveTo(mx + dx, my); ctx.lineTo(mx + dx + mh, my + mh); ctx.moveTo(mx + dx + mh, my); ctx.lineTo(mx + dx, my + mh); ctx.stroke(); }
+    roundRect(ctx, mx + 3, my + 3, mw - 6, mh - 6, 4); ctx.strokeStyle = 'rgba(255,220,210,0.55)'; ctx.lineWidth = 1.2; ctx.stroke();
+    sakura(ctx, mx + 9, my + mh - 9, 5, '#ffe3e3'); sakura(ctx, mx + mw - 9, my + mh - 9, 5, '#ffe3e3');
+    sakura(ctx, mx + mw - 18, my + mh - 5, 3.4, '#ffd0d0');
+    ctx.restore();
+    roundRect(ctx, mx, my, mw, mh, 6); ctx.lineWidth = 2.2; ctx.strokeStyle = INK; ctx.stroke();
+    // 木脚
+    [-w * 0.32, w * 0.32].forEach(function (fx) {
+      roundRect(ctx, fx - 13, y + h - 3, 26, 9, 3);
+      ctx.fillStyle = '#a7683b'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = INK; ctx.stroke();
+    });
+    // 盘身厚度
+    wavyRect(ctx, x, y + 5, w, h, 16, 1.2, index * 31 + 7);
+    ctx.fillStyle = '#e3cba3'; ctx.fill(); ctx.lineWidth = 2.6; ctx.strokeStyle = INK; ctx.stroke();
+    // 盘面
+    wavyRect(ctx, x, y, w, h, 16, 1.2, index * 31 + 7);
+    var g = ctx.createLinearGradient(0, y, 0, y + h);
+    g.addColorStop(0, '#fffaf0'); g.addColorStop(1, '#f6e8cf');
+    ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2.6; ctx.strokeStyle = INK; ctx.stroke();
+    // 内凹
+    wavyRect(ctx, x + 8, y + 6, w - 16, h - 12, 11, 0.8, index * 31 + 9);
+    ctx.fillStyle = 'rgba(232,212,178,0.35)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(190,160,120,0.55)'; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.fillStyle = ctx.createPattern(Art.noise('tray', 64, '160,120,70', 0.2, 0.08), 'repeat');
+    wavyRect(ctx, x, y, w, h, 16, 1.2, index * 31 + 7); ctx.fill();
+    // 纹样
+    if (index === 0) {
+      leaf(ctx, x + 12, y + 14, 15, -0.5, '#9dbb6c'); leaf(ctx, x + 14, y + 16, 12, 0.3, '#b7cf87'); leaf(ctx, x + 10, y + 18, 10, 1.1, '#8eae5e');
+      leaf(ctx, x + w - 12, y + h - 12, 15, Math.PI + 0.5, '#9dbb6c'); leaf(ctx, x + w - 14, y + h - 14, 11, Math.PI - 0.4, '#b7cf87');
+    } else if (index === 1) {
+      ctx.strokeStyle = '#8c6a4a'; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.moveTo(x + 8, y + h - 12); ctx.quadraticCurveTo(x + 16, y + 18, x + 26, y + 10); ctx.stroke();
+      sakura(ctx, x + 16, y + 16, 5.5); sakura(ctx, x + 25, y + 10, 4); sakura(ctx, x + 11, y + 27, 3.6, '#f9c9d1');
+      ctx.beginPath(); ctx.moveTo(x + w - 8, y + 12); ctx.quadraticCurveTo(x + w - 18, y + h - 14, x + w - 28, y + h - 10); ctx.stroke();
+      sakura(ctx, x + w - 15, y + h - 17, 5.5); sakura(ctx, x + w - 27, y + h - 11, 4);
+    } else {
+      waves(ctx, x + 14, y + 17, 7, 'rgba(120,150,120,0.75)');
+      waves(ctx, x + w - 44, y + h - 9, 7, 'rgba(120,150,120,0.75)');
+    }
+    return { canvas: c, w: cw, h: ch, ox: cw / 2, oy: ch / 2 - 3 };
+  };
+
+  /** 虚线椭圆空位 */
+  Art.slot = function (ctx, x, y, rx, ry, alpha) {
+    ctx.save();
+    ctx.setLineDash([4.5, 4]);
+    ctx.strokeStyle = 'rgba(150,115,80,' + (alpha == null ? 0.75 : alpha) + ')'; ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+  };
+
+  /** 暂存区面板 */
+  Art.bufferPanel = function (ctx, b, slots) {
+    ctx.save(); ctx.translate(0, 4);
+    roundRect(ctx, b.x, b.y, b.w, b.h, 18); ctx.fillStyle = 'rgba(100,50,20,0.25)'; ctx.fill();
+    ctx.restore();
+    roundRect(ctx, b.x, b.y, b.w, b.h, 18);
+    var g = ctx.createLinearGradient(0, b.y, 0, b.y + b.h);
+    g.addColorStop(0, '#fff8ea'); g.addColorStop(1, '#f3e3c4');
+    ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2.6; ctx.strokeStyle = INK; ctx.stroke();
+    roundRect(ctx, b.x + 6, b.y + 6, b.w - 12, b.h - 12, 13);
+    ctx.strokeStyle = 'rgba(190,160,120,0.6)'; ctx.lineWidth = 1.2; ctx.stroke();
+    waves(ctx, b.x + 16, b.y + 20, 7, 'rgba(120,150,120,0.6)');
+    waves(ctx, b.x + b.w - 46, b.y + 20, 7, 'rgba(120,150,120,0.6)');
+  };
+
+  Art.label = function (ctx, x, y, text) {
+    ctx.save();
+    ctx.font = Art.font(15);
+    var tw = ctx.measureText(text).width + 30;
+    roundRect(ctx, x - tw / 2, y - 14, tw, 28, 14);
+    ctx.fillStyle = '#fbefd8'; ctx.fill(); ctx.lineWidth = 2.4; ctx.strokeStyle = INK; ctx.stroke();
+    ctx.fillStyle = '#5b3a26'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(text, x, y + 1);
+    // 两侧小装饰
+    ctx.strokeStyle = '#d0603f'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+    [-1, 1].forEach(function (sd) {
+      var bx = x + sd * (tw / 2 + 6);
+      ctx.beginPath();
+      ctx.moveTo(bx, y - 7); ctx.lineTo(bx + sd * 6, y - 11);
+      ctx.moveTo(bx + sd * 2, y); ctx.lineTo(bx + sd * 9, y);
+      ctx.moveTo(bx, y + 7); ctx.lineTo(bx + sd * 6, y + 11);
+      ctx.stroke();
+    });
+    ctx.restore();
+  };
+
+  // ---------- HUD ----------
+  Art.button = function (ctx, r, icon, pressed, muted) {
+    ctx.save();
+    var dy = pressed ? 2 : 0;
+    roundRect(ctx, r.x, r.y + 3, r.w, r.h, 12); ctx.fillStyle = '#c9a77f'; ctx.fill();
+    roundRect(ctx, r.x, r.y + 3, r.w, r.h, 12); ctx.lineWidth = 2.6; ctx.strokeStyle = INK; ctx.stroke();
+    roundRect(ctx, r.x, r.y + dy, r.w, r.h, 12);
+    var g = ctx.createLinearGradient(0, r.y, 0, r.y + r.h);
+    g.addColorStop(0, '#fff7e6'); g.addColorStop(1, '#f2dfbd');
+    ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2.6; ctx.strokeStyle = INK; ctx.stroke();
+    var cx = r.x + r.w / 2, cy = r.y + r.h / 2 + dy;
+    ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = 3.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (icon === 'restart') {
+      var a0 = -Math.PI / 2 + 0.25, a1 = Math.PI * 1.5 - 0.75;
+      ctx.beginPath(); ctx.arc(cx, cy + 1, 10, a0, a1); ctx.stroke();
+      var ex = cx + Math.cos(a1) * 10, ey = cy + 1 + Math.sin(a1) * 10;
+      var dx = -Math.sin(a1), dy = Math.cos(a1), nx = Math.cos(a1), ny = Math.sin(a1);
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(ex + dx * 7, ey + dy * 7); ctx.lineTo(ex - dx * 1 + nx * 6, ey - dy * 1 + ny * 6); ctx.lineTo(ex - dx * 1 - nx * 6, ey - dy * 1 - ny * 6); ctx.closePath(); ctx.fill(); ctx.stroke();
+    } else if (icon === 'sound') {
+      ctx.beginPath(); ctx.moveTo(cx - 11, cy - 4); ctx.lineTo(cx - 6, cy - 4); ctx.lineTo(cx + 1, cy - 10); ctx.lineTo(cx + 1, cy + 10); ctx.lineTo(cx - 6, cy + 4); ctx.lineTo(cx - 11, cy + 4); ctx.closePath();
+      ctx.lineWidth = 2.4; ctx.fill(); ctx.stroke();
+      ctx.lineWidth = 2.6;
+      if (muted) {
+        ctx.beginPath(); ctx.moveTo(cx + 5, cy - 5); ctx.lineTo(cx + 13, cy + 5); ctx.moveTo(cx + 13, cy - 5); ctx.lineTo(cx + 5, cy + 5); ctx.stroke();
+      } else {
+        ctx.beginPath(); ctx.arc(cx + 2, cy, 6, -0.9, 0.9); ctx.stroke();
+        ctx.beginPath(); ctx.arc(cx + 2, cy, 11, -0.9, 0.9); ctx.stroke();
+      }
+    } else if (icon === 'back') {
+      ctx.lineWidth = 3.6;
+      ctx.beginPath(); ctx.moveTo(cx + 4, cy - 10); ctx.lineTo(cx - 6, cy); ctx.lineTo(cx + 4, cy + 10); ctx.stroke();
+    } else if (icon === 'home') {
+      ctx.lineWidth = 2.8;
+      ctx.beginPath(); ctx.moveTo(cx - 11, cy - 1); ctx.lineTo(cx, cy - 11); ctx.lineTo(cx + 11, cy - 1); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx - 7, cy - 3); ctx.lineTo(cx - 7, cy + 9); ctx.lineTo(cx + 7, cy + 9); ctx.lineTo(cx + 7, cy - 3); ctx.stroke();
+    } else if (icon === 'pause') {
+      ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(cx - 5, cy - 9); ctx.lineTo(cx - 5, cy + 9); ctx.moveTo(cx + 5, cy - 9); ctx.lineTo(cx + 5, cy + 9); ctx.stroke();
+    }
+    ctx.restore();
+  };
+
+  /** 红色手绘墨块标题 */
+  Art.banner = function (ctx, x, y, text, w, h, color) {
+    w = w || 150; h = h || 46;
+    ctx.save();
+    var r = KS.rng(text.length * 131 + 7);
+    ctx.beginPath();
+    var n = 18;
+    for (var i = 0; i <= n; i++) {
+      var a = i / n * Math.PI * 2;
+      var rx = w / 2 * (0.97 + r() * 0.06), ry = h / 2 * (0.9 + r() * 0.12);
+      var px = x + Math.cos(a) * rx * (Math.abs(Math.cos(a)) > 0.7 ? 1 : 1.02);
+      var py = y + Math.sin(a) * ry;
+      // 让形状更接近圆角矩形
+      px = x + Math.sign(Math.cos(a)) * Math.pow(Math.abs(Math.cos(a)), 0.45) * rx;
+      py = y + Math.sign(Math.sin(a)) * Math.pow(Math.abs(Math.sin(a)), 0.6) * ry;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = color || '#c74a3f'; ctx.fill();
+    ctx.save(); ctx.clip();
+    ctx.fillStyle = 'rgba(255,200,180,0.18)';
+    for (var k = 0; k < 6; k++) { ctx.beginPath(); ctx.ellipse(x - w / 2 + r() * w, y - h / 2 + r() * h, 10 + r() * 16, 3 + r() * 5, r(), 0, Math.PI * 2); ctx.fill(); }
+    ctx.fillStyle = 'rgba(120,20,15,0.18)';
+    for (var k2 = 0; k2 < 4; k2++) { ctx.beginPath(); ctx.ellipse(x - w / 2 + r() * w, y - h / 2 + r() * h, 8 + r() * 12, 2 + r() * 4, r(), 0, Math.PI * 2); ctx.fill(); }
+    ctx.restore();
+    // 刷痕小点
+    ctx.strokeStyle = color || '#c74a3f'; ctx.lineWidth = 2.4; ctx.lineCap = 'round';
+    [-1, 1].forEach(function (sd) {
+      var bx = x + sd * (w / 2 + 8);
+      ctx.beginPath();
+      ctx.moveTo(bx, y - 12); ctx.lineTo(bx + sd * 8, y - 17);
+      ctx.moveTo(bx + sd * 3, y); ctx.lineTo(bx + sd * 13, y);
+      ctx.moveTo(bx, y + 12); ctx.lineTo(bx + sd * 8, y + 17);
+      ctx.stroke();
+    });
+    ctx.font = Art.font(Math.round(h * 0.56));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(110,25,20,0.9)'; ctx.lineJoin = 'round';
+    ctx.strokeText(text, x, y + 1);
+    ctx.fillStyle = '#fff6e6'; ctx.fillText(text, x, y + 1);
+    ctx.restore();
+  };
+
+  Art.pill = function (ctx, r) {
+    roundRect(ctx, r.x, r.y + 2, r.w, r.h, r.h / 2); ctx.fillStyle = '#c9a77f'; ctx.fill();
+    roundRect(ctx, r.x, r.y, r.w, r.h, r.h / 2);
+    ctx.fillStyle = '#fff6e4'; ctx.fill(); ctx.lineWidth = 2.4; ctx.strokeStyle = INK; ctx.stroke();
+  };
+
+  Art.clockIcon = function (ctx, x, y, r, warn) {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = warn ? '#f2a08f' : '#bfe0a0'; ctx.fill(); ctx.lineWidth = 2.2; ctx.strokeStyle = INK; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - r * 0.6); ctx.moveTo(x, y); ctx.lineTo(x + r * 0.45, y + r * 0.2);
+    ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke();
+  };
+
+  /** 时间条 */
+  Art.bar = function (ctx, b, frac, color, pulse) {
+    ctx.save();
+    roundRect(ctx, b.x, b.y, b.w, b.h, b.h / 2);
+    ctx.fillStyle = '#f4e4c3'; ctx.fill();
+    ctx.save(); ctx.clip();
+    ctx.fillStyle = 'rgba(160,120,70,0.15)'; ctx.fillRect(b.x, b.y, b.w, 4);
+    if (frac > 0) {
+      var fw = Math.max(b.h, b.w * frac);
+      roundRect(ctx, b.x, b.y, fw, b.h, b.h / 2);
+      ctx.fillStyle = color; ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      roundRect(ctx, b.x + 4, b.y + 3, Math.max(0, fw - 8), 4, 2); ctx.fill();
+      ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fillRect(b.x, b.y + b.h - 4, fw, 4);
+      if (pulse) { ctx.fillStyle = 'rgba(255,255,255,' + (0.25 * pulse).toFixed(3) + ')'; ctx.fillRect(b.x, b.y, fw, b.h); }
+    }
+    ctx.restore();
+    roundRect(ctx, b.x, b.y, b.w, b.h, b.h / 2);
+    ctx.lineWidth = 2.4; ctx.strokeStyle = INK; ctx.stroke();
+    ctx.restore();
+  };
+
+  /** 描边文字 */
+  Art.text = function (ctx, text, x, y, size, fill, stroke, align, lw) {
+    ctx.save();
+    ctx.font = Art.font(size);
+    ctx.textAlign = align || 'center'; ctx.textBaseline = 'middle';
+    if (stroke) { ctx.lineJoin = 'round'; ctx.lineWidth = lw || Math.max(3, size * 0.18); ctx.strokeStyle = stroke; ctx.strokeText(text, x, y); }
+    ctx.fillStyle = fill; ctx.fillText(text, x, y);
+    ctx.restore();
+  };
+
+  /** 星星 */
+  Art.star = function (ctx, x, y, r, filled, rot) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rot || 0);
+    ctx.beginPath();
+    for (var i = 0; i < 10; i++) {
+      var a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.48 : r;
+      ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
+    }
+    ctx.closePath();
+    ctx.fillStyle = filled ? '#ffcf4a' : '#e8d6b6'; ctx.fill();
+    ctx.lineWidth = Math.max(2, r * 0.14); ctx.lineJoin = 'round'; ctx.strokeStyle = INK; ctx.stroke();
+    if (filled) { ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.ellipse(-r * 0.25, -r * 0.2, r * 0.18, r * 0.1, -0.6, 0, Math.PI * 2); ctx.fill(); }
+    ctx.restore();
+  };
+
+  /** 卡通手指（新手提示） */
+  Art.hand = function (ctx, x, y, s, press) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(-0.35);
+    ctx.translate(0, press ? 3 : 0);
+    ctx.beginPath();
+    ctx.moveTo(-3, 0);
+    ctx.quadraticCurveTo(-3, -4, 1, -4); ctx.quadraticCurveTo(5, -4, 5, 0);
+    ctx.lineTo(5, 14);
+    ctx.quadraticCurveTo(9, 11, 12, 14); ctx.quadraticCurveTo(15, 12, 18, 16); ctx.quadraticCurveTo(22, 15, 23, 20);
+    ctx.lineTo(23, 30); ctx.quadraticCurveTo(22, 40, 12, 42); ctx.lineTo(4, 42);
+    ctx.quadraticCurveTo(-4, 40, -8, 30); ctx.lineTo(-13, 20);
+    ctx.quadraticCurveTo(-14, 15, -9, 16); ctx.lineTo(-3, 22);
+    ctx.closePath();
+    ctx.fillStyle = '#fff7ea'; ctx.fill(); ctx.lineWidth = 2.4; ctx.strokeStyle = INK; ctx.lineJoin = 'round'; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(12, 15); ctx.lineTo(12, 22); ctx.moveTo(18, 17); ctx.lineTo(18, 23); ctx.lineWidth = 1.6; ctx.stroke();
+    ctx.restore();
+  };
+
+  Art.strokePath = strokePath;
+})(globalThis.KS);
+
+</script>
+<!-- 游戏 -->
+<script>
+/*
+ * 小红书小工具端能力适配。
+ * 以小工具在线文档（2026-11-13 版，§3.6/§3.7/§3.11/§3.13）为契约：
+ *   - Storage：客户端 9.46+（buildVersion ≥ 9460）使用 xhs.miniTool.getStorage/setStorage；
+ *     在小红书容器内但版本不足 / 版本未知 / 方法缺失时，存储能力不可用，**不回退到浏览器存储**。
+ *   - getWindowInfo：9.49+。
+ *   - vibrateShort({type})：9.50+。
+ * 仅在普通浏览器（没有注入 window.xhs）里，为了本地 H5 预览，才使用 localStorage / navigator.vibrate。
+ * V1 基线在“容器内低版本”时会回退 localStorage，V2 按在线文档改为不回退（见 制作说明-v2.md）。
+ */
+(function (KS) {
+  'use strict';
+  var Platform = KS.Platform = {};
+  var versionPromise = null;
+  var STORAGE_MIN = 9460, WINDOW_MIN = 9490, VIBRATE_MIN = 9500;
+
+  function bridge() {
+    var xhs = window.xhs;
+    return xhs && xhs.miniTool;
+  }
+
+  /** 是否运行在小红书容器内（注入了 window.xhs） */
+  Platform.inContainer = function () { return !!window.xhs; };
+
+  function extractVersion(options) {
+    var env = options && options.miniToolEnv;
+    var value = Number(env && env.buildVersion) || 0;
+    // 末三位是构建号：9533001 → 9533
+    return Math.floor(value / 1000);
+  }
+
+  Platform.clientVersion = function () {
+    if (versionPromise) return versionPromise;
+    var xhs = window.xhs;
+    var syncVersion = extractVersion(xhs && xhs.launchOptions);
+    if (syncVersion) return versionPromise = Promise.resolve(syncVersion);
+    var mt = bridge();
+    if (!mt || typeof mt.getLaunchOptions !== 'function') return versionPromise = Promise.resolve(0);
+    try {
+      versionPromise = Promise.resolve(mt.getLaunchOptions()).then(function (options) {
+        return extractVersion(options);
+      }, function () { return 0; });
+    } catch (e) {
+      versionPromise = Promise.resolve(0);
+    }
+    return versionPromise;
+  };
+
+  Platform.storageBridge = function () {
+    return this.clientVersion().then(function (v) {
+      var mt = bridge();
+      return v >= STORAGE_MIN && mt && typeof mt.getStorage === 'function' &&
+        typeof mt.setStorage === 'function' ? mt : null;
+    });
+  };
+
+  /** 存储是否可用：容器内需满足版本；普通浏览器视 localStorage 而定 */
+  Platform.storageAvailable = function () {
+    return this.storageBridge().then(function (mt) {
+      if (mt) return true;
+      if (Platform.inContainer()) return false;
+      try { return typeof localStorage !== 'undefined' && localStorage !== null; } catch (e) { return false; }
+    });
+  };
+
+  function browserGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function browserSet(key, data) { try { localStorage.setItem(key, data); return true; } catch (e) { return false; } }
+
+  Platform.get = function (key) {
+    return this.storageBridge().then(function (mt) {
+      if (mt) {
+        return Promise.resolve(mt.getStorage({ key: key })).then(function (res) {
+          return res && typeof res.data === 'string' && res.data !== '' ? res.data : null;
+        }, function () { return null; });
+      }
+      if (Platform.inContainer()) return null;   // 容器内存储不可用：不读浏览器存储
+      return browserGet(key);
+    });
+  };
+
+  Platform.set = function (key, value) {
+    var data = String(value);
+    return this.storageBridge().then(function (mt) {
+      if (mt) {
+        return Promise.resolve(mt.setStorage({ key: key, data: data })).then(function (res) {
+          return !!res && res.errMsg === 'setStorage:ok';
+        }, function () { return false; });
+      }
+      if (Platform.inContainer()) return false;  // 调用方据此提示“成绩无法保存”
+      return browserSet(key, data);
+    });
+  };
+
+  /**
+   * 一次性迁移：读取旧版遗留在浏览器存储里的值（V1 在低版本容器里曾写入 localStorage）。
+   * 只在容器 Storage 可用时调用；读取后不再读写浏览器存储。
+   */
+  Platform.legacyBrowserValue = function (key) {
+    return browserGet(key);
+  };
+
+  Platform.windowInfo = function () {
+    return this.clientVersion().then(function (v) {
+      var mt = bridge();
+      if (v < WINDOW_MIN || !mt || typeof mt.getWindowInfo !== 'function') return null;
+      return Promise.resolve(mt.getWindowInfo()).then(function (info) { return info; }, function () { return null; });
+    });
+  };
+
+  /** 轻震动反馈：容器内用 vibrateShort（9.50+），浏览器预览用 navigator.vibrate；都不可用时静默 */
+  Platform.vibrate = function () {
+    return this.clientVersion().then(function (v) {
+      var mt = bridge();
+      if (mt) {
+        if (v >= VIBRATE_MIN && typeof mt.vibrateShort === 'function') {
+          try {
+            return Promise.resolve(mt.vibrateShort({ type: 'light' })).then(function () { return true; }, function () { return false; });
+          } catch (e) { return false; }
+        }
+        return false;
+      }
+      if (!Platform.inContainer() && typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+        try { return !!navigator.vibrate(25); } catch (e) { return false; }
+      }
+      return false;
+    });
+  };
+})(globalThis.KS);
+
+</script>
+<script>
+/*
+ * 存档：每张地图的最佳星级 / 最佳用时、新手教学是否看过。全部经 KS.Platform 读写。
+ *
+ * 键名（主线与自由地图隔离）：
+ *   ks2_best_<mapKey>   最佳星级 1..3      mapKey = main-1 / main-2 / main-3 / free-u / free-z / free-double
+ *   ks2_time_<mapKey>   最佳用时（秒，保留 1 位小数）
+ *   ks2_tutorial        '1' = 第 1 关教学已看过
+ *   ks2_migrated        '1' = V1 旧记录已迁移
+ *
+ * V1 旧键 ks_best_1/2/3 不删除；按“同一条轨道”一次性迁移到 V2：
+ *   V1 第1关（直线）→ main-1；V1 第3关（S 型）→ main-2；V1 第2关（U 型）→ free-u。
+ */
+(function (KS) {
+  'use strict';
+  var P = KS.Platform;
+  var Progress = KS.Progress = {
+    stars: {}, times: {}, tutorialDone: false, endlessBest: 0, endlessBestGroups: 0,
+    available: null,       // null=未知 true/false=存储是否可用
+    lastSaveOk: true,
+    onChange: null,
+    LEGACY: { '1': 'main-1', '3': 'main-2', '2': 'free-u' }
+  };
+
+  Progress.starKey = function (mapKey) { return 'ks2_best_' + mapKey; };
+  Progress.timeKey = function (mapKey) { return 'ks2_time_' + mapKey; };
+
+  function changed() { if (typeof Progress.onChange === 'function') Progress.onChange(); }
+
+  /** 读入所有地图的记录；返回 Promise（测试可等待） */
+  Progress.load = function (mapKeys) {
+    var self = this;
+    return P.storageAvailable().then(function (ok) {
+      self.available = ok;
+      if (!ok) { changed(); return; }
+      return self.migrate().then(function () {
+        var jobs = mapKeys.map(function (k) {
+          return Promise.all([P.get(self.starKey(k)), P.get(self.timeKey(k))]).then(function (r) {
+            var s = parseInt(r[0], 10) || 0, t = parseFloat(r[1]) || 0;
+            if (s > (self.stars[k] || 0)) self.stars[k] = Math.min(3, s);
+            if (t > 0 && (!self.times[k] || t < self.times[k])) self.times[k] = t;
+          });
+        });
+        jobs.push(P.get('ks2_tutorial').then(function (v) { if (v === '1') self.tutorialDone = true; }));
+        jobs.push(P.get('ks4_endless_best').then(function(v){self.endlessBest=Math.max(0,parseInt(v,10)||0)}));
+        return Promise.all(jobs);
+      }).then(changed);
+    });
+  };
+
+  /** V1 → V2 一次性迁移（只增不减，旧键保留） */
+  Progress.migrate = function () {
+    var self = this;
+    return P.get('ks2_migrated').then(function (done) {
+      if (done === '1') return;
+      var ids = Object.keys(self.LEGACY);
+      return Promise.all(ids.map(function (id) {
+        var oldKey = 'ks_best_' + id, target = self.LEGACY[id];
+        return P.get(oldKey).then(function (v) {
+          // 容器 Storage 中没有时，读一次 V1 在低版本客户端写入的浏览器存储（仅迁移用途）
+          if (v === null && P.inContainer()) v = P.legacyBrowserValue(oldKey);
+          var s = Math.min(3, parseInt(v, 10) || 0);
+          if (!s) return;
+          return P.get(self.starKey(target)).then(function (cur) {
+            if (s > (parseInt(cur, 10) || 0)) return P.set(self.starKey(target), String(s));
+          });
+        });
+      })).then(function () { return P.set('ks2_migrated', '1'); });
+    });
+  };
+
+  /** 记录一局成绩（只保存更好的）；返回 Promise<是否成功写入> */
+  Progress.record = function (mapKey, stars, seconds) {
+    var self = this, writes = [];
+    var t = Math.round(seconds * 10) / 10;
+    if (stars > (this.stars[mapKey] || 0)) {
+      this.stars[mapKey] = stars;
+      writes.push(P.set(this.starKey(mapKey), String(stars)));
+    }
+    if (stars > 0 && (!this.times[mapKey] || t < this.times[mapKey])) {
+      this.times[mapKey] = t;
+      writes.push(P.set(this.timeKey(mapKey), String(t)));
+    }
+    changed();
+    return Promise.all(writes).then(function (res) {
+      var ok = res.every(function (x) { return x; });
+      self.lastSaveOk = ok;
+      return ok;
+    });
+  };
+
+  Progress.recordEndless=function(score,groups,seconds){
+    var self=this;
+    if(score <= this.endlessBest)return Promise.resolve(true);
+    this.endlessBest=score;this.endlessBestGroups=groups;
+    changed();
+    return Promise.all([P.set('ks4_endless_best',String(score)),P.set('ks4_endless_time',String(Math.round(seconds*10)/10))]).then(function(r){self.lastSaveOk=r.every(Boolean);return self.lastSaveOk});
+  };
+
+  Progress.markTutorial = function () {
+    if (this.tutorialDone) return Promise.resolve(true);
+    this.tutorialDone = true;
+    return P.set('ks2_tutorial', '1');
+  };
+})(globalThis.KS);
+
+</script>
+<script>
+/*
+ * 合成音效（WebAudio 实时合成，无需音频文件）。首次触摸后解锁。
+ * 后续若有正式音效素材，只需在 play() 中改为播放 AudioBuffer。
+ */
+(function (KS) {
+  'use strict';
+  var Sfx = KS.Sfx = { muted: false, ctx: null, muteTouched: false };
+  KS.Platform.get('ks_muted').then(function (raw) {
+    if (!Sfx.muteTouched && raw !== null) Sfx.muted = raw === '1';
+  });
+
+  Sfx.unlock = function () {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    try {
+      this.ctx = new AC();
+      this.master = this.ctx.createGain();
+      this.master.gain.value = 0.5;
+      this.master.connect(this.ctx.destination);
+    } catch (e) { this.ctx = null; }
+  };
+  Sfx.toggle = function () {
+    this.muteTouched = true;
+    this.muted = !this.muted;
+    KS.Platform.set('ks_muted', this.muted ? '1' : '0');
+  };
+
+  function tone(freq, t0, dur, type, vol, slideTo) {
+    var c = Sfx.ctx;
+    var o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'sine';
+    o.frequency.setValueAtTime(freq, t0);
+    if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol || 0.3, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(Sfx.master);
+    o.start(t0); o.stop(t0 + dur + 0.02);
+  }
+
+  Sfx.play = function (name, arg) {
+    if (this.muted || !this.ctx || this.ctx.state !== 'running') return;
+    var t = this.ctx.currentTime + 0.005;
+    switch (name) {
+      case 'pick': tone(520, t, 0.09, 'triangle', 0.25, 880); break;
+      case 'place': tone(300, t, 0.08, 'sine', 0.35, 180); tone(900, t, 0.04, 'triangle', 0.08); break;
+      case 'buffer': tone(260, t, 0.08, 'sine', 0.3, 200); break;
+      case 'reject': tone(180, t, 0.16, 'square', 0.08, 120); tone(140, t + 0.08, 0.16, 'square', 0.06, 100); break;
+      case 'match': {
+        var base = 523.25 * Math.pow(2, Math.min(arg || 0, 4) / 12);
+        [1, 1.26, 1.5, 2].forEach(function (m, i) { tone(base * m, t + i * 0.06, 0.32, 'triangle', 0.22); });
+        tone(base * 4, t + 0.24, 0.25, 'sine', 0.08);
+        break;
+      }
+      case 'tick': tone(1200, t, 0.03, 'square', 0.04); break;
+      case 'go': tone(660, t, 0.12, 'triangle', 0.25); tone(990, t + 0.1, 0.2, 'triangle', 0.25); break;
+      case 'win': [523, 659, 784, 1046, 1318].forEach(function (f, i) { tone(f, t + i * 0.1, 0.4, 'triangle', 0.22); }); break;
+      case 'lose': [392, 330, 262, 196].forEach(function (f, i) { tone(f, t + i * 0.16, 0.35, 'triangle', 0.2); }); break;
+      case 'click': tone(700, t, 0.05, 'triangle', 0.18); break;
+    }
+  };
+})(globalThis.KS);
+
+</script>
+<script>
+/*
+ * 特效：粒子、冲击环、飘字、提示气泡、缓动函数。
+ */
+(function (KS) {
+  'use strict';
+  var Art = KS.Art;
+
+  var Ease = KS.Ease = {
+    outBack: function (t) { var c = 1.70158 + 1; return 1 + c * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2); },
+    outCubic: function (t) { return 1 - Math.pow(1 - t, 3); },
+    inOutQuad: function (t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; },
+    inBack: function (t) { return 2.7 * t * t * t - 1.7 * t * t; },
+    /** 弹簧回弹：返回衰减振荡（0 → 振动 → 0） */
+    wobble: function (t, freq, decay) { return Math.exp(-t * (decay || 9)) * Math.sin(t * (freq || 28)); }
+  };
+
+  function Fx() { this.parts = []; this.texts = []; this.toasts = []; }
+
+  Fx.prototype.clear = function () { this.parts.length = 0; this.texts.length = 0; this.toasts.length = 0; };
+
+  /** 三消爆裂：彩纸 + 米粒 + 星星 + 冲击环 */
+  Fx.prototype.burst = function (x, y, colors, big) {
+    var n = big ? 34 : 24;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2, sp = 90 + Math.random() * 220;
+      var kind = i % 4 === 0 ? 'star' : i % 4 === 1 ? 'grain' : 'confetti';
+      this.parts.push({
+        kind: kind, x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 120,
+        rot: Math.random() * 6, vr: (Math.random() - 0.5) * 14,
+        size: kind === 'star' ? 5 + Math.random() * 4 : 3 + Math.random() * 3.5,
+        color: kind === 'grain' ? '#fffaf0' : colors[i % colors.length],
+        life: 0, max: 0.7 + Math.random() * 0.5, g: kind === 'star' ? 120 : 520
+      });
+    }
+    this.parts.push({ kind: 'ring', x: x, y: y, life: 0, max: 0.45, size: 18, color: '#fff3d6' });
+    this.parts.push({ kind: 'ring', x: x, y: y, life: -0.06, max: 0.5, size: 10, color: colors[0] });
+    this.parts.push({ kind: 'flash', x: x, y: y, life: 0, max: 0.25, size: 60 });
+  };
+
+  /** 落地小烟尘 */
+  Fx.prototype.puff = function (x, y) {
+    for (var i = 0; i < 5; i++) {
+      var a = Math.PI + (i / 4) * Math.PI;
+      this.parts.push({ kind: 'puff', x: x + Math.cos(a) * 10, y: y, vx: Math.cos(a) * 40, vy: -10 - Math.random() * 15, life: 0, max: 0.35, size: 3 + Math.random() * 2.5, g: 0 });
+    }
+  };
+
+  /** 拿起时的小星光 */
+  Fx.prototype.sparkle = function (x, y, n) {
+    for (var i = 0; i < (n || 4); i++) {
+      var a = Math.random() * Math.PI * 2;
+      this.parts.push({ kind: 'star', x: x, y: y, vx: Math.cos(a) * 70, vy: Math.sin(a) * 70 - 30, rot: 0, vr: 4, size: 3.5, color: '#fff2b8', life: 0, max: 0.4, g: 60 });
+    }
+  };
+
+  Fx.prototype.text = function (x, y, str, color, size) {
+    this.texts.push({ x: x, y: y, str: str, color: color || '#fff6e6', size: size || 22, life: 0, max: 1.0 });
+  };
+
+  Fx.prototype.toast = function (x, y, str) {
+    // 同一时刻只保留一条，避免叠字
+    this.toasts.length = 0;
+    this.toasts.push({ x: x, y: y, str: str, life: 0, max: 1.5 });
+  };
+
+  Fx.prototype.update = function (dt) {
+    var p = this.parts;
+    for (var i = p.length - 1; i >= 0; i--) {
+      var q = p[i];
+      q.life += dt;
+      if (q.life >= q.max) { p.splice(i, 1); continue; }
+      if (q.vx !== undefined) {
+        q.vx *= Math.pow(0.12, dt); q.vy += (q.g || 0) * dt; q.vy *= Math.pow(0.5, dt);
+        q.x += q.vx * dt; q.y += q.vy * dt; q.rot = (q.rot || 0) + (q.vr || 0) * dt;
+      }
+    }
+    for (var j = this.texts.length - 1; j >= 0; j--) { var t = this.texts[j]; t.life += dt; if (t.life >= t.max) this.texts.splice(j, 1); }
+    for (var k = this.toasts.length - 1; k >= 0; k--) { var o = this.toasts[k]; o.life += dt; if (o.life >= o.max) this.toasts.splice(k, 1); }
+  };
+
+  Fx.prototype.draw = function (ctx) {
+    var p = this.parts;
+    for (var i = 0; i < p.length; i++) {
+      var q = p[i];
+      if (q.life < 0) continue;
+      var f = q.life / q.max;
+      ctx.save();
+      if (q.kind === 'ring') {
+        ctx.globalAlpha = 1 - f;
+        ctx.strokeStyle = q.color; ctx.lineWidth = 6 * (1 - f) + 1;
+        ctx.beginPath(); ctx.arc(q.x, q.y, q.size + Ease.outCubic(f) * 70, 0, Math.PI * 2); ctx.stroke();
+      } else if (q.kind === 'flash') {
+        var g = ctx.createRadialGradient(q.x, q.y, 0, q.x, q.y, q.size);
+        g.addColorStop(0, 'rgba(255,250,230,' + (0.9 * (1 - f)).toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,250,230,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q.x, q.y, q.size, 0, Math.PI * 2); ctx.fill();
+      } else if (q.kind === 'puff') {
+        ctx.globalAlpha = 0.7 * (1 - f);
+        ctx.fillStyle = '#fff4e0';
+        ctx.beginPath(); ctx.arc(q.x, q.y, q.size * (1 + f), 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.globalAlpha = f > 0.7 ? (1 - f) / 0.3 : 1;
+        ctx.translate(q.x, q.y); ctx.rotate(q.rot);
+        if (q.kind === 'star') {
+          ctx.fillStyle = q.color; ctx.beginPath();
+          for (var s = 0; s < 8; s++) { var a = s * Math.PI / 4, r = s % 2 ? q.size * 0.35 : q.size; ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+          ctx.closePath(); ctx.fill();
+          ctx.strokeStyle = 'rgba(74,49,34,0.6)'; ctx.lineWidth = 1; ctx.stroke();
+        } else if (q.kind === 'grain') {
+          ctx.fillStyle = q.color; ctx.strokeStyle = 'rgba(74,49,34,0.55)'; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.ellipse(0, 0, q.size, q.size * 0.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        } else {
+          ctx.fillStyle = q.color;
+          ctx.fillRect(-q.size, -q.size * 0.55, q.size * 2, q.size * 1.1);
+        }
+      }
+      ctx.restore();
+    }
+    for (var j = 0; j < this.texts.length; j++) {
+      var t = this.texts[j], tf = t.life / t.max;
+      var sc = tf < 0.18 ? Ease.outBack(tf / 0.18) : 1;
+      ctx.save();
+      ctx.globalAlpha = tf > 0.7 ? (1 - tf) / 0.3 : 1;
+      ctx.translate(t.x, t.y - Ease.outCubic(tf) * 44);
+      ctx.scale(sc, sc);
+      Art.text(ctx, t.str, 0, 0, t.size, t.color, '#6b2a1c', 'center', 5);
+      ctx.restore();
+    }
+    for (var k = 0; k < this.toasts.length; k++) {
+      var o = this.toasts[k], of = o.life / o.max;
+      var s2 = of < 0.12 ? Ease.outBack(of / 0.12) : 1;
+      ctx.save();
+      ctx.globalAlpha = of > 0.8 ? (1 - of) / 0.2 : 1;
+      ctx.font = Art.font(14);
+      var w = ctx.measureText(o.str).width + 26, h = 30;
+      var x = KS.clamp(o.x, w / 2 + 8, KS.Layout.W - w / 2 - 8), y = o.y;
+      ctx.translate(x, y); ctx.scale(s2, s2);
+      Art.roundRect(ctx, -w / 2, -h / 2, w, h, 15);
+      ctx.fillStyle = '#4a3122'; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-6, h / 2 - 1); ctx.lineTo(0, h / 2 + 7); ctx.lineTo(6, h / 2 - 1); ctx.fill();
+      ctx.fillStyle = '#fff3dc'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(o.str, 0, 1);
+      ctx.restore();
+    }
+  };
+
+  KS.Fx = Fx;
+})(globalThis.KS);
+
+</script>
+<script>
+/* V4 三模式首页：新手教学 / 十分钟无尽回转 / 自由选图。保持视觉清爽，不显示寿司数量或冗长规则。 */
+(function(KS){
+ 'use strict';
+ var Art=KS.Art,Ease=KS.Ease,INK=Art.INK;
+ var Menu=KS.Menu={};
+ Menu.drawButton=function(ctx,b,label,primary,pressed){
+   ctx.save();var dy=pressed?3:0;
+   Art.roundRect(ctx,b.x,b.y+4,b.w,b.h,b.h/2);
+   ctx.fillStyle=primary?'#ac5d37':'#bea487';ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=INK;ctx.stroke();
+   Art.roundRect(ctx,b.x,b.y+dy,b.w,b.h,b.h/2);
+   var g=ctx.createLinearGradient(0,b.y,0,b.y+b.h);
+   g.addColorStop(0,primary?'#ed9861':'#fff8e9');g.addColorStop(1,primary?'#df7851':'#edd6b3');
+   ctx.fillStyle=g;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=INK;ctx.stroke();
+   Art.text(ctx,label,b.x+b.w/2,b.y+b.h/2+dy+1,18,primary?'#fff9ea':'#59402d',primary?'#b9633a':null);
+   ctx.restore();
+ };
+ Menu.drawTrackThumb=function(ctx,cfg,x,y,w,h){
+   var sp=cfg.track.space||{w:390,h:360};
+   var path=KS.Path.fromTrack(cfg.track,{x:0,y:0,w:sp.w,h:sp.h});
+   var scale=Math.min(w/sp.w,h/sp.h),ox=x+(w-sp.w*scale)/2,oy=y+(h-sp.h*scale)/2;
+   ctx.save();Art.roundRect(ctx,x-4,y-4,w+8,h+8,12);ctx.fillStyle='#f2e7d1';ctx.fill();
+   ctx.beginPath();ctx.rect(x-4,y-4,w+8,h+8);ctx.clip();ctx.translate(ox,oy);ctx.scale(scale,scale);
+   Art.strokePath(ctx,path);ctx.lineJoin='round';ctx.lineCap='round';
+   ctx.strokeStyle='#6d7256';ctx.lineWidth=cfg.beltWidth+cfg.wall*2+6;ctx.stroke();
+   ctx.strokeStyle='#bf9971';ctx.lineWidth=cfg.beltWidth;ctx.stroke();
+   ctx.strokeStyle='#e8ca9e';ctx.lineWidth=Math.max(3,cfg.beltWidth-12);ctx.stroke();
+   // 跑道起终点提示，便于缩略图辨认路线。
+   var a=path.at(0,{}),b=path.at(path.length,{});
+   if(a.x>0&&a.x<sp.w&&a.y>0&&a.y<sp.h){ctx.fillStyle='#8ba66d';ctx.beginPath();ctx.arc(a.x,a.y,20,0,7);ctx.fill()}
+   if(b.x>0&&b.x<sp.w&&b.y>0&&b.y<sp.h){ctx.fillStyle='#e28b6c';ctx.beginPath();ctx.arc(b.x,b.y,20,0,7);ctx.fill()}
+   ctx.restore();
+ };
+ function MenuScene(app,view){
+   this.app=app;this.view=view==='free'?'free':'home';this.page=app.menuPage||0;
+   this.time=0;this.pressed=null;this.buttons=[];this.relayout();
+ }
+ var P=MenuScene.prototype;
+ P.relayout=function(){
+   this.L=this.app.layout;var L=this.L,res=L.scale*this.app.pixelRatio;
+   Art.setResolution(.85*res);var c=this.staticLayer=Art.makeCanvas(L.W*res,L.H*res),ctx=c.getContext('2d');ctx.scale(res,res);
+   if(this.view==='home'){
+     this.woodTop=L.H-363;
+     Art.paper(ctx,0,0,L.W,this.woodTop);Art.wood(ctx,0,this.woodTop,L.W,L.H-this.woodTop);
+     var top=L.top+140,avail=this.woodTop-top-10,lh=KS.clamp(avail-25,100,185),cy=top+avail/2;
+     this.loop=KS.Path.roundedLoop(L.W/2,cy,280,lh,53);
+     Art.belt(ctx,this.loop,56,10,L.W,L.H,res);
+     ctx.save();Art.roundRect(ctx,L.W/2-88,cy-17,176,35,8);ctx.fillStyle='#f8ecd4';ctx.fill();ctx.strokeStyle='#8d704b';ctx.lineWidth=2;ctx.stroke();ctx.restore();
+     Art.text(ctx,'今日营业中',L.W/2,cy,15,'#82553b');
+     this.loopTypes=['salmon','tuna','tamago','maki','ebi','inari','hotate','ikura','salmon','tamago','tuna','maki'];
+   } else {
+     this.woodTop=L.H-77;
+     Art.paper(ctx,0,0,L.W,L.H);
+     Art.wood(ctx,0,L.H-65,L.W,65);
+   }
+ };
+ P.update=function(dt){this.time+=dt};
+ P.homeCards=function(){
+   var self=this,L=this.L,y=L.H-333,h=93,pitch=105;
+   return [
+     {id:'tutorial',label:'新手教学',description:'',icon:'tamago',x:29,y:y,w:332,h:h,action:function(){self.app.startGame(KS.LEVELS[0])}},
+     {id:'endless',label:'无尽回转',description:'',icon:'salmon',x:29,y:y+pitch,w:332,h:h,action:function(){self.app.startGame(KS.ENDLESS)}},
+     {id:'free',label:'自由选图',description:'',icon:'ikura',x:29,y:y+pitch*2,w:332,h:h,action:function(){self.app.showMenu('free')}}
+   ];
+ };
+ P.drawHome=function(ctx){
+   var L=this.L,loop=this.loop,items=[],tmp={},gap=loop.length/this.loopTypes.length;
+   for(var i=0;i<this.loopTypes.length;i++){
+    loop.at((this.time*30+i*gap)%loop.length,tmp);items.push({x:tmp.x,y:tmp.y,type:this.loopTypes[i]});
+   }
+   items.sort(function(a,b){return a.y-b.y});
+   items.forEach(function(it){Art.drawSprite(ctx,Art.plateSprite(it.type),it.x,it.y-11,.48);Art.drawSprite(ctx,Art.sushiSprite(it.type),it.x,it.y-18,.40)});
+   Art.banner(ctx,L.W/2,L.top+61,'回转寿司',228,68);
+   var self=this;
+   this.homeCards().forEach(function(c,i){
+    self.buttons.push(c);var pressed=self.pressed===c.id;
+    ctx.save();Art.roundRect(ctx,c.x+3,c.y+5,c.w,c.h,21);ctx.fillStyle='rgba(84,49,28,.24)';ctx.fill();
+    Art.roundRect(ctx,c.x,c.y+(pressed?3:0),c.w,c.h,21);
+    var g=ctx.createLinearGradient(0,c.y,0,c.y+c.h);
+    g.addColorStop(0,i===1?'#ffe9d4':'#fff9ee');g.addColorStop(1,i===1?'#f6c0a5':'#f1dfc5');
+    ctx.fillStyle=g;ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=i===1?3.3:2.6;ctx.stroke();
+    ctx.beginPath();ctx.arc(c.x+52,c.y+c.h/2,32,0,7);ctx.fillStyle=i===1?'#d77959':'#edd5b0';ctx.fill();
+    Art.drawSprite(ctx,Art.sushiSprite(c.icon),c.x+52,c.y+c.h/2+5,.46);
+    Art.text(ctx,c.label,c.x+107,c.y+c.h/2,24,i===1?'#9e432e':'#5a3927',null,'left');
+    ctx.strokeStyle='#b87953';ctx.lineWidth=4;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(c.x+c.w-29,c.y+c.h/2-8);ctx.lineTo(c.x+c.w-21,c.y+c.h/2);ctx.lineTo(c.x+c.w-29,c.y+c.h/2+8);ctx.stroke();
+    ctx.restore();
+   });
+ };
+ P.mapCards=function(){
+   var L=this.L,per=3,all=KS.FREE_MAPS,max=Math.ceil(all.length/per)-1;
+   if(this.page>max)this.page=max;if(this.page<0)this.page=0;
+   var h=KS.clamp((L.H-L.top-207)/3,122,156),gap=12;
+   var y0=L.top+108;
+   var self=this;
+   return all.slice(this.page*per,this.page*per+per).map(function(cfg,i){return {id:'map-'+cfg.key,x:24,y:y0+i*(h+gap),w:342,h:h,cfg:cfg,action:function(){self.app.menuPage=self.page;self.app.startGame(cfg)}}});
+ };
+ P.drawFree=function(ctx){
+   var L=this.L,self=this;
+   var back={id:'back',x:L.btnBack.x,y:L.btnBack.y,w:L.btnBack.w,h:L.btnBack.h,action:function(){self.app.showMenu('home')}};
+   this.buttons.push(back);Art.button(ctx,back,'back',this.pressed==='back');
+   Art.banner(ctx,L.W/2,L.top+37,'自由选图',170,48,'#78a25e');
+   var cards=this.mapCards();
+   cards.forEach(function(c,i){
+    self.buttons.push(c);
+    ctx.save();Art.roundRect(ctx,c.x+2,c.y+5,c.w,c.h,18);ctx.fillStyle='rgba(110,70,30,.18)';ctx.fill();
+    Art.roundRect(ctx,c.x,c.y,c.w,c.h,18);ctx.fillStyle='#fffaf0';ctx.fill();ctx.strokeStyle=INK;ctx.lineWidth=2.4;ctx.stroke();
+    Menu.drawTrackThumb(ctx,c.cfg,c.x+15,c.y+14,115,c.h-28);
+    Art.text(ctx,c.cfg.name,c.x+149,c.y+38,19,'#5b3b2a',null,'left');
+    var stars=KS.Progress.stars[c.cfg.key]||0;
+    for(var k=0;k<3;k++)Art.star(ctx,c.x+167+k*27,c.y+c.h-42,10,k<stars);
+    Art.text(ctx,'▶',c.x+c.w-29,c.y+c.h/2,22,'#d17d54');
+    ctx.restore();
+   });
+   var pageH=L.H-64,total=Math.ceil(KS.FREE_MAPS.length/3);
+   var prev={id:'prev',x:30,y:pageH-13,w:90,h:50,action:function(){if(self.page>0){self.page--;self.app.menuPage=self.page}}};
+   var next={id:'next',x:270,y:pageH-13,w:90,h:50,action:function(){if(self.page<total-1){self.page++;self.app.menuPage=self.page}}};
+   this.buttons.push(prev,next);
+   if(this.page>0)Menu.drawButton(ctx,prev,'上一页',false,this.pressed==='prev');
+   if(this.page<total-1)Menu.drawButton(ctx,next,'下一页',false,this.pressed==='next');
+   Art.text(ctx,(this.page+1)+' / '+total,L.W/2,pageH+13,15,'#69452b');
+ };
+ P.render=function(ctx){
+   ctx.drawImage(this.staticLayer,0,0,this.L.W,this.L.H);this.buttons=[];
+   if(this.view==='home')this.drawHome(ctx);else this.drawFree(ctx);
+ };
+ P.hit=function(x,y){for(var i=this.buttons.length-1;i>=0;i--){var b=this.buttons[i];if(x>=b.x&&x<=b.x+b.w&&y>=b.y&&y<=b.y+b.h)return b}return null};
+ P.onDown=function(x,y){var b=this.hit(x,y);this.pressed=b?b.id:null};
+ P.onMove=function(){};
+ P.onUp=function(x,y){var b=this.hit(x,y);if(b&&b.id===this.pressed){KS.Sfx.play('click');b.action()}this.pressed=null};
+ P.onCancel=function(){this.pressed=null};
+ P.onKey=function(k){if(this.view==='free'&&k==='ArrowRight'){this.page=Math.min(this.page+1,Math.ceil(KS.FREE_MAPS.length/3)-1)}else if(this.view==='free'&&k==='ArrowLeft'){this.page=Math.max(0,this.page-1)}};
+ KS.MenuScene=MenuScene;
+})(globalThis.KS);
+
+</script>
+<script>
+/*
+ * 关卡进行场景：把纯逻辑模型(KS.Model)可视化，并处理触摸/鼠标操作。
+ * 视觉层只“读取”模型状态并做插值动画，所有规则判断都在模型里，
+ * 因此动画再花哨也不会造成寿司复制或丢失。
+ */
+(function (KS) {
+  'use strict';
+  var Art = KS.Art, Ease = KS.Ease, INK = Art.INK;
+  var TAP_SLOP = 10;          // 移动小于此距离视为“点一下”
+  var HOLD_LIFT_Y = 30;       // 拖动时寿司显示在手指上方，避免被手指挡住
+  var PRAISE = ['好吃！', '真棒！', '完美！', '鲜美！', '漂亮！'];
+
+  /**
+   * cfg：主线关卡（KS.LEVELS）或自由地图（KS.FREE_MAPS）的配置；cfg.mode 决定结算后去哪里。
+   * seed：仅调试覆盖；正常游玩为 undefined，使用 cfg.seed 固定局面。
+   */
+  function PlayScene(app, cfg, seed) {
+    this.app = app;
+    this.cfg = cfg;
+    this.level = cfg;
+    this.levelIndex = cfg.mode === 'tutorial' ? 0 : -1;
+    this.seed = seed;
+    // 第 1 关新手教学：只在第一次进入时出现，点击任意处开始
+    this.tutorial = cfg.mode === 'tutorial' && !KS.Progress.tutorialDone;
+    this.fx = new KS.Fx();
+    this.time = 0;
+    this.readyT = 0;
+    this.result = null;       // {win, stars, t}
+    this.buttons = [];
+    this.pointer = null;
+    this.lastClear = -9; this.combo = 0;
+    this.lastTick = -1;
+    this.hintDone = !this.tutorial;
+    this.trayFx = [0, 1, 2].map(function () { return { shake: 0, bounce: 0, flash: 0 }; });
+    this.ghosts = [];
+    this.layoutDone = false;
+    this.relayout();
+    this.model = new KS.Model(this.level, this.path, { seed: seed, pickRange: this.pickRange });
+    this.views = this.model.sushi.map(function () { return { x: 0, y: 0, k: 0, key: null, fl: null, land: 9, shake: 0, lift: 0, rot: 0, vx: 0, vy: 0, show: false }; });
+  }
+
+  var P = PlayScene.prototype;
+
+  /** 布局变化（旋转/窗口缩放）时重建路径与静态层。逻辑状态用弧长保存，不受影响。 */
+  P.relayout = function () {
+    var app = this.app, L = this.L = app.layout;
+    var path = KS.Path.fromTrack(this.level.track, L.conveyor);
+    if (this.model) {
+      // 屏幕尺寸改变：按比例换算弧长（路径形状相同，只是缩放）
+      var ratio = path.length / this.path.length;
+      this.model.path = path; this.model.L = path.length;
+      this.model.speed *= ratio; this.model.spacing *= ratio;
+      this.model.sushi.forEach(function (s) { if (s.s >= 0) s.s *= ratio; });
+    }
+    this.path = path;
+    var k = path.scale;
+    this.beltW = this.level.beltWidth * k;
+    this.wallW = this.level.wall * k;
+    this.plateK = this.beltW * 0.43 / 50;
+    this.sushiK = this.plateK * 0.84;
+    this.trayK = 0.49;
+    this.bufPlateK = 0.41;
+    this.bufK = 0.38;
+    this.computeRanges();
+    if (this.model) this.model.pickRange = this.pickRange;
+    this.buildStatic();
+  };
+
+  /**
+   * 可拿取范围：屏幕内（留 22 边距），且避开画面内出入口门帘下方的 26 像素。
+   * innerStart / innerEnd：入口/出口落在画面内（如回字螺旋的中心出口），需要淡入淡出。
+   */
+  P.computeRanges = function () {
+    var L = this.L, path = this.path, GATE = 26;
+    var screen = { x: 0, y: 0, w: L.W, h: L.H };
+    this.screenRange = path.visibleRange(screen, 0);
+    var vis = path.visibleRange(screen, 22) || { start: 0, end: path.length };
+    this.pickRange = { start: Math.max(vis.start, GATE), end: Math.min(vis.end, path.length - GATE) };
+    this.innerStart = !!this.screenRange && this.screenRange.start < 2;
+    this.innerEnd = !!this.screenRange && this.screenRange.end > path.length - 2;
+  };
+
+  P.buildStatic = function () {
+    var app = this.app, L = this.L, dpr = app.pixelRatio;
+    var res = L.scale * dpr;
+    Art.setResolution(Math.max(this.plateK, this.trayK) * 1.35 * res);
+    var c = this.staticLayer = Art.makeCanvas(L.W * res, L.H * res);
+    var ctx = c.getContext('2d');
+    ctx.scale(res, res);
+    Art.paper(ctx, 0, 0, L.W, L.woodTop);
+    Art.wood(ctx, 0, L.woodTop, L.W, L.H - L.woodTop);
+    this.drawGardenBackdrop(ctx);
+    Art.belt(ctx, this.path, this.beltW, this.wallW, L.W, L.H, res);
+    Art.beltArrows(ctx, this.path, this.beltW, this.wallW, { w: L.W, y: L.conveyor.y, h: L.conveyor.h });
+    this.drawDecorStatic(ctx);
+    Art.bufferPanel(ctx, L.buffer, L.bufferSlots);
+    for (var i = 0; i < 5; i++) Art.slot(ctx, L.bufferSlots[i].cx, L.bufferSlots[i].cy + 2, 22, 14);
+    /* 暂存槽已经足够直观，不额外标文字 */
+    // 出入口门帘
+    var g = this.gateLayer = Art.makeCanvas(L.W * res, L.H * res);
+    var gctx = g.getContext('2d'); gctx.scale(res, res);
+    var span = this.beltW + this.wallW * 2 + 8, tmp = {};
+    if (this.screenRange) {
+      // 屏幕边缘的端点：门帘贴边；画面内的端点（螺旋中心出口）：门帘盖住轨道末端
+      var ends = [[this.innerStart ? 13 : this.screenRange.start + 11, '入口'], [this.innerEnd ? this.path.length - 13 : this.screenRange.end - 11, '出口']];
+      var self = this;
+      ends.forEach(function (e) {
+        self.path.at(e[0], tmp);
+        Art.gate(gctx, tmp.x, tmp.y, Math.atan2(tmp.ty, tmp.tx), span, e[1]);
+      });
+    }
+    this.trays = [0, 1, 2].map(function (i) { return Art.traySprite(i, L.TRAY_W || KS.Layout.TRAY_W, KS.Layout.TRAY_H, res); });
+  };
+
+  P.drawGardenBackdrop=function(ctx){
+    if(this.cfg.mode!=='endless' && this.cfg.key!=='free-garden' && this.cfg.key!=='free-maple')return;
+    var L=this.L,m=KS.Path.mapping(L.conveyor,this.cfg.track.space),c=m.map([192,260]);
+    var x=c[0],y=c[1],k=m.scale;
+    ctx.save();ctx.translate(x,y);ctx.scale(k,k);
+    // 枯山水庭院+小池塘。完全在跑道下方，不覆盖可触摸寿司。
+    ctx.fillStyle='rgba(150,172,113,.16)';ctx.beginPath();ctx.ellipse(0,3,104,78,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#8caeaa';ctx.strokeStyle='#a0a67d';ctx.lineWidth=5;
+    ctx.beginPath();ctx.ellipse(-13,18,64,27,-.09,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle='rgba(255,245,219,.55)';ctx.lineWidth=2;
+    for(var i=0;i<3;i++){ctx.beginPath();ctx.ellipse(-13,18,24+i*12,8+i*5,0,Math.PI*.25,Math.PI*.95);ctx.stroke()}
+    ctx.fillStyle='#657f46';for(var n=0;n<15;n++){var a=n*2.4,r=65+(n%4)*9;ctx.beginPath();ctx.arc(Math.cos(a)*r,Math.sin(a)*r*.72,3+(n%3)*2,0,Math.PI*2);ctx.fill()}
+    // 粉色樱花树，保持温暖手绘笔触
+    ctx.strokeStyle='#8c593c';ctx.lineWidth=9;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(20,15);ctx.lineTo(17,-26);ctx.lineTo(-12,-49);ctx.moveTo(17,-22);ctx.lineTo(47,-51);ctx.stroke();
+    for(var j=0;j<24;j++){var ax=(j*37)%109-40,ay=-55+Math.sin(j*2.4)*19;KS.Art.sakura(ctx,ax,ay,4+(j%3),j%2?'#f3a6b4':'#f8c9ca')}
+    ctx.restore();
+  };
+
+  P.drawDecorStatic = function (ctx) {
+    var m = KS.Path.mapping(this.L.conveyor, this.level.track.space);
+    var self = this;
+    this.decor = (this.level.decor || []).map(function (d) {
+      var p = m.map([d.x, d.y]);
+      var o = { kind: d.kind, x: p[0], y: p[1], w: (d.w || 0) * m.scale, h: (d.h || 0) * m.scale, text: d.text };
+      if (d.kind === 'menu') {
+        var x = o.x - o.w / 2, y = o.y - o.h / 2;
+        ctx.save();
+        Art.roundRect(ctx, x + 2, y + 4, o.w, o.h, 10); ctx.fillStyle = 'rgba(110,60,25,0.25)'; ctx.fill();
+        Art.roundRect(ctx, x, y, o.w, o.h, 10);
+        ctx.fillStyle = '#b97b48'; ctx.fill(); ctx.lineWidth = 2.6; ctx.strokeStyle = INK; ctx.stroke();
+        Art.roundRect(ctx, x + 6, y + 6, o.w - 12, o.h - 12, 6);
+        ctx.fillStyle = '#fbf0da'; ctx.fill(); ctx.lineWidth = 1.6; ctx.stroke();
+        // 挂绳
+        ctx.strokeStyle = INK; ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.arc(x + 18, y + 3, 3, 0, Math.PI * 2); ctx.arc(x + o.w - 18, y + 3, 3, 0, Math.PI * 2); ctx.stroke();
+        ctx.restore();
+        Art.text(ctx, '今日菜单', o.x, y + 17, 12, '#8a3b2a');
+      } else if (d.kind === 'tip') {
+        var lines = (d.text || '').split('\n');
+        lines.forEach(function (ln, i) {
+          Art.text(ctx, ln, o.x, o.y + (i - (lines.length - 1) / 2) * 22, 13.5, '#7a5236');
+        });
+        ctx.save();
+        ctx.strokeStyle = 'rgba(200,90,60,0.6)'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+        var hw = 132 * m.scale, hh = lines.length * 11 + 6;
+        ctx.beginPath();
+        ctx.moveTo(o.x - hw + 8, o.y - hh); ctx.lineTo(o.x - hw, o.y - hh); ctx.lineTo(o.x - hw, o.y - hh + 8);
+        ctx.moveTo(o.x + hw - 8, o.y + hh); ctx.lineTo(o.x + hw, o.y + hh); ctx.lineTo(o.x + hw, o.y + hh - 8);
+        ctx.stroke(); ctx.restore();
+      }
+      return o;
+    });
+    void self;
+  };
+
+  // ---------------- 位置计算 ----------------
+
+  P.anchorOf = function (sh, out) {
+    var L = this.L;
+    out.plate = 0;
+    switch (sh.loc) {
+      case 'belt':
+        this.path.at(sh.s, out); out.k = this.sushiK; out.plate = this.plateK; out.show = true; return out;
+      case 'tray': {
+        var sl = L.trays[sh.tray].slots[sh.slot];
+        out.x = sl.x; out.y = sl.y + 4; out.k = this.trayK; out.show = true; return out;
+      }
+      case 'buffer': {
+        var b = L.bufferSlots[sh.slot];
+        out.x = b.cx; out.y = b.cy; out.k = this.bufK; out.plate = this.bufPlateK; out.show = true; return out;
+      }
+      case 'held':
+        if (this.pointer) { out.x = this.pointer.x; out.y = this.pointer.y - HOLD_LIFT_Y; }
+        out.k = this.sushiK * 1.22; out.plate = 0; out.show = true; return out;
+      default:
+        out.show = false; return out;
+    }
+  };
+
+  // ---------------- 更新 ----------------
+
+  P.update = function (dt) {
+    this.time += dt;
+    var m = this.model;
+    // 存档是异步读取的：若读完发现教学已看过（例如通过 ?level=1 直接进入），收起教学卡
+    if (this.tutorial && KS.Progress.tutorialDone) { this.tutorial = false; this.hintDone = true; }
+    if (m.status === 'ready' && !this.tutorial) {
+      this.readyT += dt;
+      if (this.readyT >= 1.25) { m.start(); KS.Sfx.play('go'); }
+    }
+    if (!this.app.paused) m.update(dt);
+    this.handleEvents(m.drainEvents());
+    // 倒计时提示音
+    if (m.endless && m.status === 'playing' && m.timeLeft <= 10) {
+      var sec = Math.ceil(m.timeLeft);
+      if (sec !== this.lastTick) { this.lastTick = sec; KS.Sfx.play('tick'); }
+    }
+    this.updateViews(dt);
+    this.fx.update(dt);
+    for (var i = 0; i < 3; i++) {
+      var tf = this.trayFx[i];
+      tf.shake = Math.max(0, tf.shake - dt); tf.bounce = Math.max(0, tf.bounce - dt); tf.flash = Math.max(0, tf.flash - dt);
+    }
+    for (var g = this.ghosts.length - 1; g >= 0; g--) {
+      var gh = this.ghosts[g];
+      gh.life += dt;
+      if (gh.s != null) gh.s += m.isActive() ? m.speed * m.speedMul * dt : 0;
+      if (gh.life > 0.35) this.ghosts.splice(g, 1);
+    }
+    if (this.result) this.result.t += dt;
+  };
+
+  P.updateViews = function (dt) {
+    var m = this.model, tmp = this._tmp || (this._tmp = {});
+    for (var i = 0; i < m.sushi.length; i++) {
+      if (!this.views[i]) this.views[i] = { x:0,y:0,k:0,key:null,fl:null,land:9,shake:0,lift:0,rot:0,vx:0,vy:0,show:false };
+      var sh = m.sushi[i], v = this.views[i];
+      var key = sh.loc + ':' + sh.tray + ':' + sh.slot;
+      this.anchorOf(sh, tmp);
+      if (v.key !== key) {
+        var prev = v.key ? v.key.split(':')[0] : null;
+        if (prev === null || sh.loc === 'kitchen' || sh.loc === 'cleared' || (prev === 'kitchen' && sh.loc === 'belt')) {
+          v.fl = null;
+          if (sh.loc === 'kitchen' && prev === 'held') this.fx.puff(v.x, v.y);
+        } else if (sh.loc === 'held') {
+          v.fl = null; v.lift = 0;
+          if (prev === 'belt') v.heldFromBelt = true;
+          if (prev === 'buffer') this.ghosts.push({ x: v.x, y: v.y, k: this.bufPlateK, life: 0 });
+        } else {
+          // 从当前位置飞向新目标
+          var dist = Math.hypot(tmp.x - v.x, tmp.y - v.y);
+          v.fl = { x: v.x, y: v.y, k: v.k, t: 0, dur: KS.clamp(0.16 + dist / 1400, 0.2, 0.42), h: 26 + dist * 0.18, dir: tmp.x > v.x ? 1 : -1, plateFrom: v.plateNow || 0 };
+          if (prev === 'belt' && sh.loc !== 'held') {
+            // 直接点走：空盘留在传送带上淡出
+            var st = this.lastBeltS[i];
+            if (st != null) this.ghosts.push({ s: st, k: this.plateK, life: 0 });
+          }
+          if (prev === 'held' && v.heldFromBelt && sh.loc !== 'belt') {
+            if (this.lastBeltS[i] != null && this.lastBeltS[i] >= 0) this.ghosts.push({ s: this.lastBeltS[i], k: this.plateK, life: 0 });
+          }
+          if (prev === 'buffer' && sh.loc !== 'held') this.ghosts.push({ x: v.x, y: v.y, k: this.bufPlateK, life: 0 });
+          if (sh.loc !== 'held') v.heldFromBelt = false;
+        }
+        v.key = key;
+        if (prev === null || (prev === 'kitchen' && sh.loc === 'belt')) { v.x = tmp.x; v.y = tmp.y; v.k = tmp.k; }
+      }
+      this.lastBeltS = this.lastBeltS || [];
+      this.lastBeltS[i] = sh.s >= 0 ? sh.s : this.lastBeltS[i];
+      if (sh.loc === 'kitchen') this.lastBeltS[i] = null;
+      v.show = tmp.show;
+      v.shake = Math.max(0, v.shake - dt);
+      if (!tmp.show) continue;
+      if (sh.loc === 'held') {
+        // 弹簧跟随手指 + 根据速度倾斜
+        v.lift = Math.min(1, v.lift + dt * 7);
+        var kx = 1 - Math.pow(0.0005, dt);
+        var nx = v.x + (tmp.x - v.x) * kx, ny = v.y + (tmp.y - v.y) * kx;
+        v.vx = (nx - v.x) / Math.max(dt, 1e-3); v.vy = (ny - v.y) / Math.max(dt, 1e-3);
+        v.x = nx; v.y = ny;
+        v.rot += (KS.clamp(v.vx * 0.0009, -0.35, 0.35) - v.rot) * Math.min(1, dt * 12);
+        v.k += (tmp.k - v.k) * Math.min(1, dt * 14);
+        v.plateNow = 0;
+        continue;
+      }
+      v.rot *= Math.pow(0.001, dt);
+      v.lift = Math.max(0, v.lift - dt * 5);
+      if (v.fl) {
+        var f = v.fl;
+        f.t += dt;
+        var p = Math.min(1, f.t / f.dur), e = Ease.inOutQuad(p);
+        var cx = (f.x + tmp.x) / 2, cy = Math.min(f.y, tmp.y) - f.h;
+        var a = 1 - e;
+        v.x = a * a * f.x + 2 * a * e * cx + e * e * tmp.x;
+        v.y = a * a * f.y + 2 * a * e * cy + e * e * tmp.y;
+        v.k = KS.lerp(f.k, tmp.k, e) * (1 + 0.16 * Math.sin(Math.PI * p));
+        v.flRot = Math.sin(Math.PI * p) * 0.22 * f.dir;
+        v.plateNow = tmp.plate ? KS.lerp(f.plateFrom, tmp.plate, e) : 0;
+        if (p >= 1) {
+          v.fl = null; v.land = 0; v.flRot = 0;
+          if (sh.loc === 'tray') { this.fx.puff(tmp.x, tmp.y + 10); KS.Sfx.play('place'); }
+          else if (sh.loc === 'buffer') { this.fx.puff(tmp.x, tmp.y + 10); KS.Sfx.play('buffer'); }
+        }
+      } else {
+        v.x = tmp.x; v.y = tmp.y; v.k = tmp.k; v.plateNow = tmp.plate;
+      }
+      v.land += dt;
+    }
+  };
+
+  P.handleEvents = function (evs) {
+    var m = this.model, L = this.L, self = this;
+    evs.forEach(function (e) {
+      if (e.type === 'reject') {
+        KS.Sfx.play('reject');
+        self.views[e.id].shake = 0.35;
+        var sh = m.sushi[e.id], name = KS.SUSHI_TYPES[sh.type].name;
+        if (e.tray != null) {
+          var tr = L.trays[e.tray], mt = m.trays[e.tray];
+          self.trayFx[e.tray].shake = 0.4; self.trayFx[e.tray].flash = 0.4;
+          var msg = e.reason === 'tray-type' ? '这个托盘只放「' + KS.SUSHI_TYPES[mt.type].name + '」' : e.reason === 'tray-clearing' ? '正在消除，稍等一下' : '托盘满了';
+          self.fx.toast(tr.cx, tr.y - 14, msg);
+        } else if (e.reason === 'buffer-full') {
+          self.fx.toast(L.W / 2, L.buffer.y - 30, '暂存区满了');
+        } else if (e.reason === 'all-full') {
+          self.fx.toast(L.W / 2, L.trays[0].y - 18, '没有托盘能放「' + name + '」，暂存区也满了');
+        } else if (e.reason === 'no-tray') {
+          self.fx.toast(L.W / 2, L.buffer.y - 30, '没有可放「' + name + '」的托盘');
+        }
+      } else if (e.type === 'pick') {
+        KS.Sfx.play('pick');
+      } else if (e.type === 'place') {
+        self.hintDone = true;
+      } else if (e.type === 'cleared') {
+        var t = L.trays[e.tray];
+        var info = KS.SUSHI_TYPES[e.sushiType];
+        self.fx.burst(t.cx, t.cy - 6, info.colors.concat(['#f6b3bf', '#9dbb6c']), true);
+        if (self.time - self.lastClear < 3) self.combo++; else self.combo = 0;
+        self.lastClear = self.time;
+        self.fx.text(t.cx, t.cy - 30, self.combo > 0 ? '连击 ×' + (self.combo + 1) : PRAISE[(m.matches - 1) % PRAISE.length], '#fff6e6', self.combo > 0 ? 24 : 22);
+        self.fx.text(t.cx + 92, t.cy - 10, '+3', '#ffd25a', 18);
+        self.trayFx[e.tray].bounce = 0.45;
+        KS.Sfx.play('match', self.combo);
+        KS.Platform.vibrate();
+      } else if (e.type === 'win') {
+        var stars = m.elapsed <= (self.cfg.star3 || 35) ? 3 : m.elapsed <= (self.cfg.star2 || 70) ? 2 : 1;
+        var prevBest = KS.Progress.times[self.cfg.key] || 0;
+        self.result = { win: true, stars: stars, t: -0.5, newBest: !prevBest || m.elapsed < prevBest - 0.05, saveOk: true };
+        KS.Progress.record(self.cfg.key, stars, m.elapsed).then(function (ok) { if (self.result) self.result.saveOk = ok; });
+        setTimeout(function () { KS.Sfx.play('win'); }, 350);
+        for (var i = 0; i < 4; i++) self.fx.burst(60 + i * 90, L.conveyor.y + 80 + (i % 2) * 60, ['#f58a4b', '#ffcf4a', '#9dbb6c', '#f6b3bf', '#d8394a'], true);
+      } else if (e.type === 'unlock') {
+        self.fx.toast(L.W/2,L.conveyor.y+35,'解锁 '+KS.SUSHI_TYPES[e.sushiType].name+'！');
+        KS.Sfx.play('go');
+      } else if (e.type === 'end') {
+        self.result = { win: true, endless: true, score: m.clearedCount, t: -0.1, reason: e.reason, saveOk: true };
+        KS.Progress.recordEndless(m.clearedCount,m.matches,m.elapsed).then(function(ok){if(self.result)self.result.saveOk=ok});
+        KS.Sfx.play('win');
+        self.pointer = null;
+      }
+    });
+  };
+
+  // ---------------- 输入 ----------------
+
+  P.hitButton = function (x, y) {
+    for (var i = this.buttons.length - 1; i >= 0; i--) {
+      var b = this.buttons[i];
+      if (x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) return b;
+    }
+    return null;
+  };
+
+  function inRect(x, y, r) { return x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h; }
+
+  P.findSushiAt = function (x, y) {
+    var m = this.model, L = this.L;
+    // 暂存区
+    for (var b = 0; b < 5; b++) {
+      var id = m.buffer[b];
+      if (id !== null && inRect(x, y, L.bufferSlots[b])) return id;
+    }
+    // 传送带：取最近的可拿取寿司（热区比盘子略大）
+    var best = -1, bd = Infinity, tmp = {};
+    var R = Math.max(24, this.plateK * 50 * 1.18);
+    for (var i = 0; i < m.belt.length; i++) {
+      var sid = m.belt[i];
+      if (!m.isPickableOnBelt(sid)) continue;
+      this.path.at(m.sushi[sid].s, tmp);
+      var dx = x - tmp.x, dy = (y - (tmp.y - 6)) * 1.15;
+      var d = dx * dx + dy * dy;
+      if (d < R * R && d < bd) { bd = d; best = sid; }
+    }
+    return best;
+  };
+
+  P.onDown = function (x, y) {
+    var btn = this.hitButton(x, y);
+    if (btn) { this.pressed = btn.id; return; }
+    var m = this.model;
+    if (this.tutorial && m.status === 'ready') {
+      // 教学卡：点一下就开始
+      this.tutorial = false; this.readyT = 1.0;
+      KS.Progress.markTutorial();
+      return;
+    }
+    if (m.status !== 'playing' || this.app.paused) return;
+    var id = this.findSushiAt(x, y);
+    if (id < 0) return;
+    this.pointer = { x: x, y: y, sx: x, sy: y, id: id, moved: false, t0: this.time };
+    if (m.pick(id)) {
+      var v = this.views[id];
+      this.fx.sparkle(v.x, v.y - 20, 4);
+      this.app.debugLog && this.app.debugLog('pick #' + id);
+    } else this.pointer = null;
+  };
+
+  P.onMove = function (x, y) {
+    if (!this.pointer) return;
+    this.pointer.x = x; this.pointer.y = y;
+    if (Math.hypot(x - this.pointer.sx, y - this.pointer.sy) > TAP_SLOP) this.pointer.moved = true;
+  };
+
+  /** 拖放目标：按寿司显示位置判断（显示在手指上方） */
+  P.dropTarget = function () {
+    var p = this.pointer, L = this.L;
+    if (!p) return null;
+    var x = p.x, y = p.y - HOLD_LIFT_Y * 0.6;
+    for (var t = 0; t < 3; t++) if (inRect(x, y, L.trays[t].hit)) return { kind: 'tray', index: t };
+    if (inRect(x, y, L.bufferHit) || inRect(p.x, p.y, L.bufferHit)) {
+      var best = 0, bd = Infinity;
+      for (var b = 0; b < 5; b++) { var d = Math.abs(L.bufferSlots[b].cx - x); if (d < bd) { bd = d; best = b; } }
+      return { kind: 'buffer', index: best };
+    }
+    return null;
+  };
+
+  P.onUp = function (x, y) {
+    var btn = this.hitButton(x, y);
+    if (this.pressed) {
+      if (btn && btn.id === this.pressed) { KS.Sfx.play('click'); btn.action(); }
+      this.pressed = null;
+      return;
+    }
+    var p = this.pointer, m = this.model;
+    if (!p) return;
+    p.x = x; p.y = y;
+    if (m.held) {
+      if (!p.moved) m.autoPlaceHeld();
+      else m.drop(this.dropTarget());
+    }
+    this.pointer = null;
+  };
+
+  P.onCancel = function () {
+    if (this.model.held) this.model.cancelHeld();
+    this.pointer = null; this.pressed = null;
+  };
+
+  P.onKey = function (k) {
+    if (k === 'r' || k === 'R') this.app.startGame(this.cfg, this.seed);
+  };
+
+  // ---------------- 绘制 ----------------
+
+  P.drawSushi = function (ctx, type, x, y, k, sx, sy, rot, alpha) {
+    Art.drawSprite(ctx, Art.sushiSprite(type), x, y - 22 * k + 3 * k, k, sx, sy, rot, alpha);
+  };
+
+  P.drawPlate = function (ctx, type, x, y, k, alpha) {
+    Art.drawSprite(ctx, type ? Art.plateSprite(type) : Art.plainPlateSprite(), x, y - 22 * k, k, 1, 1, 0, alpha);
+  };
+
+  P.render = function (ctx) {
+    var L = this.L, m = this.model, self = this;
+    ctx.drawImage(this.staticLayer, 0, 0, L.W, L.H);
+    // 菜单牌动态数字
+    /* 地图上不重复显示种类数字 */
+    // 履带纹
+    Art.beltSlats(ctx, this.path, this.beltW, m.beltOffset, 15 * this.path.scale, this.screenRange);
+
+    // ---- 传送带上的盘子与寿司（按 y 排序，下方的遮挡上方的）----
+    var items = [], tmp = {};
+    for (var i = 0; i < m.belt.length; i++) {
+      var sh = m.sushi[m.belt[i]];
+      if (this.screenRange && (sh.s < this.screenRange.start - 60 || sh.s > this.screenRange.end + 60)) continue;
+      this.path.at(sh.s, tmp);
+      items.push({ y: tmp.y, x: tmp.x, sh: sh, held: sh.loc === 'held' });
+    }
+    this.ghosts.forEach(function (g) {
+      if (g.s == null) return;
+      self.path.at(g.s, tmp);
+      items.push({ y: tmp.y, x: tmp.x, ghost: g });
+    });
+    items.sort(function (a, b) { return a.y - b.y; });
+    items.forEach(function (it) {
+      if (it.ghost) {
+        var gf = it.ghost.life / 0.35;
+        self.drawPlate(ctx, null, it.x, it.y, it.ghost.k * (1 - gf * 0.3), 1 - gf);
+        return;
+      }
+      var v = self.views[it.sh.id];
+      // 画面内的入口/出口：盘子在门帘下淡入/淡出，不会凭空出现或消失
+      var fade = 1, s0 = it.sh.s;
+      if (self.innerEnd && s0 > self.path.length - 30) fade = KS.clamp((self.path.length - s0) / 22, 0, 1);
+      if (self.innerStart && s0 < 30) fade = Math.min(fade, KS.clamp(s0 / 22, 0, 1));
+      var fk = 0.55 + 0.45 * fade;
+      self.drawPlate(ctx, it.sh.type, it.x, it.y, self.plateK * fk, (it.held ? 0.9 : 1) * fade);
+      if (it.held || v.fl) return;
+      var sk = v.shake > 0 ? Math.sin(v.shake * 60) * 3 * (v.shake / 0.35) : 0;
+      var sq = v.land < 0.5 ? Ease.wobble(v.land, 30, 9) * 0.16 : 0;
+      self.drawSushi(ctx, it.sh.type, it.x + sk, it.y, self.plateK * 0.84 * fk, 1 + sq, 1 - sq, 0, fade);
+    });
+    ctx.drawImage(this.gateLayer, 0, 0, L.W, L.H);
+    this.drawRefill(ctx);
+
+    // ---- 托盘 ----
+    var drag = this.pointer && m.held && this.pointer.moved ? this.dropTarget() : null;
+    var heldType = m.held ? m.sushi[m.held.id].type : null;
+    for (var t = 0; t < 3; t++) this.drawTray(ctx, t, drag, heldType);
+
+    // ---- 暂存区 ----
+    if (drag && drag.kind === 'buffer') {
+      var full = m.freeBufferSlot() < 0;
+      ctx.save();
+      Art.roundRect(ctx, L.buffer.x - 3, L.buffer.y - 3, L.buffer.w + 6, L.buffer.h + 6, 20);
+      ctx.lineWidth = 4; ctx.strokeStyle = full ? 'rgba(220,80,60,0.8)' : 'rgba(120,190,90,0.9)'; ctx.stroke();
+      ctx.restore();
+    }
+    this.ghosts.forEach(function (g) {
+      if (g.s != null) return;
+      var gf = g.life / 0.35;
+      self.drawPlate(ctx, null, g.x, g.y, g.k, 1 - gf);
+    });
+    for (var b = 0; b < 5; b++) {
+      var bid = m.buffer[b];
+      if (bid === null) continue;
+      var bv = this.views[bid];
+      if (bv.fl) continue;
+      var bs = m.sushi[bid];
+      var bsk = bv.shake > 0 ? Math.sin(bv.shake * 60) * 3 : 0;
+      var bsq = bv.land < 0.5 ? Ease.wobble(bv.land, 30, 9) * 0.18 : 0;
+      this.drawPlate(ctx, bs.type, bv.x + bsk, bv.y, this.bufPlateK);
+      this.drawSushi(ctx, bs.type, bv.x + bsk, bv.y, this.bufK, 1 + bsq, 1 - bsq);
+    }
+
+    // ---- 飞行中的寿司（最上层）----
+    for (var f = 0; f < m.sushi.length; f++) {
+      var fv = this.views[f];
+      if (!fv.fl || !fv.show) continue;
+      var fs = m.sushi[f];
+      ctx.save();
+      ctx.fillStyle = 'rgba(80,45,20,0.18)';
+      Art.ellipse(ctx, fv.x, fv.y + 14, 22 * fv.k / 0.6, 6 * fv.k / 0.6); ctx.fill();
+      ctx.restore();
+      if (fv.plateNow > 0.01) this.drawPlate(ctx, fs.type, fv.x, fv.y, fv.plateNow);
+      this.drawSushi(ctx, fs.type, fv.x, fv.y, fv.k, 1, 1, fv.flRot || 0);
+    }
+
+    // ---- 手里的寿司 ----
+    if (m.held) {
+      var hv = this.views[m.held.id], hs = m.sushi[m.held.id];
+      var lift = Ease.outBack(Math.min(1, hv.lift));
+      ctx.save();
+      ctx.fillStyle = 'rgba(70,40,20,' + (0.25 - lift * 0.08).toFixed(3) + ')';
+      Art.ellipse(ctx, hv.x + 4, hv.y + 18 + lift * 14, 26 * (1 - lift * 0.15), 8 * (1 - lift * 0.15)); ctx.fill();
+      ctx.restore();
+      var st = 1 + Math.min(0.12, Math.abs(hv.vy) * 0.00012);
+      var hk = hv.k * (0.85 + 0.15 * lift);
+      this.drawSushi(ctx, hs.type, hv.x, hv.y - lift * 6, hk, 1 / Math.sqrt(st), st, hv.rot);
+    }
+
+    this.fx.draw(ctx);
+    this.drawHint(ctx);
+    this.drawHUD(ctx);
+    this.drawOverlay(ctx);
+  };
+
+  /** 补货加速提示：在入口旁显示“加速上菜” */
+  P.drawRefill = function (ctx) {
+    var m = this.model;
+    var a = KS.clamp((m.speedMul - 1.12) / 0.25, 0, 1);
+    this.refillA = (this.refillA || 0) + (a - (this.refillA || 0)) * 0.15;
+    if (this.refillA < 0.02 || !this.screenRange) return;
+    var tmp = this.path.at(this.screenRange.start + 70, {});
+    var nx = -tmp.ty, ny = tmp.tx;
+    if (ny > 0) { nx = -nx; ny = -ny; }
+    var d = this.beltW / 2 + this.wallW + 4;
+    var x = KS.clamp(tmp.x + nx * d + 28, 60, this.L.W - 60), y = Math.max(this.L.conveyor.y + 12, tmp.y + ny * d - 4);
+    ctx.save();
+    ctx.globalAlpha = this.refillA;
+    var bob = Math.sin(this.time * 8) * 1.5;
+    ctx.font = Art.font(12);
+    var w = ctx.measureText('加速上菜').width + 34;
+    Art.roundRect(ctx, x - w / 2, y - 12 + bob, w, 22, 11);
+    ctx.fillStyle = '#c74a3f'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = INK; ctx.stroke();
+    // 小箭头
+    ctx.strokeStyle = '#fff3dc'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (var i = 0; i < 2; i++) {
+      var ax = x - w / 2 + 10 + i * 5 + ((this.time * 12) % 4);
+      ctx.beginPath(); ctx.moveTo(ax, y - 5 + bob); ctx.lineTo(ax + 4, y - 1 + bob); ctx.lineTo(ax, y + 3 + bob); ctx.stroke();
+    }
+    Art.text(ctx, '加速上菜', x + 7, y - 1 + bob, 12, '#fff6e6');
+    ctx.restore();
+  };
+
+  P.drawDecorDynamic = function (ctx) {
+    var m = this.model;
+    var self = this;
+    (this.decor || []).forEach(function (d) {
+      if (d.kind !== 'menu') return;
+      var types = self.typeList();
+      var n = types.length, iw = (d.w - 24) / n;
+      types.forEach(function (tp, i) {
+        var cx = d.x - d.w / 2 + 12 + iw * (i + 0.5), cy = d.y + d.h * 0.12;
+        var left = 0;
+        m.sushi.forEach(function (s) { if (s.type === tp && s.loc !== 'cleared') left++; });
+        var k = Math.min(0.3, d.h / 240) * 1.05;
+        self.drawSushi(ctx, tp, cx - 10, cy + 4, k * 0.95, 1, 1, 0, left ? 1 : 0.35);
+        Art.text(ctx, left ? '×' + left : '✓', cx + 17, cy + 3, 12, left ? '#5b3a26' : '#5f9a3a');
+      });
+    });
+  };
+
+  P.titleText = function () { return this.cfg.name; };
+  P.typeList = function () {
+    return Object.keys(this.cfg.sushi).sort(function (a, b) { return KS.SUSHI_ORDER.indexOf(a) - KS.SUSHI_ORDER.indexOf(b); });
+  };
+
+  P.drawTray = function (ctx, t, drag, heldType) {
+    var L = this.L, m = this.model, tr = L.trays[t], mt = m.trays[t], fx = this.trayFx[t];
+    var spr = this.trays[t];
+    var sx = fx.shake > 0 ? Math.sin(fx.shake * 55) * 6 * (fx.shake / 0.4) : 0;
+    var bounce = fx.bounce > 0 ? 1 + Ease.wobble(0.45 - fx.bounce, 22, 7) * 0.06 : 1;
+    ctx.save();
+    ctx.translate(tr.cx + sx, tr.cy);
+    ctx.scale(bounce, 2 - bounce);
+    ctx.drawImage(spr.canvas, -spr.ox, -spr.oy, spr.w, spr.h);
+    ctx.restore();
+    // 拖动高亮
+    var over = drag && drag.kind === 'tray' && drag.index === t;
+    if (over || fx.flash > 0) {
+      var okDrop = over && m.trayAccepts(t, heldType) === 'ok';
+      ctx.save();
+      Art.roundRect(ctx, tr.x - 5 + sx, tr.y - 5, tr.w + 10, tr.h + 10, 20);
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = fx.flash > 0 ? 'rgba(220,70,50,' + (fx.flash / 0.4).toFixed(2) + ')' : okDrop ? 'rgba(110,185,80,0.95)' : 'rgba(220,80,60,0.85)';
+      ctx.stroke();
+      ctx.restore();
+    }
+    // 空位：虚线椭圆；托盘已锁定种类时在空位显示淡淡的种类剪影
+    for (var s = 0; s < 3; s++) {
+      if (mt.slots[s] !== null) continue;
+      var sl = tr.slots[s];
+      Art.slot(ctx, sl.x + sx, sl.y + 4, 27, 15);
+      if (mt.type) this.drawSushi(ctx, mt.type, sl.x + sx, sl.y + 4, this.trayK * 0.85, 1, 1, 0, 0.2);
+    }
+    // 托盘中的寿司（含消除动画）
+    var ids = mt.slots;
+    for (var j = 0; j < 3; j++) {
+      var id = ids[j];
+      if (id === null) continue;
+      var v = this.views[id];
+      if (v.fl) continue;
+      var x = v.x + sx, y = v.y, k = v.k, sqx = 1, sqy = 1, alpha = 1;
+      if (v.land < 0.5) { var w = Ease.wobble(v.land, 30, 9) * 0.2; sqx = 1 + w; sqy = 1 - w; }
+      if (mt.clearing) {
+        var ct = mt.clearT;
+        // 依次跳起 → 向中间聚拢 → 收缩（爆裂在模型 cleared 事件时触发）
+        var hop = KS.clamp((ct - 0.22 - j * 0.05) / 0.2, 0, 1);
+        y -= Math.sin(hop * Math.PI) * 16;
+        var gather = KS.clamp((ct - 0.38) / 0.24, 0, 1), ge = Ease.inBack(gather);
+        x = KS.lerp(x, tr.cx, ge);
+        y = KS.lerp(y, tr.cy - 8, ge);
+        k *= 1 + 0.12 * Math.sin(hop * Math.PI) - 0.35 * ge;
+        alpha = 1 - gather * 0.3;
+        if (gather > 0) { sqx = 1 + 0.15 * gather; sqy = 1 - 0.1 * gather; }
+      }
+      var ssh = v.shake > 0 ? Math.sin(v.shake * 60) * 3 : 0;
+      ctx.save();
+      ctx.fillStyle = 'rgba(110,70,30,0.14)';
+      Art.ellipse(ctx, x + ssh, y + 15, 24 * k / 0.6, 5 * k / 0.6); ctx.fill();
+      ctx.restore();
+      this.drawSushi(ctx, m.sushi[id].type, x + ssh, y, k, sqx, sqy, 0, alpha);
+    }
+    if (mt.clearing && mt.clearT > 0.25) {
+      // 聚拢时的光晕
+      var gl = KS.clamp((mt.clearT - 0.25) / 0.37, 0, 1);
+      ctx.save();
+      var g = ctx.createRadialGradient(tr.cx, tr.cy - 6, 0, tr.cx, tr.cy - 6, 70);
+      g.addColorStop(0, 'rgba(255,245,200,' + (0.7 * gl).toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,245,200,0)');
+      ctx.fillStyle = g; ctx.fillRect(tr.cx - 80, tr.cy - 70, 160, 130);
+      ctx.restore();
+    }
+  };
+
+  P.drawHint = function (ctx) {
+    var m = this.model;
+    if (this.hintDone || m.status !== 'playing' || m.held) return;
+    if (m.elapsed < 0.8) return;
+    // 指向最靠近屏幕中部的可拿取寿司
+    var best = -1, bd = Infinity, tmp = {};
+    for (var i = 0; i < m.belt.length; i++) {
+      var id = m.belt[i];
+      if (!m.isPickableOnBelt(id)) continue;
+      this.path.at(m.sushi[id].s, tmp);
+      var d = Math.abs(tmp.x - this.L.W * 0.45);
+      if (d < bd) { bd = d; best = id; }
+    }
+    if (best < 0) return;
+    this.path.at(m.sushi[best].s, tmp);
+    var ph = (this.time * 1.6) % 1;
+    var press = ph > 0.45 && ph < 0.7;
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    ctx.strokeStyle = 'rgba(255,250,235,' + (1 - ph).toFixed(2) + ')'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(tmp.x, tmp.y - 6, 20 + ph * 22, 0, Math.PI * 2); ctx.stroke();
+    Art.hand(ctx, tmp.x + 8, tmp.y + 4 - (press ? 0 : 6), 1.05, press);
+    ctx.restore();
+  };
+
+  P.drawHUD = function (ctx) {
+    var L=this.L,m=this.model,self=this;
+    this.buttons=[];
+    var back={id:'back',x:L.btnBack.x,y:L.btnBack.y,w:L.btnBack.w,h:L.btnBack.h,
+      action:function(){self.onCancel();self.app.showMenu(self.cfg.mode==='free'?'free':'home')}};
+    var restart={id:'restart',x:L.btnRestart.x,y:L.btnRestart.y,w:L.btnRestart.w,h:L.btnRestart.h,
+      action:function(){self.app.startGame(self.cfg,self.seed)}};
+    var pause={id:'pause',x:L.btnPause.x,y:L.btnPause.y,w:L.btnPause.w,h:L.btnPause.h,
+      action:function(){self.onCancel();self.app.paused=!self.app.paused}};
+    var sound={id:'sound',x:L.btnSound.x,y:L.btnSound.y,w:L.btnSound.w,h:L.btnSound.h,
+      action:function(){KS.Sfx.toggle()}};
+    this.buttons.push(back,restart,pause,sound);
+    Art.button(ctx,back,'back',this.pressed==='back');
+    Art.button(ctx,restart,'restart',this.pressed==='restart');
+    Art.button(ctx,pause,'pause',this.pressed==='pause');
+    Art.button(ctx,sound,'sound',this.pressed==='sound',KS.Sfx.muted);
+    // 正向计时：教学与自由图没有超时失败；无尽在十分钟自然结算。
+    var t=m.endless?Math.max(0,Math.ceil(m.timeLeft)):Math.floor(m.elapsed);
+    var clock=Math.floor(t/60)+':'+('0'+t%60).slice(-2);
+    Art.pill(ctx,L.clockPill);
+    Art.text(ctx,clock,L.W/2,L.clockPill.y+L.clockPill.h/2+1,18,'#5b3a26');
+    if(m.endless){
+      // 小而清楚的成绩，不和寿司画面抢位置
+      Art.text(ctx,'已消除 '+m.clearedCount,L.W/2,L.conveyor.y+7,14,'#764a2c');
+    }
+  };
+
+  P.drawOverlay = function (ctx) {
+    var L=this.L,m=this.model,self=this;
+    var cy=L.conveyor.y+L.conveyor.h/2;
+    // 新手教学首次打开时只给三个最基础规则。
+    if(this.tutorial && m.status==='ready'){
+      ctx.save();ctx.fillStyle='rgba(59,35,18,.43)';ctx.fillRect(0,0,L.W,L.H);
+      Art.roundRect(ctx,43,cy-106,304,213,22);ctx.fillStyle='#fff6e5';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle=INK;ctx.stroke();
+      Art.banner(ctx,L.W/2,cy-100,'新手教学',160,45);
+      Art.text(ctx,'点寿司，自动放进托盘',L.W/2,cy-42,16,'#5a3927');
+      Art.text(ctx,'三个相同寿司就消除',L.W/2,cy-6,16,'#5a3927');
+      Art.text(ctx,'放不下？用下方五格暂存',L.W/2,cy+30,15,'#7c5740');
+      Art.text(ctx,'轻触开始',L.W/2,cy+79,18,'#c74a3f');ctx.restore();return;
+    }
+    if(m.status==='ready' || (m.status==='playing' && m.elapsed<.45)){
+      var t=m.status==='ready'?this.readyT:1.25+m.elapsed;
+      var alpha=t<1.25?1:1-(t-1.25)/.45;
+      ctx.save();ctx.globalAlpha=KS.clamp(alpha,0,1);
+      ctx.fillStyle='rgba(72,40,20,.25)';ctx.fillRect(0,L.conveyor.y,L.W,L.conveyor.h);
+      Art.banner(ctx,L.W/2,cy,t<1.0?this.cfg.name:'开始！',190,54,t<1?'#c74a3f':'#7aa84a');
+      ctx.restore();
+    }
+    // 暂停：可以继续、提前结算（无尽）、或回到首页。
+    if(this.app.paused && !this.result){
+      ctx.save();ctx.fillStyle='rgba(51,31,16,.64)';ctx.fillRect(0,0,L.W,L.H);
+      Art.roundRect(ctx,53,cy-156,284,305,25);ctx.fillStyle='#fff4df';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle=INK;ctx.stroke();
+      Art.banner(ctx,L.W/2,cy-143,'已暂停',150,50);ctx.restore();
+      var btns=[{label:'继续游戏',primary:true,action:function(){self.app.paused=false}}];
+      if(m.endless)btns.push({label:'结束本局 · 结算',action:function(){self.app.paused=false;m.finishEndless('manual')}});
+      btns.push({label:'返回首页',action:function(){self.app.paused=false;self.onCancel();self.app.showMenu('home')}});
+      btns.forEach(function(b,i){b.id='pause-'+i;b.x=L.W/2-110;b.y=cy-65+i*65;b.w=220;b.h=48;self.buttons.push(b);KS.Menu.drawButton(ctx,b,b.label,b.primary,self.pressed===b.id)});
+      return;
+    }
+    if(!this.result||this.result.t<0)return;
+    var r=this.result,cfg=this.cfg,t=r.t;
+    ctx.save();
+    ctx.fillStyle='rgba(45,28,18,'+(.55*KS.clamp(t/.25,0,1)).toFixed(3)+')';ctx.fillRect(0,0,L.W,L.H);
+    var pw=310,ph=345,px=L.W/2,py=L.H/2;
+    ctx.translate(px,py);ctx.scale(Ease.outBack(KS.clamp(t/.38,0,1)),Ease.outBack(KS.clamp(t/.38,0,1)));
+    Art.roundRect(ctx,-pw/2+3,-ph/2+5,pw,ph,24);ctx.fillStyle='rgba(40,24,10,.4)';ctx.fill();
+    Art.roundRect(ctx,-pw/2,-ph/2,pw,ph,24);ctx.fillStyle='#fff5e0';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle=INK;ctx.stroke();
+    Art.banner(ctx,0,-ph/2+1,r.endless?'本局完成！':'完成！',180,52);
+    if(r.endless){
+      Art.text(ctx,'已消除',0,-105,16,'#9b7350');
+      Art.text(ctx,String(r.score),0,-60,52,'#c74a3f');
+      Art.text(ctx,'颗寿司 · '+m.matches+' 组',0,-21,17,'#65432b');
+      Art.text(ctx,'用时 '+formatClock(m.elapsed),0,9,14,'#87664b');
+      if(KS.Progress.endlessBest)Art.text(ctx,'最佳纪录 '+KS.Progress.endlessBest+' 颗',0,39,14,'#7a954e');
+    } else {
+      for(var i=0;i<3;i++)Art.star(ctx,(i-1)*65,-80-(i===1?8:0),i===1?28:24,i<r.stars);
+      Art.text(ctx,'用时 '+formatClock(m.elapsed),0,-11,21,'#593b29');
+      Art.text(ctx,r.newBest?'新纪录！':'再试一次，冲击三星',0,25,15,r.newBest?'#be6040':'#8c7259');
+    }
+    ctx.restore();
+    var buttons=r.endless?[{label:'再玩一次',primary:true,action:function(){self.app.startGame(cfg)}},{label:'返回首页',action:function(){self.app.showMenu('home')}}]:
+      [{label:'再玩一次',primary:true,action:function(){self.app.startGame(cfg)}},{label:'返回选图',action:function(){self.app.showMenu(cfg.mode==='free'?'free':'home')}}];
+    if(t<.35)return;
+    buttons.forEach(function(b,i){b.id='result-'+i;b.x=px-112;b.y=py+63+i*57;b.w=224;b.h=45;self.buttons.push(b);KS.Menu.drawButton(ctx,b,b.label,b.primary,self.pressed===b.id)});
+  };
+
+  function formatClock(seconds){var t=Math.floor(seconds);return Math.floor(t/60)+':'+('0'+t%60).slice(-2)}
+
+  KS.PlayScene = PlayScene;
+})(globalThis.KS);
+
+</script>
+<script>
+/*
+ * 入口：画布适配、主循环、输入分发、场景切换、调试接口。
+ * URL 参数：
+ *   ?level=1..3        直接进入主线某关
+ *   ?map=free-u|free-z|free-double   直接进入自由地图（无效值回到首页）
+ *   ?seed=123          调试：覆盖地图的固定 seed（正常游玩不会出现）
+ *   ?debug=1     显示开发者面板（数量守恒断言、帧率）
+ *   ?manual=1    手动时钟（自动化录屏用，由 KSDebug.step 驱动）
+ */
+(function (KS) {
+  'use strict';
+  var params = new URLSearchParams(location.search);
+  var DEBUG = params.get('debug') === '1';
+  var MANUAL = params.get('manual') === '1';
+
+  var App = {
+    canvas: null, ctx: null, layout: null, scene: null,
+    pixelRatio: 1, paused: false, safeTop: 0, safeBottom: 0,
+    hostTop: 0, hostBottom: 0, guard: false,
+    debugSeed: params.get('seed') != null && isFinite(parseInt(params.get('seed'), 10)) ? parseInt(params.get('seed'), 10) : undefined,
+    invariantErrors: 0, lastInvariant: [],
+    perf: { frames: [], work: [] }
+  };
+  KS.App = App;
+
+  App.init = function () {
+    this.canvas = document.getElementById('game');
+    this.ctx = this.canvas.getContext('2d');
+    this.measureSafe();
+    this.resize();
+    window.addEventListener('resize', this.onResize.bind(this));
+    window.addEventListener('orientationchange', this.onResize.bind(this));
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && App.scene instanceof KS.PlayScene && App.scene.model.status === 'playing') {
+        App.scene.onCancel(); App.paused = true;
+      }
+    });
+    this.bindInput();
+    this.bindBack();
+    var lv = parseInt(params.get('level'), 10);
+    var mapKey = params.get('map');
+    var mapCfg = mapKey ? KS.findMap(mapKey) : null;
+    if (lv >= 1 && lv <= KS.LEVELS.length) this.startLevel(lv - 1);
+    else if (mapCfg) this.startGame(mapCfg);
+    else this.showMenu('home');
+    this.loadBestStars();
+    this.refreshHostInsets();
+    this.last = performance.now();
+    if (!MANUAL) requestAnimationFrame(this.loop.bind(this));
+    else this.frame(0);
+    var boot = document.getElementById('boot');
+    if (boot) boot.remove();
+  };
+
+  App.measureSafe = function () {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:0;top:0;visibility:hidden;padding-top:0;padding-bottom:0;padding-top:var(--safe-area-inset-top, env(safe-area-inset-top, 0px));padding-bottom:var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px))';
+    document.body.appendChild(d);
+    var cs = getComputedStyle(d);
+    this.safeTop = Math.max(parseFloat(cs.paddingTop) || 0, this.hostTop || 0);
+    this.safeBottom = Math.max(parseFloat(cs.paddingBottom) || 0, this.hostBottom || 0);
+    d.remove();
+  };
+
+  App.refreshHostInsets = function () {
+    if (!KS.Platform) return;
+    KS.Platform.windowInfo().then(function (info) {
+      if (!info || !App.canvas) return;
+      var safe = info.safeArea || {};
+      var top = Math.max(0, Number(safe.top) || 0);
+      var h = Number(info.windowHeight) || 0;
+      var bottom = h && isFinite(Number(safe.bottom)) ? Math.max(0, h - Number(safe.bottom)) : 0;
+      var buttons = info.menuButtons || {};
+      ['back', 'me', 'share'].forEach(function (key) {
+        var b = buttons[key];
+        if (b && Number(b.top) < 120 && isFinite(Number(b.bottom))) {
+          top = Math.max(top, Number(b.bottom) + 5);
+        }
+      });
+      top = Math.min(96, top);
+      bottom = Math.min(72, bottom);
+      if (Math.abs(top - App.hostTop) < 2 && Math.abs(bottom - App.hostBottom) < 2) return;
+      App.hostTop = top;
+      App.hostBottom = bottom;
+      App.measureSafe();
+      App.resize();
+      if (App.scene) App.scene.relayout();
+    });
+  };
+
+  App.onResize = function () {
+    clearTimeout(this._rt);
+    var self = this;
+    this._rt = setTimeout(function () {
+      self.measureSafe(); self.resize(); if (self.scene) self.scene.relayout();
+      self.refreshHostInsets();
+    }, 60);
+  };
+
+  App.resize = function () {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2.5);
+    this.canvas.width = Math.round(vw * this.pixelRatio);
+    this.canvas.height = Math.round(vh * this.pixelRatio);
+    this.canvas.style.width = vw + 'px';
+    this.canvas.style.height = vh + 'px';
+    this.layout = KS.Layout.compute(vw, vh, this.safeTop, this.safeBottom);
+  };
+
+  /** 菜单：view = 'home' 首页 | 'main' 经典闯关列表 | 'free' 自由选图列表 */
+  App.showMenu = function (view) {
+    this.paused = false;
+    this.scene = new KS.MenuScene(this, view || 'home');
+    if (this.scene.view !== 'home') this.ensureGuard();
+  };
+
+  /** 统一开局入口：cfg 为主线关卡或自由地图配置；seed 仅调试覆盖 */
+  App.startGame = function (cfg, seed) {
+    if (!cfg) { this.showMenu('home'); return; }
+    this.paused = false;
+    if (seed === undefined) seed = this.debugSeed;
+    this.scene = new KS.PlayScene(this, cfg, seed);
+    this.ensureGuard();
+    this.debugLog('开始 ' + cfg.key + ' seed=' + this.scene.model.seed);
+  };
+
+  /** 兼容 V1：按主线下标开局 */
+  App.startLevel = function (index, seed) { this.startGame(KS.LEVELS[index], seed); };
+  App.startMap = function (key, seed) { this.startGame(KS.findMap(key), seed); };
+  App.startEndless = function(seed){this.startGame(KS.ENDLESS,seed)};
+
+  // ---------- 返回键 / 系统返回手势 ----------
+  // 不在首页时保留一条 history 记录；系统返回会触发 popstate，游戏内返回上一级而不是直接退出。
+  App.ensureGuard = function () {
+    if (this.guard || MANUAL || !window.history || typeof history.pushState !== 'function') return;
+    try { history.pushState({ ks: 1 }, ''); this.guard = true; } catch (e) { /* ignore */ }
+  };
+  App.bindBack = function () {
+    var self = this;
+    window.addEventListener('popstate', function () { self.guard = false; self.back(); });
+  };
+  /** 返回上一级：对局 → 所属列表；列表 → 首页 */
+  App.back = function () {
+    var sc = this.scene;
+    if (sc instanceof KS.PlayScene) { sc.onCancel(); this.showMenu(sc.cfg.mode === 'free' ? 'free' : 'home'); }
+    else if (sc instanceof KS.MenuScene && sc.view !== 'home') this.showMenu('home');
+  };
+
+  App.allMapKeys = function () {
+    return KS.LEVELS.concat(KS.FREE_MAPS).map(function (c) { return c.key; });
+  };
+  App.loadBestStars = function () {
+    return KS.Progress.load(this.allMapKeys());
+  };
+  App.bestStars = function () { return KS.Progress.stars; };
+
+  App.toLogical = function (cx, cy) {
+    var r = this.canvas.getBoundingClientRect(), L = this.layout;
+    return { x: (cx - r.left - L.offX) / L.scale, y: (cy - r.top - L.offY) / L.scale };
+  };
+
+  App.bindInput = function () {
+    var self = this, c = this.canvas, active = null;
+    function down(e) {
+      KS.Sfx.unlock();
+      if (active !== null) return;
+      active = e.pointerId;
+      try { c.setPointerCapture(e.pointerId); } catch (er) { /* ignore */ }
+      e.preventDefault();
+      /* 暂停时把点击交给暂停菜单，避免任意点击直接恢复 */
+      var p = self.toLogical(e.clientX, e.clientY);
+      self.scene.onDown(p.x, p.y);
+    }
+    function move(e) {
+      if (e.pointerId !== active) return;
+      e.preventDefault();
+      var p = self.toLogical(e.clientX, e.clientY);
+      self.scene.onMove(p.x, p.y);
+    }
+    function up(e) {
+      if (e.pointerId !== active) return;
+      active = null;
+      e.preventDefault();
+      var p = self.toLogical(e.clientX, e.clientY);
+      self.scene.onUp(p.x, p.y);
+    }
+    function cancel(e) {
+      if (e.pointerId !== active) return;
+      active = null;
+      self.scene.onCancel();
+    }
+    c.addEventListener('pointerdown', down);
+    c.addEventListener('pointermove', move);
+    c.addEventListener('pointerup', up);
+    c.addEventListener('pointercancel', cancel);
+    c.addEventListener('lostpointercapture', cancel);
+    c.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+    window.addEventListener('keydown', function (e) {
+      if (e.key >= '1' && e.key <= String(KS.LEVELS.length)) self.startLevel(parseInt(e.key, 10) - 1);
+      else if (e.key === 'Escape') self.back();
+      else if (e.key === 'm' || e.key === 'M') KS.Sfx.toggle();
+      else self.scene.onKey(e.key);
+    });
+  };
+
+  App.loop = function (now) {
+    var dt = Math.min(0.05, Math.max(0, (now - this.last) / 1000));
+    this.perf.frames.push(now - this.last);
+    if (this.perf.frames.length > 240) this.perf.frames.shift();
+    this.last = now;
+    this.frame(dt);
+    requestAnimationFrame(this.loop.bind(this));
+  };
+
+  App.frame = function (dt) {
+    var t0 = performance.now();
+    this.scene.update(dt);
+    this._invariantTick = (this._invariantTick || 0) + 1;
+    // 无尽模式十分钟可积累数百个已消除寿司，生产环境每 15 帧核验一次；调试模式每帧核验。
+    if (this.scene.model && (DEBUG || this._invariantTick % 15 === 0)) {
+      var errs = this.scene.model.checkInvariants();
+      if (errs.length) {
+        this.invariantErrors++;
+        if (this.invariantErrors < 5) console.error('[不变量] ', errs);
+        this.lastInvariant = errs;
+      }
+    }
+    this.render();
+    this.perf.work.push(performance.now() - t0);
+    if (this.perf.work.length > 240) this.perf.work.shift();
+  };
+
+  App.render = function () {
+    var ctx = this.ctx, L = this.layout, pr = this.pixelRatio;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    if (L.offX > 0.5 || L.offY > 0.5) {
+      ctx.fillStyle = '#d9b48a';
+      ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    ctx.setTransform(L.scale * pr, 0, 0, L.scale * pr, L.offX * pr, L.offY * pr);
+    ctx.save();
+    ctx.beginPath(); ctx.rect(0, 0, L.W, L.H); ctx.clip();
+    this.scene.render(ctx);
+    ctx.restore();
+    if (DEBUG) this.drawDebug(ctx);
+  };
+
+  App.drawDebug = function (ctx) {
+    var s = this.scene, L = this.layout;
+    var lines = [];
+    var fr = this.perf.frames, wk = this.perf.work;
+    var avg = function (a) { return a.length ? a.reduce(function (x, y) { return x + y; }, 0) / a.length : 0; };
+    lines.push('FPS ' + (1000 / (avg(fr) || 16.7)).toFixed(0) + '  渲染 ' + avg(wk).toFixed(2) + 'ms');
+    if (s.model) {
+      var c = s.model.counts();
+      lines.push('带' + c.belt + ' 厨' + c.kitchen + ' 手' + c.held + ' 盘' + c.tray + ' 暂' + c.buffer + ' 消' + c.cleared + ' = ' + (c.belt + c.kitchen + c.held + c.tray + c.buffer + c.cleared) + '/' + c.total);
+      lines.push(this.invariantErrors ? '不变量错误 ' + this.invariantErrors + ': ' + this.lastInvariant[0] : '不变量 ✓  seed ' + s.model.seed);
+    }
+    ctx.save();
+    ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(4, L.H - 16 - lines.length * 14, 300, lines.length * 14 + 8);
+    ctx.font = '11px monospace'; ctx.fillStyle = this.invariantErrors ? '#ff8080' : '#b0ffb0';
+    lines.forEach(function (ln, i) { ctx.fillText(ln, 10, L.H - 14 - (lines.length - 1 - i) * 14 + 2); });
+    ctx.restore();
+  };
+
+  App.debugLog = function (msg) { if (DEBUG) console.log('[KS] ' + msg); };
+
+  // ---------- 自动化测试接口 ----------
+  window.KSDebug = {
+    app: App,
+    step: function (n, dt) { for (var i = 0; i < (n || 1); i++) App.frame(dt || 1 / 30); },
+    model: function () { return App.scene.model; },
+    scene: function () { return App.scene; },
+    /** 寿司在页面上的 CSS 像素坐标（用于真实触摸点击） */
+    screenPos: function (id) {
+      var sc = App.scene, sh = sc.model.sushi[id], t = {};
+      sc.anchorOf(sh, t);
+      var L = App.layout, r = App.canvas.getBoundingClientRect();
+      return { x: r.left + L.offX + t.x * L.scale, y: r.top + L.offY + (t.y - 6) * L.scale };
+    },
+    toScreen: function (x, y) {
+      var L = App.layout, r = App.canvas.getBoundingClientRect();
+      return { x: r.left + L.offX + x * L.scale, y: r.top + L.offY + y * L.scale };
+    },
+    layout: function () { return App.layout; },
+    perf: function () {
+      var f = App.perf.frames.slice().sort(function (a, b) { return a - b; }), w = App.perf.work.slice().sort(function (a, b) { return a - b; });
+      var avg = function (a) { return a.reduce(function (x, y) { return x + y; }, 0) / (a.length || 1); };
+      return { frameAvg: avg(f), frameP95: f[Math.floor(f.length * 0.95)] || 0, workAvg: avg(w), workP95: w[Math.floor(w.length * 0.95)] || 0, n: f.length };
+    },
+    resetPerf: function () { App.perf.frames = []; App.perf.work = []; },
+    invariantErrors: function () { return App.invariantErrors; },
+    start: function (i, seed) { App.startLevel(i, seed); },
+    startMap: function (key, seed) { App.startMap(key, seed); },
+    startEndless: function(seed) { App.startEndless(seed); },
+    menu: function (view) { App.showMenu(view); },
+    back: function () { App.back(); },
+    progress: function () { return KS.Progress; }
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { App.init(); });
+  else App.init();
+})(globalThis.KS);
+
+</script>
+</body>
+</html>
