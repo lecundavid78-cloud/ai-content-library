@@ -90,6 +90,10 @@ def split_lines(text):
             pieces.append(p); continue
         cur = ''
         subs_ = re.split(r'(?<=——)', p) if '——' in p else [p]   # 超长：先在破折号处切
+        if len(subs_) == 1:                                        # 再看较长的括号注释（≥8 字）
+            m = re.search(r'（[^）]{8,}）', p)
+            if m and m.start() > 0:
+                subs_ = [p[:m.start()], p[m.start():]]
         if len(subs_) > 1:
             pieces.extend(x for x in subs_ if x.strip()); continue
         for q in re.findall(r'[^、]+、?', p):     # 再按顿号切
