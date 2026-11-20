@@ -1,0 +1,52 @@
+/* ==========================================================================
+   ch03 · scenes.css — 第三章「其他文件有什么用」
+   构图沿用前两章：中轴 x=960；与口播框同高区域（y>488）只用 416→1504；浅舞台。
+   ========================================================================== */
+.l-at { position: absolute; }
+.ttl { position: absolute; left: 0; width: 1920px; text-align: center; top: 150px; }
+.hero-wrap { position: absolute; left: 0; width: 1920px; top: 356px; text-align: center; }
+.hero-wrap .c-hero { font-size: 112px; }
+.is-light em.red { color: var(--red); }
+
+/* 通用：深色文件夹卡（同一张卡长出多行） */
+.fold .face { padding: 24px 28px; }
+.fold .head { padding: 0 64px 14px 0; color: var(--paper); font-family: var(--font-mono); font-size: 24px; letter-spacing: 0; justify-content: flex-start; gap: 12px; }
+.fold .c-file { position: relative; height: 72px; margin-bottom: 10px; font-size: 30px; }
+.fold .c-file .ico { width: 34px; height: 34px; }
+.fold .c-file .role { margin-left: auto; font-size: 26px; color: var(--gold); }
+.fold .c-file .c-pill { margin-left: 14px; }
+.fold .c-file .role + .c-pill { margin-left: 14px; }
+.fold .c-file .sp { margin-left: auto; }
+.fold > .c-badge { right: 16px; top: 16px; }
+.fold .c-file .c-badge { position: absolute; right: -14px; top: -14px; width: 36px; height: 36px; box-shadow: none; }
+.fold .c-file .c-badge svg { width: 18px; height: 18px; }
+
+/* ---------- 部分 A · 进阶 Skill：三个可选文件夹 ---------- */
+#pA-extras .prompt { left: 470px; top: 352px; width: 340px; height: 178px; padding: 24px 26px; }
+#pA-extras .prompt .pt { font-size: 22px; font-weight: 800; color: var(--ink-3); letter-spacing: 0.06em; }
+#pA-extras .prompt .c-skel { height: 14px; margin: 14px 0 0; background: #ECECEF; }
+#pA-extras .approx { left: 828px; top: 404px; font-family: var(--font-mono); font-size: 64px; font-weight: 800; color: var(--ink-3); }
+#pA-extras .box { left: 900px; top: 352px; width: 550px; height: 178px; }
+/* 下方例子区：随讲到的文件夹原地换内容 */
+#pA-extras .ex { position: absolute; left: 416px; width: 1088px; top: 722px; text-align: center; }
+#pA-extras .ex .c-morph { display: grid; width: 100%; }
+#pA-extras .ex .row { display: flex; justify-content: center; gap: 14px; }
+#pA-extras .ex .c-chip { position: static; height: 64px; font-size: 26px; padding: 0 22px; }
+#pA-extras .ex .note { margin-top: 18px; font-size: 24px; font-weight: 700; color: var(--ink-2); letter-spacing: 0.04em; }
+#pA-extras .ex .note em { font-style: normal; color: var(--violet); }
+#pA-extras .ex .note .mono { font-family: var(--font-mono); font-size: 22px; }
+
+/* ---------- 部分 B · 都可选；放了脚本 ≠ 能运行 ---------- */
+#pB-limits .mini1 { left: 470px; top: 372px; width: 400px; height: 172px; }
+#pB-limits .mini2 { left: 1010px; top: 330px; width: 440px; height: 418px; }
+#pB-limits .mini2 .c-file { height: 64px; font-size: 26px; }
+#pB-limits .cap { text-align: center; }
+#pB-limits .env { position: absolute; left: 660px; width: 600px; }
+#pB-limits .env.e1 { top: 770px; }
+#pB-limits .env.e2 { top: 846px; }
+#pB-limits .env .c-chip { position: static; height: 62px; font-size: 26px; }
+#pB-limits .env .c-chip .bad { color: var(--red); }
+#pB-limits .env .c-chip .no { margin-left: auto; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--red); color: #fff; }
+#pB-limits .env .c-chip .no svg { width: 18px; height: 18px; }
+/* 深色卡里的 √ 徽标用白底黑勾，否则看不见 */
+.fold .c-file .c-badge:not(.is-red) { background: #fff; color: var(--ink); }

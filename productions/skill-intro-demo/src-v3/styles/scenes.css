@@ -1,0 +1,44 @@
+/* ==========================================================================
+   v3 · scenes.css — 布局原语 + 各部分坐标（#部分id 前缀隔离）
+   构图：以 x=960 为轴。标题区 y≈140–260 全宽居中；卡片区在对称安全列 416→1504 内；
+   字幕在 y≈956–1018，同样以 960 居中。
+   ========================================================================== */
+.l-at { position: absolute; }
+.ttl { position: absolute; left: 0; width: 1920px; text-align: center; top: 150px; }
+.is-dark em.red { color: var(--red); }
+
+/* ---------- 部分 A · 深 · 为什么需要 Skill ---------- */
+#pA-repeat .p-card { left: 700px; top: 392px; width: 520px; }
+#pA-repeat .p-card .head b { color: var(--gold); font-family: var(--font-mono); margin-right: 8px; }
+#pA-repeat .c-row { font-size: 30px; }
+#pA-repeat .c-row .k { width: 64px; }
+#pA-repeat .c-badge { right: 18px; top: 18px; }
+#pA-repeat .k3 .head { padding-right: 84px; }
+#pA-repeat .vm .bad { color: var(--red); }
+
+/* ---------- 部分 B · 浅 · Skill = 写给 AI 的操作手册 ---------- */
+#pB-sop .sop { left: 640px; top: 330px; width: 640px; }
+#pB-sop .sop .c-badge { right: 18px; top: 18px; }
+#pB-sop .sop .head { padding-right: 84px; }
+#pB-sop .c-chip { left: 1180px; width: 310px; }
+#pB-sop .c-chip.j1 { top: 400px; }
+#pB-sop .c-chip.j2 { top: 496px; }
+#pB-sop .c-chip.j3 { top: 592px; }
+
+/* ---------- 部分 C · 浅 · Skill 长什么样（一张卡：文件夹 ⇄ SKILL.md ⇄ 四件套） ---------- */
+#pC-anatomy .box { left: 650px; top: 380px; width: 620px; height: 270px; }
+#pC-anatomy .f-folder .head { color: var(--paper); font-family: var(--font-mono); font-size: 26px; letter-spacing: 0; justify-content: flex-start; gap: 14px; }
+#pC-anatomy .f-folder .body { position: relative; }
+#pC-anatomy .cap { position: absolute; left: 30px; top: 132px; font-size: 24px; font-weight: 600; color: var(--paper-3); letter-spacing: 0.06em; white-space: nowrap; }
+#pC-anatomy .f-doc { background: var(--card-light); color: var(--ink); }
+#pC-anatomy .f-doc .c-skel { background: #ECECEF; }
+#pC-anatomy .f-doc .head { font-family: var(--font-mono); letter-spacing: 0; font-weight: 500; color: var(--ink-3); }
+#pC-anatomy .field { margin-bottom: 24px; }
+#pC-anatomy .field .lab { font-family: var(--font-mono); font-size: 22px; font-weight: 600; color: var(--ink-3); margin-bottom: 4px; }
+#pC-anatomy .field .val { font-size: 36px; font-weight: 800; letter-spacing: 0.01em; white-space: nowrap; }
+#pC-anatomy .field .val.mono { font-size: 40px; }
+#pC-anatomy .rule { height: 1px; background: var(--card-line-light); margin: 4px 0 18px; }
+#pC-anatomy .body-lab { font-size: 22px; font-weight: 700; color: var(--ink-3); letter-spacing: 0.06em; }
+#pC-anatomy .callout { left: 1262px; }
+#pC-anatomy .callout.c1 { top: 456px; }
+#pC-anatomy .callout.c2 { top: 562px; }

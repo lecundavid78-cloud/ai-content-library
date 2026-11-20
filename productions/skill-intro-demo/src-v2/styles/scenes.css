@@ -1,0 +1,70 @@
+/* ==========================================================================
+   v2 · scenes.css — 布局原语 + 各场景坐标（#场景id 前缀隔离）
+   所有内容都在主视觉列 x 456→1824 内，中心 x 1140；字幕在 y≈960–1018。
+   ========================================================================== */
+.l-col {
+  position: absolute; left: var(--main-x); width: var(--main-w);
+  top: var(--safe-y); bottom: 150px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.l-at { position: absolute; }
+.l-center-x { left: var(--main-x); width: var(--main-w); text-align: center; }
+
+/* ---------- S01 · 同一套要求，打了三遍（深） ---------- */
+#s01-repeat .ttl { top: 196px; }
+#s01-repeat .p-card { top: 352px; width: 360px; }
+#s01-repeat .p-card.k1 { left: 568px; }
+#s01-repeat .p-card.k2 { left: 960px; }
+#s01-repeat .p-card.k3 { left: 1352px; }
+#s01-repeat .p-card .head b { color: var(--gold); font-family: var(--font-mono); margin-right: 8px; }
+#s01-repeat .c-row { font-size: 28px; height: 58px; }
+#s01-repeat .c-row .k { width: 56px; }
+#s01-repeat .c-badge { right: -16px; top: -16px; }
+#s01-repeat .note { top: 812px; }
+
+/* ---------- S02 · 能不能存下来（深 → 浅） ---------- */
+#s02-save .l-col { gap: 40px; }
+
+/* ---------- S03 · 写给 AI 的操作手册（浅） ---------- */
+#s03-sop .sop { left: 520px; top: 262px; width: 540px; }
+#s03-sop .sop .c-badge { right: -18px; top: -18px; }
+#s03-sop .txt { left: 1150px; top: 318px; display: flex; flex-direction: column; gap: 6px; }
+#s03-sop .txt .c-lead { margin-bottom: 6px; }
+
+/* ---------- S04 · 一个文件夹 + SKILL.md（浅） ---------- */
+#s04-folder .ttl { top: 206px; }
+#s04-folder .folder { left: 830px; top: 390px; width: 620px; }
+#s04-folder .folder .head { color: var(--paper); font-family: var(--font-mono); font-size: 26px; letter-spacing: 0; justify-content: flex-start; gap: 14px; }
+#s04-folder .file {
+  display: flex; align-items: center; gap: 18px;
+  height: 104px; padding: 0 26px; border-radius: 14px; background: var(--card-dark-2);
+  font-family: var(--font-mono); font-size: 44px; font-weight: 800; letter-spacing: -0.01em;
+}
+#s04-folder .file .ico { width: 46px; height: 46px; }
+#s04-folder .file .c-pill { margin-left: auto; }
+#s04-folder .cap { margin-top: 22px; font-size: 24px; font-weight: 600; color: var(--paper-3); letter-spacing: 0.06em; }
+#s04-folder .c-badge { right: -18px; top: -18px; }
+
+/* ---------- S05 · 两个必填项（浅） ---------- */
+#s05-fields .ttl { top: 170px; }
+#s05-fields .doc { left: 520px; top: 278px; width: 820px; }
+#s05-fields .doc .head { font-family: var(--font-mono); letter-spacing: 0; font-weight: 500; }
+#s05-fields .field { margin-bottom: 26px; }
+#s05-fields .field .lab { font-family: var(--font-mono); font-size: 22px; font-weight: 600; color: var(--ink-3); margin-bottom: 6px; }
+#s05-fields .field .val { font-size: 36px; font-weight: 800; letter-spacing: 0.01em; white-space: nowrap; }
+#s05-fields .field .val.mono { font-size: 40px; }
+#s05-fields .rule { height: 1px; background: var(--card-line-light); margin: 6px 0 22px; }
+#s05-fields .body-lab { font-size: 22px; font-weight: 700; color: var(--ink-3); letter-spacing: 0.06em; }
+#s05-fields .callout { left: 1296px; }
+#s05-fields .callout.c1 { top: 398px; }
+#s05-fields .callout.c2 { top: 514px; }
+
+/* ---------- S06 · 四个部分（浅） ---------- */
+#s06-parts .ttl { top: 226px; }
+#s06-parts .c-tile { top: 404px; }
+#s06-parts .c-tile.t1 { left: 504px; }
+#s06-parts .c-tile.t2 { left: 828px; }
+#s06-parts .c-tile.t3 { left: 1152px; }
+#s06-parts .c-tile.t4 { left: 1476px; }
+#s06-parts .c-tile.is-key { background: var(--ink); outline: 2px solid var(--violet); outline-offset: 4px; }
+#s06-parts .foot { top: 712px; }

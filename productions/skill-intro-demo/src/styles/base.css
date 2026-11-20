@@ -1,0 +1,178 @@
+/* ==========================================================================
+   base.css — 舞台、图层、背景、字幕、口播框、章节角标、调试参考线、播放器 UI
+   ========================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: #000;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+/* ---------- 舞台：固定 1920×1080，由 JS 等比缩放居中 ---------- */
+#stage {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: var(--canvas-w); height: var(--canvas-h);
+  transform-origin: 0 0;
+  background: var(--c-bg);
+  overflow: hidden;
+  font-family: var(--font-sans);
+  color: var(--c-text);
+  font-feature-settings: "palt" 1;     /* CJK 标点挤压，排版更紧凑 */
+  letter-spacing: var(--tracking-text);
+}
+
+.layer { position: absolute; inset: 0; pointer-events: none; }
+
+/* ---------- 背景：极暗暗角 + 星尘 ---------- */
+.bg-vignette {
+  background:
+    radial-gradient(1200px 800px at 62% 44%, rgba(255,255,255,0.025), transparent 70%),
+    radial-gradient(circle at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%);
+}
+.dust {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  will-change: transform, opacity;
+}
+
+/* ---------- 场景容器 ---------- */
+.scene { position: absolute; inset: 0; }
+.scene .lift-layer { position: absolute; inset: 0; pointer-events: none; }
+
+/* ---------- 字幕：主视觉区底部居中，单行 ---------- */
+.subtitle-layer .sub {
+  position: absolute;
+  left: var(--main-x);
+  width: var(--main-w);
+  bottom: calc(var(--safe-y) + 6px);
+  text-align: center;
+  font-size: var(--fs-sub);
+  font-weight: var(--fw-semi);
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  color: rgba(244,245,247,0.92);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.85), 0 0 2px rgba(0,0,0,0.9);
+  white-space: nowrap;
+  font-feature-settings: normal;   /* 字幕不挤压标点，保证逗号/问号可读 */
+}
+.subtitle-layer .sub .en { font-family: var(--font-mono); font-weight: 600; letter-spacing: 0; }
+.no-subs .subtitle-layer { display: none; }
+
+/* ---------- 章节角标（左上） ---------- */
+.chapter {
+  position: absolute;
+  left: var(--safe-x); top: var(--safe-y);
+  display: flex; align-items: center; gap: 16px;
+  font-size: var(--fs-note);
+  font-weight: var(--fw-semi);
+  color: var(--c-text-2);
+  letter-spacing: 0.06em;
+}
+.chapter .no {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--c-green);
+  letter-spacing: 0;
+}
+.chapter .bar { width: 28px; height: 2px; background: var(--c-line); }
+
+/* ---------- 口播预留框（左下，竖屏 9:16） ---------- */
+.slot {
+  position: absolute;
+  left: var(--slot-x); top: var(--slot-y);
+  width: var(--slot-w); height: var(--slot-h);
+  border-radius: var(--radius);
+  border: var(--border);
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,0.022) 0 2px, transparent 2px 14px),
+    #0C0D11;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+  overflow: hidden;
+}
+.slot .corner { position: absolute; width: 22px; height: 22px; border-color: rgba(255,255,255,0.45); border-style: solid; border-width: 0; }
+.slot .corner.tl { left: 14px; top: 14px;    border-left-width: 2px; border-top-width: 2px; }
+.slot .corner.tr { right: 14px; top: 14px;   border-right-width: 2px; border-top-width: 2px; }
+.slot .corner.bl { left: 14px; bottom: 14px; border-left-width: 2px; border-bottom-width: 2px; }
+.slot .corner.br { right: 14px; bottom: 14px; border-right-width: 2px; border-bottom-width: 2px; }
+.slot .slot-info {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  text-align: center;
+}
+.slot .slot-icon { width: 56px; height: 56px; opacity: 0.4; }
+.slot .slot-title { font-size: 26px; font-weight: var(--fw-bold); color: var(--c-text-2); letter-spacing: 0.12em; }
+.slot .slot-meta { font-family: var(--font-mono); font-size: 17px; color: var(--c-text-3); letter-spacing: 0.02em; line-height: 1.6; }
+.slot .slot-rec {
+  position: absolute; top: 18px; left: 50%; translate: -50% 0;
+  font-family: var(--font-mono); font-size: 14px; color: var(--c-text-3); letter-spacing: 0.12em;
+  display: flex; align-items: center; gap: 8px;
+}
+.slot .slot-rec i { width: 8px; height: 8px; border-radius: 50%; background: var(--c-green); box-shadow: 0 0 10px var(--c-green); }
+.slot .slot-name {
+  position: absolute; left: 30px; bottom: 46px;
+  padding: 6px 16px; border-radius: var(--radius-pill);
+  background: var(--c-green); color: var(--c-on-green);
+  font-size: 20px; font-weight: var(--fw-bold); letter-spacing: 0.08em;
+}
+/* 抠像模式：?slot=key → 内部纯绿，剪辑时直接色键；?slot=alpha → 透明（导出带 alpha 时用） */
+.slot-key .slot { background: #00FF00; }
+.slot-key .slot > *:not(.slot-name) { display: none; }
+.slot-alpha .slot { background: transparent; box-shadow: none; }
+.slot-alpha .slot > *:not(.slot-name) { display: none; }
+
+/* ---------- 调试参考线（?guides=1 或按 G） ---------- */
+.guides { display: none; }
+.show-guides .guides { display: block; }
+.guides .g-safe {
+  position: absolute; left: var(--safe-x); top: var(--safe-y);
+  right: var(--safe-x); bottom: var(--safe-y);
+  outline: 1px dashed rgba(56,189,248,0.7);
+}
+.guides .g-main {
+  position: absolute; left: var(--main-x); top: var(--safe-y);
+  width: var(--main-w); bottom: var(--safe-y);
+  background: rgba(56,189,248,0.05);
+  outline: 1px solid rgba(56,189,248,0.35);
+}
+.guides .g-slot-zone {
+  position: absolute;
+  left: 0; top: calc(var(--slot-y) - var(--slot-gutter));
+  width: calc(var(--slot-x) + var(--slot-w) + var(--slot-gutter)); bottom: 0;
+  background: repeating-linear-gradient(45deg, rgba(255,77,79,0.16) 0 6px, transparent 6px 16px);
+  outline: 1px dashed rgba(255,77,79,0.8);
+}
+.guides .g-label {
+  position: absolute; font-family: var(--font-mono); font-size: 16px; color: rgba(56,189,248,0.95);
+  background: rgba(0,0,0,0.6); padding: 2px 8px;
+}
+
+/* ---------- 播放器 UI（舞台外，不进入成片） ---------- */
+#player {
+  position: fixed; left: 50%; bottom: 18px; translate: -50% 0;
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 16px; border-radius: 12px;
+  background: rgba(20,21,26,0.9); border: 1px solid rgba(255,255,255,0.12);
+  font: 500 13px/1 "SkillMono", ui-monospace, monospace; color: #ccc;
+  z-index: 10; transition: opacity .3s;
+  user-select: none;
+}
+#player button {
+  background: #B8FF01; color: #000; border: 0; border-radius: 8px;
+  font: 700 13px/1 inherit; padding: 8px 12px; cursor: pointer; font-family: inherit;
+}
+#player button.ghost { background: transparent; color: #ccc; border: 1px solid rgba(255,255,255,0.18); }
+#player input[type=range] { width: 360px; accent-color: #B8FF01; }
+#player .time { min-width: 108px; text-align: right; }
+body.idle #player { opacity: 0; }
+body.capture #player { display: none; }
+#lint {
+  position: fixed; right: 12px; top: 12px; max-width: 420px; z-index: 11;
+  font: 12px/1.5 ui-monospace, monospace; color: #FF4D4F;
+  background: rgba(0,0,0,0.8); padding: 8px 10px; border-radius: 8px; display: none;
+}
+body.capture #lint { display: none !important; }

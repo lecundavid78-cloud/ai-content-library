@@ -1,0 +1,63 @@
+/* ==========================================================================
+   ch01 · scenes.css — 第一章各部分版式
+   构图沿用 v3：中轴 x=960；与口播框同高的区域（y>488）只用对称安全列 416→1504。
+   ========================================================================== */
+.l-at { position: absolute; }
+.ttl { position: absolute; left: 0; width: 1920px; text-align: center; top: 150px; }
+.is-dark em.red { color: var(--red); }
+
+/* ---------- 部分 A · 开场 → 为什么需要 Skill（深） ----------
+   开场大字居中（y≈420），讲到「假设你常让 AI 做 PPT」时整组上移、缩成标题（move s .68） */
+#pA-why .hero-wrap { position: absolute; left: 0; width: 1920px; top: 356px; text-align: center; }
+#pA-why .hero-wrap .c-hero { font-size: 112px; }
+#pA-why .eyebrow { position: absolute; left: 0; width: 1920px; top: 280px; text-align: center; }
+#pA-why .lead { position: absolute; left: 0; width: 1920px; top: 520px; text-align: center; }
+#pA-why .p-card { left: 690px; top: 352px; width: 540px; }
+#pA-why .p-card .head b { color: var(--gold); font-family: var(--font-mono); margin-right: 8px; }
+#pA-why .c-row { font-size: 30px; height: 56px; margin-bottom: 10px; }
+#pA-why .c-row .k { width: 64px; }
+#pA-why .c-badge { right: 18px; top: 18px; }
+#pA-why .p-card .head { padding-right: 84px; }
+#pA-why .vm .bad { color: var(--red); }
+
+/* ---------- 部分 B · 让 AI 干活的三件事 → Skill 管第二件（浅） ---------- */
+#pB-three .q { top: 360px; width: 320px; height: 300px; }
+#pB-three .q1 { left: 456px; }
+#pB-three .q2 { left: 800px; }
+#pB-three .q3 { left: 1144px; }
+#pB-three .q .face { padding: 28px 28px 26px; display: flex; flex-direction: column; }
+#pB-three .q .no { font-family: var(--font-mono); font-size: 22px; font-weight: 800; color: var(--gold); }
+#pB-three .q .big { margin-top: 14px; font-size: 46px; font-weight: 900; letter-spacing: 0.02em; }
+#pB-three .q .big .dim { color: rgba(255,255,255,0.18); }
+#pB-three .q .ex { margin-top: 14px; font-size: 24px; font-weight: 600; line-height: 1.55; color: var(--paper-2); }
+#pB-three .q .tag { margin-top: auto; }
+#pB-three .skill-pin { left: 0; width: 1920px; text-align: center; top: 318px; }
+#pB-three .q2 .f-sop .head { padding: 0 64px 18px 0; }
+#pB-three .q2 .c-row.is-slot { outline-color: rgba(255,255,255,0.16); }
+#pB-three .q2 .f-sop .head .c-pill { margin-left: 12px; }
+#pB-three .q2 .c-row { font-size: 30px; height: 58px; margin-bottom: 12px; }
+#pB-three .q2 .c-badge { right: 18px; top: 18px; }
+
+/* ---------- 部分 C · 说白了 SOP → 就像带新同事（浅） ---------- */
+#pC-sop .hero-wrap { position: absolute; left: 0; width: 1920px; top: 382px; text-align: center; }
+#pC-sop .lead { position: absolute; left: 0; width: 1920px; top: 300px; text-align: center; }
+#pC-sop .gloss { position: absolute; left: 0; width: 1920px; top: 540px; text-align: center;
+  font-family: var(--font-mono); font-size: 24px; font-weight: 600; color: var(--ink-3); letter-spacing: 0.08em; }
+#pC-sop .person { left: 470px; top: 480px; width: 300px; height: 250px; }
+#pC-sop .person .face { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+#pC-sop .person .avatar { width: 84px; height: 84px; border-radius: 50%; background: #EFEDF8; display: grid; place-items: center; }
+#pC-sop .person .avatar svg { width: 48px; height: 48px; }
+#pC-sop .person .nm { font-size: 40px; font-weight: 900; }
+#pC-sop .person .sm { font-size: 22px; font-weight: 700; color: var(--ink-3); letter-spacing: 0.06em; }
+#pC-sop .teach { left: 790px; width: 340px; top: 580px; text-align: center; font-size: 26px; font-weight: 800; color: var(--ink-3); letter-spacing: 0.04em; }
+#pC-sop .teach .line { display: block; height: 0; margin: 12px 20px 0; border-top: 2px dashed #CFCFD6; }
+#pC-sop .manual { left: 840px; top: 510px; width: 240px; height: 190px; padding: 22px 24px; }
+#pC-sop .manual .mh { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 22px; font-weight: 800; color: var(--gold); }
+#pC-sop .manual .c-skel { height: 14px; margin: 14px 0 0; }
+#pC-sop .manual .c-badge { right: -16px; top: -16px; }
+#pC-sop .arrow { top: 588px; font-family: var(--font-mono); font-size: 34px; font-weight: 700; color: var(--violet); }
+#pC-sop .arrow.a1 { left: 784px; }
+#pC-sop .arrow.a2 { left: 1098px; }
+#pC-sop .c-chip { left: 1150px; width: 320px; }
+#pC-sop .c-chip.t1 { top: 496px; }
+#pC-sop .c-chip.t2 { top: 596px; }

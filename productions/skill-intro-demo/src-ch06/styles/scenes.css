@@ -1,0 +1,69 @@
+/* ==========================================================================
+   ch06 · scenes.css — 第六章「Skill 和 Prompt 的区别」
+   构图沿用前几章：中轴 x=960；与口播框同高区域（y>488）只用 416→1504；浅舞台。
+   ========================================================================== */
+.l-at { position: absolute; }
+.ttl { position: absolute; left: 0; width: 1920px; text-align: center; top: 150px; }
+.hero-wrap { position: absolute; left: 0; width: 1920px; top: 356px; text-align: center; }
+.hero-wrap .c-hero { font-size: 112px; }
+.is-light em.red { color: var(--red); }
+.row-c { position: absolute; left: 0; width: 1920px; display: flex; justify-content: center; align-items: center; gap: 14px; }
+.row-c .c-chip { position: static; }
+.card-t { font-size: 22px; font-weight: 800; letter-spacing: 0.06em; color: var(--ink-3); }
+.mono-t { font-family: var(--font-mono); font-size: 22px; color: var(--ink-3); }
+.c-skel.l { background: #ECECEF; height: 14px; margin: 14px 0 0; }
+
+/* 白卡：SKILL.md / 聊天框 */
+.wcard { padding: 24px 28px; }
+.wcard > .c-badge { right: 18px; top: 18px; }
+.wcard .hd { display: flex; justify-content: space-between; align-items: baseline; padding-right: 56px; white-space: nowrap; }
+.chat .msg { margin-top: 18px; padding: 14px 18px; border-radius: 14px; background: #F3F3F6; min-height: 120px; }
+.chat .inp { position: absolute; left: 28px; right: 28px; bottom: 24px; height: 48px; border-radius: 24px; outline: 1.5px solid var(--card-line-light); display: flex; align-items: center; padding: 0 18px; font-size: 20px; color: var(--ink-3); }
+
+/* 深色文件夹卡（同第三章 .fold） */
+.fold .face { padding: 24px 28px; }
+.fold .head { padding: 0 64px 14px 0; color: var(--paper); font-family: var(--font-mono); font-size: 24px; letter-spacing: 0; justify-content: flex-start; gap: 12px; }
+.fold .c-file { position: relative; height: 66px; margin-bottom: 10px; font-size: 28px; }
+.fold .c-file .ico { width: 32px; height: 32px; }
+.fold .c-file .role { margin-left: auto; font-family: var(--font-sans); font-size: 22px; font-weight: 800; color: var(--paper-2); }
+.fold .c-file .role .ok { color: var(--gold); }
+.fold > .c-badge { right: 16px; top: 16px; }
+
+/* ---------- 部分 A · 只有纯文字 ---------- */
+#pA-text .md   { left: 470px;  top: 340px; width: 440px; height: 330px; }
+#pA-text .chat { left: 1010px; top: 340px; width: 440px; height: 330px; }
+#pA-text .md .ft { position: absolute; left: 28px; right: 28px; bottom: 22px; }
+#pA-text .md .ft .row { display: flex; gap: 10px; }
+#pA-text .md .ft .c-pill.v { background: var(--violet-soft); color: var(--violet); box-shadow: none; }
+#pA-text .copy { left: 900px; width: 120px; top: 478px; text-align: center; font-size: 22px; font-weight: 800; color: var(--violet); }
+#pA-text .copy .ar { display: block; font-family: var(--font-mono); font-size: 34px; }
+#pA-text .cond { top: 716px; }
+#pA-text .cond .c-chip { height: 54px; font-size: 24px; box-shadow: none; outline: 1px solid var(--card-line-light); }
+
+/* ---------- 部分 B · 带配套资源 ---------- */
+#pB-pack .pack { left: 470px; top: 330px; width: 540px; height: 156px; }
+#pB-pack .chat { left: 1060px; top: 330px; width: 400px; height: 300px; }
+#pB-pack .bind { left: 470px; width: 540px; top: 740px; text-align: center; }
+#pB-pack .task { left: 1060px; width: 400px; height: 66px; font-size: 26px; }
+#pB-pack .task.t1 { top: 360px; } #pB-pack .task.t2 { top: 446px; } #pB-pack .task.t3 { top: 532px; }
+#pB-pack .task .ok2 { margin-left: auto; color: var(--violet); font-weight: 900; }
+#pB-pack .task .old { margin-left: auto; color: var(--ink-3); font-weight: 700; }
+#pB-pack .hist { left: 1060px; width: 400px; top: 636px; text-align: center; }
+#pB-pack .hist .c-chip { position: static; display: inline-flex; height: 56px; font-size: 24px; box-shadow: none; outline: 1.5px dashed rgba(20,20,22,0.22); outline-offset: -1.5px; background: transparent; color: var(--ink-2); }
+#pB-pack .hist .no { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--red); color: #fff; }
+#pB-pack .hist .no svg { width: 16px; height: 16px; }
+
+/* ---------- 部分 C · 这一次 vs 这一类 ---------- */
+#pC-sum .sk { left: 1000px; top: 350px; width: 400px; height: 310px; padding: 26px 30px; }
+#pC-sum .pr { left: 520px;  top: 350px; width: 400px; height: 310px; padding: 26px 30px; }
+#pC-sum .big { margin-top: 18px; font-size: 64px; font-weight: 900; letter-spacing: 0.02em; }
+#pC-sum .ds { margin-top: 10px; font-size: 24px; font-weight: 700; color: var(--ink-2); }
+#pC-sum .sk .ds { color: var(--paper-2); }
+#pC-sum .sk .big { color: #fff; }
+#pC-sum .sk .tags { position: absolute; left: 30px; bottom: 24px; display: flex; gap: 10px; }
+#pC-sum .kw { font-family: var(--font-mono); font-size: 22px; font-weight: 800; }
+#pC-sum .pr .kw { color: var(--violet); }
+#pC-sum .sk .kw { color: var(--gold); }
+#pC-sum .three { top: 712px; }
+#pC-sum .three .c-chip { height: 62px; font-size: 26px; }
+#pC-sum .three .n { color: var(--violet); font-weight: 900; }

@@ -1,0 +1,58 @@
+/* ==========================================================================
+   ch07 · scenes.css — 第七章「值不值得做 + 总结」（全片最后一章）
+   构图沿用前几章：中轴 x=960；与口播框同高区域（y>488）只用 416→1504；浅舞台。
+   ========================================================================== */
+.l-at { position: absolute; }
+.ttl { position: absolute; left: 0; width: 1920px; text-align: center; top: 150px; }
+.hero-wrap { position: absolute; left: 0; width: 1920px; top: 356px; text-align: center; }
+.hero-wrap .c-hero { font-size: 112px; }
+.is-light em.red { color: var(--red); }
+.row-c { position: absolute; left: 0; width: 1920px; display: flex; justify-content: center; align-items: center; gap: 14px; }
+.row-c .c-chip { position: static; }
+.c-skel.l { background: #ECECEF; height: 14px; margin: 14px 0 0; }
+
+/* 小方块（适合 / 不适合） */
+.tile { position: absolute; width: 430px; height: 96px; display: flex; align-items: center; gap: 14px; padding: 0 26px; font-size: 27px; font-weight: 800; white-space: nowrap; }
+.tile .ico { width: 30px; height: 30px; }
+.tile .c-badge { right: -12px; top: -12px; width: 38px; height: 38px; }
+.tile .c-badge svg { width: 18px; height: 18px; }
+.c-card.tile:not(.is-white) .c-badge:not(.is-red) { background: #fff; color: var(--ink); }
+
+/* ---------- 部分 A · 什么任务值得做 ---------- */
+#pA-worth .crit { top: 296px; }
+#pA-worth .crit .c-chip { height: 58px; font-size: 26px; }
+#pA-worth .crit .n { color: var(--violet); font-weight: 900; }
+#pA-worth .tile.g1 { left: 505px; top: 386px; } #pA-worth .tile.g2 { left: 985px; top: 386px; }
+#pA-worth .tile.g3 { left: 505px; top: 500px; } #pA-worth .tile.g4 { left: 985px; top: 500px; }
+#pA-worth .tile.b1 { left: 505px; top: 640px; } #pA-worth .tile.b2 { left: 985px; top: 640px; }
+#pA-worth .tile.bad { background: transparent; box-shadow: none; outline: 2px dashed rgba(20,20,22,0.22); outline-offset: -2px; color: var(--ink-2); font-size: 25px; }
+#pA-worth .tile.bad .q { color: var(--ink); }
+
+/* ---------- 部分 B · 总结 ---------- */
+#pB-summary .pile { top: 400px; flex-wrap: wrap; width: 900px; left: 510px; }
+#pB-summary .pile .c-chip { height: 56px; font-size: 24px; color: var(--ink-3); box-shadow: none; outline: 1px solid var(--card-line-light); }
+#pB-summary .ask { left: 470px; top: 360px; width: 360px; height: 300px; padding: 24px 26px; }
+#pB-summary .ask .t { font-size: 22px; font-weight: 800; color: var(--ink-3); letter-spacing: 0.06em; }
+#pB-summary .ask .bub { margin-top: 14px; padding: 12px 16px; border-radius: 12px; background: #F3F3F6; font-size: 22px; font-weight: 700; color: var(--ink-2); }
+#pB-summary .arr { left: 846px; top: 476px; width: 70px; text-align: center; font-family: var(--font-mono); font-size: 40px; font-weight: 800; color: var(--violet); }
+#pB-summary .sk { left: 930px; top: 340px; width: 520px; height: 340px; }
+#pB-summary .sk .face { padding: 24px 28px; }
+#pB-summary .sk .head { padding: 0 64px 14px 0; color: var(--paper); font-size: 24px; font-weight: 900; letter-spacing: 0.04em; justify-content: flex-start; }
+#pB-summary .sk .c-row { height: 54px; margin-bottom: 10px; font-size: 27px; }
+#pB-summary .sk .c-row.is-slot { outline-color: rgba(255,255,255,0.16); }
+#pB-summary .sk .c-row .no { color: var(--gold); }
+#pB-summary .sk > .c-badge { right: 16px; top: 16px; background: #fff; color: var(--ink); }
+
+/* ---------- 部分 C · 三个问题 + 结尾 ---------- */
+#pC-questions .qs { left: 500px; top: 330px; width: 920px; height: 290px; padding: 24px 30px; }
+#pC-questions .qs .hd { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 12px; font-size: 22px; font-weight: 800; color: var(--ink-3); letter-spacing: 0.06em; }
+#pC-questions .qr {
+  position: relative; display: flex; align-items: center; height: 62px; padding: 0 18px; margin-bottom: 10px; border-radius: 12px;
+  outline: 1.5px dashed rgba(20,20,22,0.18); outline-offset: -1.5px; font-size: 27px; font-weight: 800; white-space: nowrap;
+}
+#pC-questions .qr .fill { display: flex; align-items: center; gap: 14px; }
+#pC-questions .qr .no { font-family: var(--font-mono); font-size: 20px; font-weight: 800; color: var(--violet); }
+#pC-questions .qr .c-badge { right: 14px; top: 13px; width: 36px; height: 36px; }
+#pC-questions .qr .c-badge svg { width: 18px; height: 18px; }
+#pC-questions .next { top: 700px; }
+#pC-questions .next .c-pill { font-size: 30px; padding: 14px 30px 15px; }

@@ -1,0 +1,68 @@
+/* ==========================================================================
+   ch02 · scenes.css — 第二章「Skill 长什么样」各部分版式
+   构图沿用 v3 / ch01：中轴 x=960；与口播框同高的区域（y>488）只用对称安全列 416→1504。
+   两个部分都在浅舞台，承接第一章结尾的浅舞台，章节衔接处背景不跳。
+   ========================================================================== */
+.l-at { position: absolute; }
+.ttl { position: absolute; left: 0; width: 1920px; text-align: center; top: 150px; }
+.hero-wrap { position: absolute; left: 0; width: 1920px; top: 356px; text-align: center; }
+.hero-wrap .c-hero { font-size: 112px; }
+.is-light em.red { color: var(--red); }
+.mono { font-family: var(--font-mono); letter-spacing: -0.01em; }
+
+/* ---------- 部分 A · Skill 在电脑里长什么样（代码卡 → 文件夹卡） ---------- */
+#pA-folder .box { left: 610px; top: 330px; width: 700px; height: 420px; }
+#pA-folder .face { padding: 28px 30px; }
+#pA-folder .f-code .head { padding: 0 0 18px; font-family: var(--font-mono); font-size: 22px; letter-spacing: 0; }
+#pA-folder .f-code .ln { font-family: var(--font-mono); font-size: 24px; line-height: 46px; white-space: pre; color: var(--paper-2); }
+#pA-folder .f-code .ln .k { color: #A891FF; } #pA-folder .f-code .ln .s { color: var(--gold); } #pA-folder .f-code .ln .c { color: var(--paper-3); }
+#pA-folder .f-folder .head { padding: 0 0 18px; color: var(--paper); font-family: var(--font-mono); font-size: 26px; letter-spacing: 0; justify-content: flex-start; gap: 14px; }
+#pA-folder .f-folder .head .hm { margin-left: auto; font-family: var(--font-sans); font-size: 20px; font-weight: 800; color: var(--gold); letter-spacing: 0.06em; }
+#pA-folder .f-folder .body { padding: 0; position: relative; }
+#pA-folder .c-file .tag { margin-left: auto; }
+#pA-folder .cap { margin: 2px 0 18px 4px; font-size: 22px; font-weight: 700; color: var(--paper-3); letter-spacing: 0.06em; white-space: nowrap; }
+#pA-folder .cap .ok { color: var(--gold); }
+#pA-folder .ghost .role { margin-left: auto; }
+#pA-folder .c-badge { right: 18px; top: 18px; }
+#pA-folder .f-folder .head { padding-right: 64px; }
+
+/* ---------- 部分 B · SKILL.md 里写了什么（同一张白色文档卡：前置字段 → 正文步骤） ---------- */
+#pB-skillmd .doc { left: 520px; top: 300px; width: 880px; height: 470px; }
+#pB-skillmd .doc .face { padding: 28px 34px; background: var(--card-light); color: var(--ink); }
+#pB-skillmd .doc .head { padding: 0 64px 14px 0; font-family: var(--font-mono); letter-spacing: 0; font-weight: 500; color: var(--ink-3); }
+#pB-skillmd .dash { font-family: var(--font-mono); font-size: 22px; color: var(--ink-3); line-height: 30px; }
+#pB-skillmd .fld { margin: 10px 0 14px; }
+#pB-skillmd .fld .lab { font-family: var(--font-mono); font-size: 22px; font-weight: 600; color: var(--ink-3); margin-bottom: 4px; }
+#pB-skillmd .fld .fv {
+  min-height: 56px; padding: 6px 16px; margin-left: -16px; border-radius: 12px;
+  outline: 1.5px dashed rgba(20,20,22,0.14); outline-offset: -1.5px;
+  display: flex; align-items: center;
+}
+#pB-skillmd .fld .val { font-size: 32px; font-weight: 800; letter-spacing: 0.01em; white-space: nowrap; }
+#pB-skillmd .fld .val.mono { font-size: 38px; }
+#pB-skillmd .fld .ph { color: var(--ink-3); font-weight: 700; }
+#pB-skillmd .fld .bad { color: var(--red); }
+#pB-skillmd .c-skel { background: #ECECEF; height: 14px; margin: 12px 0 0; }
+#pB-skillmd .doc .c-badge { right: 18px; top: 18px; }
+#pB-skillmd .callout { left: 1262px; }
+#pB-skillmd .callout.c1 { top: 456px; }
+#pB-skillmd .callout.c2 { top: 564px; }
+#pB-skillmd .ask { top: 800px; }
+#pB-skillmd .ask.k1 { left: 636px; }
+#pB-skillmd .ask.k2 { left: 896px; }
+#pB-skillmd .ask.k3 { left: 1126px; }
+#pB-skillmd .ask .q { color: var(--ink-3); font-family: var(--font-mono); font-weight: 800; }
+/* 正文面 */
+#pB-skillmd .strip { font-family: var(--font-mono); font-size: 20px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-bottom: 14px; border-bottom: 1px solid var(--card-line-light); }
+#pB-skillmd .h2row { display: flex; align-items: baseline; justify-content: space-between; margin: 18px 0 14px; }
+#pB-skillmd .h2 { font-family: var(--font-mono); font-size: 26px; font-weight: 800; color: var(--ink); }
+#pB-skillmd .when { font-size: 22px; font-weight: 700; color: var(--ink-3); letter-spacing: 0.04em; }
+#pB-skillmd .stp {
+  display: flex; align-items: center; height: 58px; padding: 0 18px; margin-bottom: 10px; border-radius: 12px;
+  outline: 1.5px dashed rgba(20,20,22,0.14); outline-offset: -1.5px;
+  font-size: 28px; font-weight: 800; letter-spacing: 0.02em; white-space: nowrap;
+}
+#pB-skillmd .stp .fill { display: flex; align-items: center; gap: 16px; }
+#pB-skillmd .stp .no { font-family: var(--font-mono); font-size: 22px; font-weight: 800; color: var(--violet); }
+#pB-skillmd .stp .sub { font-size: 24px; font-weight: 700; color: var(--ink-2); }
+#pB-skillmd .hr { margin-left: auto; }

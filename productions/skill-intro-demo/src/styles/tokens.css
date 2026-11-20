@@ -1,0 +1,83 @@
+/* ==========================================================================
+   tokens.css — 视觉规范（Design Tokens）
+   全片唯一的「真值来源」。改颜色 / 字号 / 动效 / 口播框，只改这里。
+   画布按 1920×1080 设计，所有数值均为画布像素（px），由 engine 统一缩放。
+   ========================================================================== */
+:root {
+  /* ---------- 画布与安全区 ---------- */
+  --canvas-w: 1920px;
+  --canvas-h: 1080px;
+  --safe-x: 96px;            /* 5% Title Safe（横向） */
+  --safe-y: 54px;            /* 5% Title Safe（纵向） */
+
+  /* ---------- 口播预留框（竖屏 9:16 小窗） ----------
+     x=96, y=528, w=280, h=498 → 右下角 (376, 1026)，正好贴住左下安全线。 */
+  --slot-w: 280px;
+  --slot-h: 498px;
+  --slot-x: var(--safe-x);
+  --slot-y: calc(var(--canvas-h) - var(--safe-y) - var(--slot-h)); /* 528 */
+  --slot-gutter: 40px;       /* 口播框与主视觉之间的最小留白 */
+
+  /* ---------- 主视觉区（避开口播框后的内容列） ----------
+     x: 456 → 1824（宽 1368），中心 x = 1140。 */
+  --main-x: calc(var(--slot-x) + var(--slot-w) + var(--slot-gutter) + 40px); /* 456 */
+  --main-r: calc(var(--canvas-w) - var(--safe-x));                           /* 1824 */
+  --main-w: calc(var(--main-r) - var(--main-x));                             /* 1368 */
+
+  /* ---------- 颜色 ---------- */
+  --c-bg: #070709;           /* 深邃黑背景 */
+  --c-card: #14151A;         /* 卡片底色 */
+  --c-card-hi: #1B1D24;      /* 卡片内高亮行 */
+  --c-line: rgba(255, 255, 255, 0.15);  /* 卡片描边 */
+  --c-line-soft: rgba(255, 255, 255, 0.08);
+  --c-text: #F4F5F7;         /* 主文字（不用纯白，降低刺眼） */
+  --c-text-2: rgba(244, 245, 247, 0.62);
+  --c-text-3: rgba(244, 245, 247, 0.38);
+  --c-green: #B8FF01;        /* 荧光绿：主强调 / 胶囊底 / 提炼大字 */
+  --c-on-green: #000000;     /* 荧光绿上的文字 */
+  --c-yellow: #FFD600;       /* 明黄：重点文字 / 虚线框 */
+  --c-blue: #38BDF8;         /* 科技蓝：文件夹 / 结构 */
+  --c-red: #FF4D4F;          /* 警告 / 错误 */
+
+  /* ---------- 字体 ---------- */
+  --font-sans: "SkillSans", "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC",
+               "Microsoft YaHei", sans-serif;
+  --font-mono: "SkillMono", "JetBrains Mono", "Fira Code", "SkillSans",
+               "Noto Sans Mono CJK SC", monospace;
+
+  /* 字号层级（画布 px）：大字报 > 标题 > 卡片 > 字幕 > 注释 */
+  --fs-hero: 168px;          /* 提炼大字（≤10 字） */
+  --fs-title: 120px;         /* 次级大字 */
+  --fs-h2: 56px;
+  --fs-card: 30px;           /* 卡片内文字 */
+  --fs-sub: 38px;            /* 字幕 */
+  --fs-pill: 30px;           /* 胶囊 */
+  --fs-note: 22px;           /* 注释 / 标签 / 角标 */
+
+  --fw-hero: 900;
+  --fw-bold: 800;
+  --fw-semi: 600;
+  --fw-text: 500;
+
+  --hero-skew: -6deg;        /* 主视觉大字微斜体 */
+  --tracking-hero: -0.02em;
+  --tracking-text: 0.02em;
+
+  /* ---------- 形状 ---------- */
+  --radius: 16px;
+  --radius-pill: 999px;
+  --border: 1px solid var(--c-line);
+  --dash-w: 2px;             /* 虚线框线宽 */
+  --dash-pattern: 10 8;      /* 虚线：实 10 / 空 8（SVG 用） */
+
+  /* ---------- 动效 ---------- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 250ms;
+  --dur-base: 300ms;
+  --dur-slow: 350ms;
+  --dur-draw: 400ms;
+
+  /* 文档压暗（铁律） */
+  --dim-opacity: 0.25;
+  --dim-blur: 2px;
+}
